@@ -14,6 +14,15 @@ It also contains workflow documents that give instructions on how to manage your
 
 **If your team has trouble with any of these steps, please ask on Piazza. For example, with how GitHub Classroom works, your team *may* not have permissions to do some of the first few steps, in which case we'll post alternative instructions as needed.**
 
+## First Pull Timeline
+Monday, Oct 31st - Sahir
+Wednesday, Nov 2nd - Jaemin
+Wednesday, Nov 2nd - Yu Yang
+Wednesday, Nov 2nd - Ael
+Thursday, Nov 3rd - Dallas
+Thursday, Nov 3rd - Amir
+Friday, Nov 4th - Max
+
 ## Workflow Documents
 
 * Github Workflow: Please refer to the workflow that was introduced in the first lab. You should follow this when working on your code. The following document provides additional details too.
@@ -37,3 +46,4 @@ Moving forward, we expect you to maintain this project structure. You *should* u
 ![image](https://user-images.githubusercontent.com/5333020/196066655-d3c97bf4-fdbd-46b0-b6ae-aeb8dbcf351d.png)
 
 You can create another simple class and try generating a test for this class.
+
