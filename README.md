@@ -16,11 +16,17 @@ It also contains workflow documents that give instructions on how to manage your
 
 ## First Pull Timeline
 Monday, Oct 31st - Sahir
+
 Wednesday, Nov 2nd - Jaemin
+
 Wednesday, Nov 2nd - Yu Yang
+
 Wednesday, Nov 2nd - Ael
+
 Thursday, Nov 3rd - Dallas
+
 Thursday, Nov 3rd - Amir
+
 Friday, Nov 4th - Max
 
 ## Workflow Documents
