@@ -1,10 +1,13 @@
+import java.util.List;
+
 public class Genre {
     public Genre() {
-
     }
-    public Artist getArtists(){
+    public List<Artist> getArtists(){
+        return null;
     }
 
     public Artist randomSelect(){
+        return null;
     }
 }

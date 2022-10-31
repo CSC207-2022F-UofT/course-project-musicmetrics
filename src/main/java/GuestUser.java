@@ -5,9 +5,11 @@ public class GuestUser extends User{
     }
 
     public boolean checkUser(){
+        return true;
     }
 
     public List<User> getUser(){
+        return null;
     }
 
     public void saveUser(){
