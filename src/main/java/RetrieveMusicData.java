@@ -1,2 +1,2 @@
-public class RetrieveMusicData{
+public class RetrieveMusicData {
 }
