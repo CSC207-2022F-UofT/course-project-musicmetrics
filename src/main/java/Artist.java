@@ -6,8 +6,7 @@ public class Artist {
         return 0;
     }
 
-    public Genre getGenre(){
-        Genre Genre = null;
-        return Genre;
+    public String getGenre(){
+        return "";
     }
 }

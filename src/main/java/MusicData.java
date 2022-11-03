@@ -19,7 +19,7 @@ public class MusicData extends RetrieveMusicData {
     public void addArtistToGenre(){
     }
 
-    public List<Genre> getGenres(){
+    public List<String> getGenres(){
         return null;
     }
 
