@@ -2,23 +2,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Searcher {
+    private List<String> actions = new ArrayList<>();
     public Searcher() {
 
     }
 
-    public void filterKeyword() {
-
+    public List<String> filterKeyword() {
+        return null;
     }
 
-    public void filterArtist() {
-
+    public List<String> filterArtist() {
+        return null;
     }
 
-    public void filterGenre() {
-
+    public List<String> filterGenre() {
+        return null;
     }
 
     public List<String> suggestions() {
-        return new ArrayList<>();
+        return actions;
     }
 }

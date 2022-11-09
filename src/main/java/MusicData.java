@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class MusicData extends RetrieveMusicData {
+public class MusicData{
     public MusicData(){
 
     }
@@ -12,7 +12,14 @@ public class MusicData extends RetrieveMusicData {
     public void addArtist(){
 
     }
-    public List<Artist> getArtistsByGenre(){
+
+    /**
+     * Gets all artists within a specific Genre
+     *
+     * @param genre gets all artists within this genre
+     * @return the lists of artists within the genre
+     */
+    public List<Artist> getArtistsByGenre(String genre){
         return null;
     }
 
