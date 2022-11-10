@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.
 
 public class MusicData{
     static HashMap<Integer, MusicData> data = new HashMap<>();
@@ -67,8 +68,37 @@ public class MusicData{
         return recommendation;
     }
 
-    public int getStreams() {
-        return 0;
+    /**
+     * Gets all streams of a given artist for given weeks
+     *
+     * @param artist the artist whose streams will be returned
+     * @param weeks the weeks of stream data that will be accessed
+     * @return a hashmap of weeks to streams
+     */
+    public HashMap<Integer, Integer> getStreams(Artist artist, List<Integer> weeks) {
+        HashMap<Integer,Integer> to_return = new HashMap<>();
+        String name = artist.getName();
+        for (int i: weeks) {
+            to_return.put(i, getStreamsHelper(name, i));
+        }
+
+        return to_return;
+    }
+
+//    Helper method for getStreams that returns artist streams of a week
+//    Assumes artists for MusicData is stored in a key(week) to value(array of artists relationship)
+    private int getStreamsHelper(String name, int week) {
+        List<Artist> week_data = data.get(week).getArtists();
+        for (Artist artist: week_data) {
+            if (Objects.equals(artist.getName(), name)) {
+                return artist.getStreams();
+            }
+        }
+    }
+
+//    returns list of artist objects for current week
+    public List<Artist> getArtists(){
+        return null;
     }
 
 
