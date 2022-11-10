@@ -1,8 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.
+import java.util.*;
 
 public class MusicData{
     static HashMap<Integer, MusicData> data = new HashMap<>();
@@ -94,6 +90,7 @@ public class MusicData{
                 return artist.getStreams();
             }
         }
+        return 0;
     }
 
 //    returns list of artist objects for current week
@@ -130,4 +127,11 @@ public class MusicData{
     public String getArtistData(){
         return null;
     }
+
+    // this is here to remove error, feel free to remove
+    // the error is that you can't use MusicData.getArtistData from Artist since it's not static
+    public static Object getArtistData(String artistTwo) {
+        return null;
+    }
+    //
 }
