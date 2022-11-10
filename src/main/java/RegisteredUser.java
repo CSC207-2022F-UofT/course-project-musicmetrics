@@ -7,7 +7,7 @@ public class RegisteredUser extends User{
     }
 
     public Alert getAlerts(double growthRate, boolean compare, int top) {
-        return new Alert();
+        return null;
     }
 
     public void setAlerts() {

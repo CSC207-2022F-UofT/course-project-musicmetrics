@@ -5,6 +5,7 @@ public class Artist {
     private String genre;
     private String name;
     private Boolean[] likes;
+    private int streams;
     public int time;
 
     /**
@@ -24,13 +25,17 @@ public class Artist {
      * @param week An integer containing the week number
      *             ex: if this artist's data is for week 3, then week=3
      */
-    public Artist(int f, String g, String n, Boolean[] l, int week) {
+    public Artist(int f, String g, String n, Boolean[] l, int week, int streams) {
         this.follows = f;
         this.genre = g;
         this.name = n;
         this.likes = l;
         this.time = week;
+        this.streams = streams;
     }
+    public int getStreams() {return this.streams;}
+
+    public String getName() {return this.name;}
     public int getFollows() {
         return this.follows;
     }
