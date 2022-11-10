@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class RegisteredUser extends User{
     public RegisteredUser() {
 
@@ -36,7 +39,13 @@ public class RegisteredUser extends User{
 
     }
 
-    public int getFollows() {
-        return 0;
+    /**
+     * Gets all artists a registeredUser follows
+     *
+     *
+     * @return a List of artists the registeredUser follows
+     */
+    public List<Artist> getFollows() {
+        return new ArrayList<Artist>();
     }
 }
