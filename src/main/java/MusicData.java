@@ -1,22 +1,20 @@
 import java.util.*;
 
 public class MusicData{
-    static HashMap<Integer, MusicData> data = new HashMap<>();
+    /**
+     * NOTE: Assume that if an Artist will have information for EVERY WEEK in the Hashmap
+     */
+    static HashMap<Integer, ArrayList<Artist>> data = new HashMap<>();
 
     private HashMap<Integer, MusicData> toBeDetermined  = new HashMap<>();
 
-    public MusicData(int week){
-        data.put(week, this);
-    }
-
-    public MusicData retrieveWeek(int week) {
+    public ArrayList<Artist> retrieveWeek(int week) {
         return data.get(week);
     }
 
     public List<Artist> getTrending(int top, int startWeek, int endWeek) {
         return new ArrayList<>();
     }
-
 
     /**
      * Gets an artist recommendation within a specific genre, random if similar is false, otherwise uses the similarties
@@ -65,6 +63,13 @@ public class MusicData{
     }
 
     /**
+     *
+     * @return  latest week in the Hashmap (aka highest integer)
+     */
+    static int getLatestWeek() {
+        return Collections.max(data.keySet());
+    }
+    /**
      * Gets all streams of a given artist for given weeks
      *
      * @param artist the artist whose streams will be returned
@@ -84,7 +89,7 @@ public class MusicData{
 //    Helper method for getStreams that returns artist streams of a week
 //    Assumes artists for MusicData is stored in a key(week) to value(array of artists relationship)
     private int getStreamsHelper(String name, int week) {
-        List<Artist> week_data = data.get(week).getArtists();
+        List<Artist> week_data = getArtists(week);
         for (Artist artist: week_data) {
             if (Objects.equals(artist.getName(), name)) {
                 return artist.getStreams();
@@ -94,14 +99,25 @@ public class MusicData{
     }
 
 //    returns list of artist objects for current week
-    public List<Artist> getArtists(){
-        return null;
+    public ArrayList<Artist> getArtists(int week){
+        return data.get(week);
     }
 
-
-    public void addArtist(){
-
+    /**
+     *
+     * @param artist An Artist Object
+     */
+    public void addArtist(Artist artist) {
+        if (data.containsKey(artist.time)) {
+            data.get(artist.time).add(artist);
+            }
+        if (!(data.containsKey(artist.time))){
+            ArrayList<Artist> artistList = new ArrayList<Artist>();
+            artistList.add(artist);
+            data.put(artist.time, artistList);
+        }
     }
+
 
     /**
      * Gets all artists within a specific Genre
@@ -120,18 +136,29 @@ public class MusicData{
         return null;
     }
 
-    public List<Artist> getTop(){
+    public List<Artist> getTop(int week){
         return null;
     }
 
-    public String getArtistData(){
+    /**
+     *
+     * @param artist
+     * @param week
+     * @return A hashmap that represents artist data
+     *      returns null if artist name is not in the arrayList of the given week
+     *
+     * PLEASE ASSUME THAT AN ARTIST WILL ALWAYS BE IN THE ARRAYLIST OF THE GIVEN WEEK (KEY)
+     */
+    public static HashMap<String, Object> getArtistData(String artist, int week){
+        Object artistObj = null;
+        for (Object a: data.get(week)) {
+            if (a.toString() == artist) { artistObj = a;}
+        }
+        if (!(artistObj==null)) {
+            int index = data.get(week).indexOf(artistObj);
+            return (data.get(week).get(index).getInfo());
+        }
         return null;
     }
 
-    // this is here to remove error, feel free to remove
-    // the error is that you can't use MusicData.getArtistData from Artist since it's not static
-    public static Object getArtistData(String artistTwo) {
-        return null;
-    }
-    //
 }

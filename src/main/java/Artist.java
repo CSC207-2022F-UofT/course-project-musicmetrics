@@ -53,24 +53,40 @@ public class Artist {
         return this.likes;
     }
 
+    /**
+     *
+     * @return a HashMap displaying this artist's information
+     */
+    public HashMap<String, Object> getInfo() {
+        HashMap<String, Object> info = new HashMap<>();
+        info.put("Name", this.name);
+        info.put("Genre", this.genre);
+        info.put("Follows", this.follows);
+        info.put("Streams", this.streams);
+        info.put("TimeStamp", this.time);
+        return info;
+    }
+
     public int getTimeStamp() { return this.time;}
 
-    public String toString(){
-        return this.name;
-    }
+    public String toString() { return this.name;}
 
     /**
      *
      * @param artistTwo     An artist's name
      * @return      A HashMap with artist name as keys
+     *                  returns null if artistTwo does not have data correlating to artistOne's week/timestamp
      *
-     * I assumed that MusicData.getArtistData() receives a String artist name as the input
-     *  and returns a string of data.   NOTE: It may be better to have getArtistData return an ArrayList of data
+     * When comparing artists, the method will compare the two artists based on THE FIRST ARTIST'S timestamp.
+     *      EX: if this artist instance is for week 3, then it will be compared against artistTwo's week 3.
      */
     public HashMap<String, Object> Compare(String artistTwo) {
         HashMap<String, Object> data = new HashMap<>();
-        data.put(this.toString(), MusicData.getArtistData(this.toString()));
-        data.put(artistTwo, MusicData.getArtistData(artistTwo));
-        return data;
+        data.put(this.getName(), this.getInfo());
+        if (MusicData.data.containsKey(this.getTimeStamp())) {
+            data.put(artistTwo, MusicData.getArtistData(artistTwo, this.getTimeStamp()));
+            return data;
+        }
+        return null;
     }
 }
