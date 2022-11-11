@@ -63,6 +63,13 @@ public class MusicData{
     }
 
     /**
+     *
+     * @return  latest week in the Hashmap (aka highest integer)
+     */
+    static int getLatestWeek() {
+        return Collections.max(data.keySet());
+    }
+    /**
      * Gets all streams of a given artist for given weeks
      *
      * @param artist the artist whose streams will be returned
