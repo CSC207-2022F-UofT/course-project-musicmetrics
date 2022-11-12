@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Scanner;
 
 public class GuestUser extends User{
     public GuestUser(){
@@ -12,12 +13,30 @@ public class GuestUser extends User{
         return null;
     }
 
+    public void register() {
+        // calls on userdata to save user
+    }
+
     public void saveUser(){
     }
 
     public void deleteUser(){
     }
 
+    public void logInUser() {
+        UserData u = new UserData();
+        // ask for email and password
+        // call on u.login
+    }
     public void logoutUser(){
+    }
+
+    public void forgotPassword() {
+        // ask for email
+        Scanner emailInput = new Scanner(System.in);
+        System.out.println("Please enter your email address.");
+        // sends an email
+        System.out.println("An email to reset your password has been sent to " + emailInput.next());
+        // email leads to her instance of RegisteredUser
     }
 }
