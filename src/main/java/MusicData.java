@@ -71,7 +71,7 @@ public class MusicData{
      * @param weeks the weeks of stream data that will be accessed
      * @return a hashmap of weeks to streams
      */
-    public static HashMap<Integer, Integer> getStreams(Artist artist, List<Integer> weeks) {
+    public HashMap<Integer, Integer> getStreams(Artist artist, List<Integer> weeks) {
         HashMap<Integer,Integer> to_return = new HashMap<>();
         String name = artist.getName();
         for (int i: weeks) {
@@ -83,7 +83,7 @@ public class MusicData{
 
 //    Helper method for getStreams that returns artist streams of a week
 //    Assumes artists for MusicData is stored in a key(week) to value(array of artists relationship)
-    private static int getStreamsHelper(String name, int week) {
+    private int getStreamsHelper(String name, int week) {
         List<Artist> week_data = data.get(week).getArtists();
         for (Artist artist: week_data) {
             if (Objects.equals(artist.getName(), name)) {
