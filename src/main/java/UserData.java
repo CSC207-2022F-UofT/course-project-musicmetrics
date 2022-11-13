@@ -1,43 +1,66 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Scanner;
 
 public class UserData {
-    private Scanner allRegisteredUsers;
-    private Hashtable<String, String> allRegisteredUsersData;
-    private Scanner loggedInUsers;
-    private Hashtable<String, String> loggedInUsersData;
+
+    // Keys are Bool values and have an arraylist of RegisteredUser objects mapped to the key.
+    //  True if User is logged-in currently
+    //  False if User is Logged-out currently
+    //  When a User logs in, their User object instance should be moved from False to True
+    static HashMap<Boolean, ArrayList<RegisteredUser>> data = new HashMap<>();
+
     public UserData() {
-        // initialize new HashTables
-        Hashtable<String, String> allRegisteredUsersData = new Hashtable<>();
-        Hashtable<String, String> loggedInUsersData = new Hashtable<>();
+    }
 
-        Scanner allRegisteredUsers = new Scanner("AllRegisteredUsers.txt");
-        // map each registered user's email and password as a key value pair into HashTable
-        while (this.allRegisteredUsers.hasNextLine()) {
-            String line = this.allRegisteredUsers.nextLine();
-            String[] temp = line.split(",");
-            this.allRegisteredUsersData.put(temp[0], temp[1]);
-        }
+    /**
+     * @param u is a RegisteredUser object
+     * @return true/false bool telling if the user is logged in or not (True= logged in, false= not logged in)
+     *      or throws an exception which says that the Registered user is not in database
+     */
+    public boolean checkStatus(RegisteredUser u) throws Exception{
+        if (data.get(true).contains(u)) { return true; };
+        if (data.get(false).contains(u)) { return false; };
+        throw new Exception(u.toString() + " is not in database");
+    }
 
-        Scanner loggedInUsers = new Scanner("LoggedInUsers.txt");
-        // map each logged-in user's email and password as a key value pair into HashTable
-        while (this.loggedInUsers.hasNextLine()) {
-            String line = this.loggedInUsers.nextLine();
-            String[] temp = line.split(",");
-            this.loggedInUsersData.put(temp[0], temp[1]);
-        }
+    public boolean checkStatus(String email) throws Exception {
+        return checkStatus(getUser(email));
     }
 
     public boolean checkUser() {
         return true;
     }
 
-    private User getUsers() {
-        return new GuestUser();
+    /**
+     *
+     * @return an ArrayList containing all Users
+     */
+    public ArrayList<RegisteredUser> getUsers() {
+        ArrayList<RegisteredUser> users = new ArrayList<RegisteredUser>();
+        users.addAll(data.get(true));
+        users.addAll(data.get(false));
+        return users;
     }
+
+    /**
+     * USE THIS IF you want to work with a RegisteredUser's instance object but only have their email
+     *
+     * @param email string representing a RegisteredUser's email
+     * @return the instance object for the desired RegisteredUser
+     * @throws Exception if user is not in database
+     */
+    private RegisteredUser getUser(String email) throws Exception {
+        for (RegisteredUser u: getUsers()) {
+            if (u.toString() == email) { return u; };
+        }
+        throw new Exception("User not found");
+    }
+
 
     public void saveUser(String email, String password) throws IOException {
         // add to HashTable of Registered Users
@@ -48,28 +71,59 @@ public class UserData {
         writer.close();
     }
 
-    public void deleteUser(String email, String password) throws IOException {
-        this.allRegisteredUsersData.remove(email);
+    public boolean deleteUser(String email, String password) throws Exception {
+        if () {};
         // update text file - need to reread whole text file and skip that that line
 
     }
 
-    // feel free to change the parameters for the login and logout functions if needed
-    public void logInUser(String email, String password) throws IOException {
-        // authenticate - use getEmail and getPassword in RegisteredUser?
-        // update text file LoggedInUsers
-        BufferedWriter writer = new BufferedWriter(new FileWriter("LoggedInUsers.txt"));
-        writer.write(email + ", " + password);
-        writer.close();
-        // update HashTable LoggedInUsersData
-        this.loggedInUsersData.remove(email);
+    /**
+     *
+     * @param email a string representing an email for a registered user
+     * @param password a string representing a password for a registered user
+     * @return the RegisteredUser instance for this email and password
+     * @throws Exception Already logged in, incorrect password, or email not found.
+     */
+    public RegisteredUser logInUser(String email, String password) throws Exception {
+        if (checkStatus(email)) { throw new Exception("Already logged in");}
+        if (!(checkStatus(email))) {
+            for (RegisteredUser u: data.get(false)) {
+                if (u.toString() == email) {
+                    if (u.getPassword() == password) {
+                        data.get(false).remove(u);
+                        data.get(true).add(u);
+                        return u;
+                    }
+                    throw new Exception("Incorrect password");
+                }
+            }
+        }
+        throw new Exception("Email not found");
     }
 
-    public GuestUser logoutUser(String email, String password) {
-        // update text file LoggedInUsers
-        // update HashTable LoggedInUsersData
-        this.loggedInUsersData.remove(email);
-        // return a GuestUser instance
-        return new GuestUser();
+    /**
+     *
+     * @param email a string representing an email address for a registered user
+     * @param password a string representing a password for a registered user
+     * @return a GuestUser (if successfully logged out)
+     * @throws Exception if incorrect password, already logged out, or email not found
+     */
+    public GuestUser logoutUser(String email, String password) throws Exception{
+        if (checkStatus(email)) {
+            for (RegisteredUser u : data.get(true)) {
+                if (u.toString() == email) {
+                    if (u.getPassword() == password) {
+                        data.get(true).remove(u);
+                        data.get(false).add(u);
+                        return new GuestUser();
+                    };
+                    throw new Exception("Incorrect password");
+                }
+            }
+        }
+        if (!(checkStatus(email))) {
+            throw new Exception("Already logged out");
+        }
+        throw new Exception("Email not found");
+        }
     }
-}
