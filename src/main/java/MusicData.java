@@ -1,20 +1,63 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MusicData{
     /**
-     * NOTE: Assume that if an Artist will have information for EVERY WEEK in the Hashmap
+     * NOTE: Assume that an Artist will have information for EVERY WEEK in the Hashmap
      */
     static HashMap<Integer, ArrayList<Artist>> data = new HashMap<>();
 
-    private HashMap<Integer, MusicData> toBeDetermined  = new HashMap<>();
 
-    public ArrayList<Artist> retrieveWeek(int week) {
-        return data.get(week);
+    /**
+     * reads from relevant data files and stores info in data Hashmap
+     *
+     * @throws FileNotFoundException for Scanner sc
+     */
+    public void setData() throws FileNotFoundException {
+
+        for (int week=1; week<=3; week++) {
+            Scanner sc = new Scanner(new File("Data_" + week));
+            sc.useDelimiter(",");
+            sc.nextLine();
+            ArrayList<Artist> allArtists = new ArrayList<>();
+            while (sc.hasNextLine()) {
+                Artist a = setArtistData(sc, week);
+                allArtists.add(a); //add Artist to allArtists arraylist
+            }
+            data.put(week, allArtists); //store information in data HashMap
+            sc.close();
+        }
     }
+
+
+    /**
+     * Reads info from relevant file and stores in a new Artist instance
+     *
+     * @param sc Scanner passed from setData to read this line
+     * @param week Current week and file data is extracted from
+     *
+     * @return Artist instance with current week's info stored
+     */
+    public Artist setArtistData(Scanner sc, int week){
+        String name, genre;
+        int streams, follows;
+        //read all info
+        name = sc.next();
+        streams = Integer.parseInt(sc.next());
+        follows = Integer.parseInt(sc.next());
+        genre = sc.next();
+        Boolean[] likes = new Boolean[0];
+
+        return new Artist(follows, genre, name, likes, week, streams);
+    }
+
 
     public List<Artist> getTrending(int top, int startWeek, int endWeek) {
         return new ArrayList<>();
     }
+
 
     /**
      * Gets an artist recommendation within a specific genre, random if similar is false, otherwise uses the similarties
@@ -62,6 +105,7 @@ public class MusicData{
         return recommendation;
     }
 
+
     /**
      *
      * @return  latest week in the Hashmap (aka highest integer)
@@ -69,6 +113,8 @@ public class MusicData{
     static int getLatestWeek() {
         return Collections.max(data.keySet());
     }
+
+
     /**
      * Gets all streams of a given artist for given weeks
      *
@@ -86,22 +132,25 @@ public class MusicData{
         return to_return;
     }
 
+
 //    Helper method for getStreams that returns artist streams of a week
 //    Assumes artists for MusicData is stored in a key(week) to value(array of artists relationship)
     private int getStreamsHelper(String name, int week) {
         List<Artist> week_data = getArtists(week);
         for (Artist artist: week_data) {
-            if (Objects.equals(artist.getName(), name)) {
+            if (artist.getName().equals(name)) {
                 return artist.getStreams();
             }
         }
         return 0;
     }
 
+
 //    returns list of artist objects for current week
     public ArrayList<Artist> getArtists(int week){
         return data.get(week);
     }
+
 
     /**
      *
@@ -120,43 +169,85 @@ public class MusicData{
 
 
     /**
-     * Gets all artists within a specific Genre
+     * Retrieve all artists within given genre
      *
-     * @param genre gets all artists within this genre
-     * @return the lists of artists within the genre
+     * @param genre the genre being searched for
+     * @return list of all Artists in that genre
      */
     public List<Artist> getArtistsByGenre(String genre){
-        return null;
+        int week = getLatestWeek();
+        List<Artist> artist_in_genre = new ArrayList<>();
+        ArrayList<Artist> w_data = getArtists(week);
+
+        for (Artist a : w_data){
+            if (a.getGenre().equals(genre)){artist_in_genre.add(a); } //add artist to list if genre matches
+        }
+
+        return artist_in_genre;
     }
 
-    public void addArtistToGenre(){
-    }
-
-    public List<String> getGenres(){
-        return null;
-    }
-
-    public List<Artist> getTop(int week){
-        return null;
-    }
 
     /**
+     * gets all genres in MusicData files
      *
-     * @param artist
-     * @param week
+     * @return list of unique genres that artists are in
+     */
+    public List<String> getGenres(){
+        int week = getLatestWeek();
+        List<String> all_genres = new ArrayList<>();
+        ArrayList<Artist> w_data = getArtists(week);
+
+        for (Artist a : w_data){all_genres.add(a.getGenre()); }
+
+        return all_genres.stream().distinct().collect(Collectors.toList());
+    }
+
+
+    /**
+     * Gets the top artists of the week by streams
+     *
+     * @param week the current week for which we want the top artist
+     * @param amount how many top Artists are we looking for
+     * @return List of Artists who had the top streams of the week
+     */
+    public List<Artist> getTop(int week, int amount){
+        ArrayList<Artist> w_data = getArtists(week);
+        List<Artist> top = new ArrayList<>();
+
+        List<Integer> streams = new ArrayList<>();
+        Collections.sort(streams);
+
+        for (int amt = 0; amt < amount; amt++){
+            for (Artist a : w_data){
+                if (a.getStreams() == streams.get(amt)){
+                    top.add(a);
+                    break;
+                }
+            }
+        }
+
+        return top;
+    }
+
+
+    /**
+     * return info of artist needed
+     *
+     * @param artist name of artist we need data for
+     * @param week current week
      * @return A hashmap that represents artist data
      *      returns null if artist name is not in the arrayList of the given week
      *
      * PLEASE ASSUME THAT AN ARTIST WILL ALWAYS BE IN THE ARRAYLIST OF THE GIVEN WEEK (KEY)
      */
     public static HashMap<String, Object> getArtistData(String artist, int week){
-        Object artistObj = null;
-        for (Object a: data.get(week)) {
-            if (a.toString() == artist) { artistObj = a;}
+        Artist artistObj = null;
+        for (Artist a : data.get(week)) {
+            if (a.getName().equals(artist)) {artistObj = a; }
         }
+
         if (!(artistObj==null)) {
-            int index = data.get(week).indexOf(artistObj);
-            return (data.get(week).get(index).getInfo());
+            return artistObj.getInfo();
         }
         return null;
     }
