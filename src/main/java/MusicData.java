@@ -9,8 +9,6 @@ public class MusicData{
      */
     static HashMap<Integer, ArrayList<Artist>> data = new HashMap<>();
 
-    private HashMap<Integer, MusicData> toBeDetermined  = new HashMap<>();
-
     /**
      * reads from relevant data files and stores info in data Hashmap
      *
@@ -194,8 +192,6 @@ public class MusicData{
         return all_genres.stream().distinct().collect(Collectors.toList());
     }
 
-    public void addArtistToGenre(){
-    }
 
     /**
      * Gets the top artists of the week by streams
@@ -225,22 +221,23 @@ public class MusicData{
 
 
     /**
+     * return info of artist needed
      *
-     * @param artist
-     * @param week
+     * @param artist name of artist we need data for
+     * @param week current week
      * @return A hashmap that represents artist data
      *      returns null if artist name is not in the arrayList of the given week
      *
      * PLEASE ASSUME THAT AN ARTIST WILL ALWAYS BE IN THE ARRAYLIST OF THE GIVEN WEEK (KEY)
      */
     public static HashMap<String, Object> getArtistData(String artist, int week){
-        Object artistObj = null;
-        for (Object a: data.get(week)) {
-            if (a.toString() == artist) { artistObj = a;}
+        Artist artistObj = null;
+        for (Artist a : data.get(week)) {
+            if (a.getName().equals(artist)) {artistObj = a; }
         }
+
         if (!(artistObj==null)) {
-            int index = data.get(week).indexOf(artistObj);
-            return (data.get(week).get(index).getInfo());
+            return artistObj.getInfo();
         }
         return null;
     }
