@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MusicData{
     /**
@@ -161,10 +162,10 @@ public class MusicData{
 
 
     /**
-     * Gets all artists within a specific Genre
+     * Retrieve all artists within given genre
      *
-     * @param genre gets all artists within this genre
-     * @return the lists of artists within the genre
+     * @param genre the genre being searched for
+     * @return list of all Artists in that genre
      */
     public List<Artist> getArtistsByGenre(String genre){
         int week = getLatestWeek();
@@ -178,15 +179,38 @@ public class MusicData{
         return artist_in_genre;
     }
 
+    /**
+     * gets all genres in MusicData files
+     *
+     * @return list of unique genres that artists are in
+     */
+    public List<String> getGenres(){
+        int week = getLatestWeek();
+        List<String> all_genres = new ArrayList<>();
+        ArrayList<Artist> w_data = getArtists(week);
+
+        for (Artist a : w_data){all_genres.add(a.getGenre()); }
+
+        return all_genres.stream().distinct().collect(Collectors.toList());
+    }
+
     public void addArtistToGenre(){
     }
 
-    public List<String> getGenres(){
-        return null;
-    }
 
     public List<Artist> getTop(int week){
-        return null;
+        ArrayList<Artist> w_data = getArtists(week);
+        List<Artist> top = new ArrayList<>();
+        top.add(w_data.get(0));
+
+        for (Artist a : w_data){
+            if (a.getStreams() > top.get(0).getStreams()){
+                top.remove(0);
+                top.add(a);
+            } else if (a.getStreams() == top.get(0).getStreams()) {top.add(a); }
+        }
+
+        return top;
     }
 
     /**
