@@ -2,17 +2,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RegisteredUser extends User{
-    public RegisteredUser() {
+    private final String email;
+    private String password;
+    public ArrayList<String> follows;
 
+    public RegisteredUser(String email, String password) {
+        this.email = email;
+        this.password = password;
+        this.follows = new ArrayList<>();
     }
 
     public Alert getAlerts(double growthRate, boolean compare, int top) {
-        return new Alert();
+        return null;
     }
 
     public void setAlerts() {
 
     }
+
+    public String toString() { return this.email;}
 
     public void deleteAlert() {
 
@@ -27,12 +35,21 @@ public class RegisteredUser extends User{
         return true;
     }
 
-    public void logout() {
-
+    public GuestUser logout() throws Exception {
+        UserData u = new UserData();
+        return u.logoutUser(this.email, this.password);
     }
 
-    public void changePassword() {
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
 
+    public String getPassword() {
+        return this.password;
+    }
+
+    public String getEmail() {
+        return this.email;
     }
 
     public void setFollows() {

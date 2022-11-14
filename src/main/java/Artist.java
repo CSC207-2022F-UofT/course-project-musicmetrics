@@ -1,14 +1,20 @@
+import java.util.HashMap;
+
 public class Artist {
     private int follows;
     private String genre;
     private String name;
     private Boolean[] likes;
+    private int streams;
+    public int time;
+
     /**
      *Creates a new Artist object with everything blank
      */
     public Artist() {
 
     }
+
     /**
      *Creates a new Artist object with the follows, genre and likes.
      *
@@ -16,13 +22,20 @@ public class Artist {
      * @param g The genre of the artist
      * @param n The name of the artist
      * @param l The list of if user's like the artist
+     * @param week An integer containing the week number
+     *             ex: if this artist's data is for week 3, then week=3
      */
-    public Artist(int f, String g, String n, Boolean[] l) {
+    public Artist(int f, String g, String n, Boolean[] l, int week, int streams) {
         this.follows = f;
         this.genre = g;
         this.name = n;
         this.likes = l;
+        this.time = week;
+        this.streams = streams;
     }
+    public int getStreams() {return this.streams;}
+
+    public String getName() {return this.name;}
     public int getFollows() {
         return this.follows;
     }
@@ -38,5 +51,42 @@ public class Artist {
      */
     public Boolean[] getLikes(){
         return this.likes;
+    }
+
+    /**
+     *
+     * @return a HashMap displaying this artist's information
+     */
+    public HashMap<String, Object> getInfo() {
+        HashMap<String, Object> info = new HashMap<>();
+        info.put("Name", this.name);
+        info.put("Genre", this.genre);
+        info.put("Follows", this.follows);
+        info.put("Streams", this.streams);
+        info.put("TimeStamp", this.time);
+        return info;
+    }
+
+    public int getTimeStamp() { return this.time;}
+
+    public String toString() { return this.name;}
+
+    /**
+     *
+     * @param artistTwo     An artist's name
+     * @return      A HashMap with artist name as keys
+     *                  returns null if artistTwo does not have data correlating to artistOne's week/timestamp
+     *
+     * When comparing artists, the method will compare the two artists based on THE FIRST ARTIST'S timestamp.
+     *      EX: if this artist instance is for week 3, then it will be compared against artistTwo's week 3.
+     */
+    public HashMap<String, Object> Compare(String artistTwo) {
+        HashMap<String, Object> data = new HashMap<>();
+        data.put(this.getName(), this.getInfo());
+        if (MusicData.data.containsKey(this.getTimeStamp())) {
+            data.put(artistTwo, MusicData.getArtistData(artistTwo, this.getTimeStamp()));
+            return data;
+        }
+        return null;
     }
 }
