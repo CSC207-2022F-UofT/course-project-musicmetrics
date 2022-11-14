@@ -20,6 +20,8 @@ public class RegisteredUser extends User{
 
     }
 
+    public String toString() { return this.email;}
+
     public void deleteAlert() {
 
     }
@@ -33,7 +35,7 @@ public class RegisteredUser extends User{
         return true;
     }
 
-    public GuestUser logout() {
+    public GuestUser logout() throws Exception {
         UserData u = new UserData();
         return u.logoutUser(this.email, this.password);
     }
