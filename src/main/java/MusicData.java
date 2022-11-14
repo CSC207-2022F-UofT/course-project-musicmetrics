@@ -10,28 +10,46 @@ public class MusicData{
 
     private HashMap<Integer, MusicData> toBeDetermined  = new HashMap<>();
 
+    /**
+     * reads from relevant data files and stores info in data Hashmap
+     *
+     * @throws FileNotFoundException
+     */
     public void setData() throws FileNotFoundException {
-        String name, genre;
-        int streams, follows;
+
         for (int week=1; week<=3; week++) {
             Scanner sc = new Scanner(new File("Data_" + week));
             sc.useDelimiter(",");
             sc.nextLine();
             ArrayList<Artist> allArtists = new ArrayList<>();
             while (sc.hasNextLine()) {
-                //read all info
-                name = sc.next();
-                streams = Integer.parseInt(sc.next());
-                follows = Integer.parseInt(sc.next());
-                genre = sc.next();
-
-                Boolean[] likes = new Boolean[0];
-                Artist a = new Artist(follows, genre, name, likes, week, streams); //create artist instance
+                Artist a = setArtistData(sc, week);
                 allArtists.add(a); //add Artist to allArtists arraylist
             }
             data.put(week, allArtists); //store information in data HashMap
             sc.close();
         }
+    }
+
+    /**
+     * Reads info from relevant file and stores in a new Artist instance
+     *
+     * @param sc Scanner passed from setData to read this line
+     * @param week Current week and file data is extracted from
+     *
+     * @return Artist instance with current week's info stored
+     */
+    public Artist setArtistData(Scanner sc, int week){
+        String name, genre;
+        int streams, follows;
+        //read all info
+        name = sc.next();
+        streams = Integer.parseInt(sc.next());
+        follows = Integer.parseInt(sc.next());
+        genre = sc.next();
+        Boolean[] likes = new Boolean[0];
+
+        return new Artist(follows, genre, name, likes, week, streams);
     }
 
     public ArrayList<Artist> retrieveWeek(int week) {
@@ -95,6 +113,7 @@ public class MusicData{
     static int getLatestWeek() {
         return Collections.max(data.keySet());
     }
+
     /**
      * Gets all streams of a given artist for given weeks
      *
