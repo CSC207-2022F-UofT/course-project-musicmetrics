@@ -197,21 +197,32 @@ public class MusicData{
     public void addArtistToGenre(){
     }
 
-
-    public List<Artist> getTop(int week){
+    /**
+     * Gets the top artists of the week by streams
+     *
+     * @param week the current week for which we want the top artist
+     * @param amount how many top Artists are we looking for
+     * @return List of Artists who had the top streams of the week
+     */
+    public List<Artist> getTop(int week, int amount){
         ArrayList<Artist> w_data = getArtists(week);
         List<Artist> top = new ArrayList<>();
-        top.add(w_data.get(0));
 
-        for (Artist a : w_data){
-            if (a.getStreams() > top.get(0).getStreams()){
-                top.remove(0);
-                top.add(a);
-            } else if (a.getStreams() == top.get(0).getStreams()) {top.add(a); }
+        List<Integer> streams = new ArrayList<>();
+        Collections.sort(streams);
+
+        for (int amt = 0; amt < amount; amt++){
+            for (Artist a : w_data){
+                if (a.getStreams() == streams.get(amt)){
+                    top.add(a);
+                    break;
+                }
+            }
         }
 
         return top;
     }
+
 
     /**
      *
