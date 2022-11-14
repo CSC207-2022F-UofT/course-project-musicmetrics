@@ -1,12 +1,38 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 public class MusicData{
     /**
-     * NOTE: Assume that if an Artist will have information for EVERY WEEK in the Hashmap
+     * NOTE: Assume that an Artist will have information for EVERY WEEK in the Hashmap
      */
     static HashMap<Integer, ArrayList<Artist>> data = new HashMap<>();
 
     private HashMap<Integer, MusicData> toBeDetermined  = new HashMap<>();
+
+    public void setData() throws FileNotFoundException {
+        String name, genre;
+        int streams, follows;
+        for (int week=1; week<=3; week++) {
+            Scanner sc = new Scanner(new File("Data_" + week));
+            sc.useDelimiter(",");
+            sc.nextLine();
+            ArrayList<Artist> allArtists = new ArrayList<>();
+            while (sc.hasNextLine()) {
+                //read all info
+                name = sc.next();
+                streams = Integer.parseInt(sc.next());
+                follows = Integer.parseInt(sc.next());
+                genre = sc.next();
+
+                Boolean[] likes = new Boolean[0];
+                Artist a = new Artist(follows, genre, name, likes, week, streams); //create artist instance
+                allArtists.add(a); //add Artist to allArtists arraylist
+            }
+            data.put(week, allArtists); //store information in data HashMap
+            sc.close();
+        }
+    }
 
     public ArrayList<Artist> retrieveWeek(int week) {
         return data.get(week);
