@@ -9,6 +9,7 @@ public class MusicData{
      */
     static HashMap<Integer, ArrayList<Artist>> data = new HashMap<>();
 
+
     /**
      * reads from relevant data files and stores info in data Hashmap
      *
@@ -29,6 +30,7 @@ public class MusicData{
             sc.close();
         }
     }
+
 
     /**
      * Reads info from relevant file and stores in a new Artist instance
@@ -51,9 +53,11 @@ public class MusicData{
         return new Artist(follows, genre, name, likes, week, streams);
     }
 
+
     public List<Artist> getTrending(int top, int startWeek, int endWeek) {
         return new ArrayList<>();
     }
+
 
     /**
      * Gets an artist recommendation within a specific genre, random if similar is false, otherwise uses the similarties
@@ -101,6 +105,7 @@ public class MusicData{
         return recommendation;
     }
 
+
     /**
      *
      * @return  latest week in the Hashmap (aka highest integer)
@@ -108,6 +113,7 @@ public class MusicData{
     static int getLatestWeek() {
         return Collections.max(data.keySet());
     }
+
 
     /**
      * Gets all streams of a given artist for given weeks
@@ -126,6 +132,7 @@ public class MusicData{
         return to_return;
     }
 
+
 //    Helper method for getStreams that returns artist streams of a week
 //    Assumes artists for MusicData is stored in a key(week) to value(array of artists relationship)
     private int getStreamsHelper(String name, int week) {
@@ -138,10 +145,12 @@ public class MusicData{
         return 0;
     }
 
+
 //    returns list of artist objects for current week
     public ArrayList<Artist> getArtists(int week){
         return data.get(week);
     }
+
 
     /**
      *
@@ -176,6 +185,7 @@ public class MusicData{
 
         return artist_in_genre;
     }
+
 
     /**
      * gets all genres in MusicData files
