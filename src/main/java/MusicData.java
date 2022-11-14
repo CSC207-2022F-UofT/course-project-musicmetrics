@@ -13,7 +13,7 @@ public class MusicData{
     /**
      * reads from relevant data files and stores info in data Hashmap
      *
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException for Scanner sc
      */
     public void setData() throws FileNotFoundException {
 
@@ -50,10 +50,6 @@ public class MusicData{
         Boolean[] likes = new Boolean[0];
 
         return new Artist(follows, genre, name, likes, week, streams);
-    }
-
-    public ArrayList<Artist> retrieveWeek(int week) {
-        return data.get(week);
     }
 
     public List<Artist> getTrending(int top, int startWeek, int endWeek) {
@@ -136,7 +132,7 @@ public class MusicData{
     private int getStreamsHelper(String name, int week) {
         List<Artist> week_data = getArtists(week);
         for (Artist artist: week_data) {
-            if (Objects.equals(artist.getName(), name)) {
+            if (artist.getName().equals(name)) {
                 return artist.getStreams();
             }
         }
@@ -171,7 +167,15 @@ public class MusicData{
      * @return the lists of artists within the genre
      */
     public List<Artist> getArtistsByGenre(String genre){
-        return null;
+        int week = getLatestWeek();
+        List<Artist> artist_in_genre = new ArrayList<>();
+        ArrayList<Artist> w_data = getArtists(week);
+
+        for (Artist a : w_data){
+            if (a.getGenre().equals(genre)){artist_in_genre.add(a); } //add artist to list if genre matches
+        }
+
+        return artist_in_genre;
     }
 
     public void addArtistToGenre(){
