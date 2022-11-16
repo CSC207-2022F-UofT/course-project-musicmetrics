@@ -18,17 +18,17 @@ public class Artist {
     /**
      *Creates a new Artist object with the follows, genre and likes.
      *
-     * @param f The follows of the artist
-     * @param g The genre of the artist
-     * @param n The name of the artist
+     * @param follows The follows of the artist
+     * @param genre The genre of the artist
+     * @param name The name of the artist
      * @param l The list of if user's like the artist
      * @param week An integer containing the week number
      *             ex: if this artist's data is for week 3, then week=3
      */
-    public Artist(int f, String g, String n, Boolean[] l, int week, int streams) {
-        this.follows = f;
-        this.genre = g;
-        this.name = n;
+    public Artist(int follows, String genre, String name, Boolean[] l, int week, int streams) {
+        this.follows = follows;
+        this.genre = genre;
+        this.name = name;
         this.likes = l;
         this.time = week;
         this.streams = streams;
