@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -23,7 +24,7 @@ public class GuestUser extends User{
     public void deleteUser(){
     }
 
-    public void logInUser() {
+    public void logInUser() throws Exception {
         UserData u = new UserData();
         // ask for email and password
         // call on u.login
