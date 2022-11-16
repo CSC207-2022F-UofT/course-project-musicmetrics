@@ -145,6 +145,22 @@ public class MusicData{
         return 0;
     }
 
+    /**
+     * converts a string of 1s and 0s into a boolean array
+     *
+     * @param binary a string of 1s and 0s to represent likes
+     * @return boolean array corresponding to binary
+     */
+    private Boolean[] likesConverter(String binary) {
+        String[] binaryList = binary.split(" ");
+        Boolean[] likes = new Boolean[50];
+        for(int i = 0; i < binaryList.length; i++){
+            String s = binaryList[i];
+            likes[i] = s.equals("1");
+        }
+        return likes;
+    }
+
 
 //    returns list of artist objects for current week
     public ArrayList<Artist> getArtists(int week){
