@@ -43,6 +43,7 @@ public class MusicData{
     public Artist setArtistData(Scanner sc, int week){
         String name, genre;
         int streams, follows;
+
         //read all info
         name = sc.next();
         streams = Integer.parseInt(sc.next());
@@ -54,8 +55,36 @@ public class MusicData{
     }
 
 
-    public List<Artist> getTrending(int top, int startWeek, int endWeek) {
-        return new ArrayList<>();
+    /**
+     * Compare past streams to a current week to see if an artist was trending during a given week
+     * Trending is defined as an increase of 10% or 10 million streams across the weeks
+     *
+     * @param startWeek first week to compare streams from
+     * @param endWeek second week to compare streams from
+     * @return list of all artists trending this week
+     */
+    public List<Artist> getTrending(int startWeek, int endWeek) {
+        List<Artist> trending = new ArrayList<>();
+        ArrayList<Artist> startData = data.get(startWeek);
+        ArrayList<Artist> endData = data.get(endWeek);
+
+        for (Artist a : startData){
+            for (Artist b : endData){
+                if (a.getName().equals(b.getName())){if (isTrending(a, b)){trending.add(b); } }
+            }
+        }
+        return trending;
+    }
+
+    /**
+     * Helper method for getTrending that returns a boolean value based on if trending criterea is met
+     *
+     * @param a Artist instance from earlier week
+     * @param b Artist instance from later week
+     * @return Boolean whether there has been a trending-worthy increase
+     */
+    public Boolean isTrending(Artist a, Artist b){
+        return (b.getStreams() > a.getStreams()*1.10 || b.getStreams() > a.getStreams() + 10000000);
     }
 
 
