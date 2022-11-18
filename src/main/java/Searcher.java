@@ -1,7 +1,6 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Searcher {
@@ -13,8 +12,19 @@ public class Searcher {
     /**
      * Creates a new Searcher instance consisting of every possible action that the User can take.
      */
-    public Searcher() {
-        // should read from a file
+    public Searcher() throws FileNotFoundException {
+        Scanner actionScanner = new Scanner(new File("src/main/java/database/actions"));
+        while (actionScanner.hasNextLine()) {
+            this.actions.add(actionScanner.nextLine());
+        }
+        Scanner artistScanner = new Scanner(new File("src/main/java/database/artists"));
+        while (artistScanner.hasNextLine()) {
+            this.artists.add(artistScanner.nextLine());
+        }
+        Scanner genreScanner = new Scanner(new File("src/main/java/database/genres"));
+        while (genreScanner.hasNextLine()) {
+            this.genres.add(genreScanner.nextLine());
+        }
     }
 
     /**
@@ -28,12 +38,7 @@ public class Searcher {
         for (String action : this.actions) {
             double score = getRelevantScore(keyword, action);
             if (score > 0) {
-                if (scoreMap.size() < 10) {
-                    scoreMap.put(action, score);
-                }
-                else {
-                    break;
-                }
+                scoreMap.put(action, score);
             }
         }
         return getKeyListSortedByValue(scoreMap);
@@ -50,12 +55,7 @@ public class Searcher {
         for (String artist : this.artists) {
             double score = getRelevantScore(keyword, artist);
             if (score > 0) {
-                if (scoreMap.size() < 10) {
-                    scoreMap.put(artist, score);
-                }
-                else {
-                    break;
-                }
+                scoreMap.put(artist, score);
             }
         }
         return getKeyListSortedByValue(scoreMap);
@@ -72,15 +72,11 @@ public class Searcher {
         for (String genre : this.genres) {
             double score = getRelevantScore(keyword, genre);
             if (score > 0) {
-                if (scoreMap.size() < 10) {
-                    scoreMap.put(genre, score);
-                }
-                else {
-                    break;
-                }
+                scoreMap.put(genre, score);
             }
         }
         return getKeyListSortedByValue(scoreMap);
+
     }
 
     /**
@@ -92,11 +88,11 @@ public class Searcher {
      * @param str the String being compared to keyword to find relativity
      * @return a double relevant score (0 <= returnValue <= 1.0)
      */
-    private double getRelevantScore(String keyword, String str) {
+    public static double getRelevantScore(String keyword, String str) {
         if (str.length() > keyword.length() && str.toLowerCase().contains(keyword.toLowerCase())) {
-            return 1.0 / (str.toLowerCase().indexOf(keyword.toLowerCase() + 1));
+            return 100.0 / ((str.toLowerCase().indexOf(keyword.toLowerCase()) * 100.0) + str.length());
         }
-        return 0;
+        return 0.0;
     }
 
     /**
@@ -105,16 +101,21 @@ public class Searcher {
      * @param map a map contains generic type as its key and double as its value
      * @return an ArrayList of keys of the map sorted by values
      */
-    private <T> List<T> getKeyListSortedByValue(Map<T, Double> map) {
+    public static <T> List<T> getKeyListSortedByValue(Map<T, Double> map) {
         List<T> sortedList = new ArrayList<>();
         if (map.size() <= 1) {
             sortedList.addAll(map.keySet());
             return sortedList;
         }
         List<Map.Entry<T, Double>> entries = map.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue()).collect(Collectors.toList());
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).collect(Collectors.toList());
         for (Map.Entry<T, Double> entry : entries) {
-            sortedList.add(entry.getKey());
+            if (sortedList.size() < 10) {
+                sortedList.add(entry.getKey());
+            }
+            else {
+                break;
+            }
         }
         return sortedList;
     }
