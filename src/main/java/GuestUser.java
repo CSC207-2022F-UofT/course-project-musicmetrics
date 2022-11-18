@@ -27,7 +27,12 @@ public class GuestUser extends User{
     public void logInUser() throws Exception {
         UserData u = new UserData();
         // ask for email and password
+        Scanner email = new Scanner(System.in);
+        System.out.println("Enter your email: ");
+        Scanner password = new Scanner(System.in);
+        System.out.println("Enter your password: ");
         // call on u.login
+        u.logInUser(String.valueOf(email), String.valueOf(password));
     }
     public void logoutUser(){
     }
