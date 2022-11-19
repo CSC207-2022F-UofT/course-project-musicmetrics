@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Alert {
-    int stream;
+    String message;
     static double growth_rate = 1.25;
     ArrayList<String> tops ;
 
@@ -13,6 +13,12 @@ public class Alert {
 
 
     }
+
+    /** trigger checks if the artists streams had the sufficient amount of growth compare to its last week
+     * streams
+     * @param artists is the list of all artists that in trigger, their streams are compared and the top ones
+     *                will be determined.
+     */
     public void trigger(ArrayList<Artist> artists){
         for (Artist i: artists){
             List<Integer> weeks = Arrays.asList(MusicData.getLatestWeek() - 1, MusicData.getLatestWeek());
@@ -24,6 +30,6 @@ public class Alert {
         }
     }
     public void sendAlert(){
-        String message = this.tops.get(this.tops.size() - 1) + "is now on fire";
+        this.message = this.tops.get(this.tops.size() - 1) + "is now on fire";
     }
 }
