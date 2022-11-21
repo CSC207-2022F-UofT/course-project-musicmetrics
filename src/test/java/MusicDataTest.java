@@ -72,10 +72,10 @@ public class MusicDataTest {
         test.addArtist(Kendrick2);
         test.addArtist(Taylor2);
         // Since Kendrick is the only artist who has an increase in streams, he should be the only artist in the list
-        Assertions.assertTrue(MusicData.getTrending(1, 1).contains(Kendrick2));
-        Assertions.assertFalse(MusicData.getTrending(1, 1).contains(Drake2));
-        Assertions.assertFalse(MusicData.getTrending(1, 1).contains(Jcole2));
-        Assertions.assertFalse(MusicData.getTrending(1, 1).contains(Taylor2));
+        Assertions.assertTrue(MusicData.getTrending(1, 1).contains(Kendrick));
+        Assertions.assertFalse(MusicData.getTrending(1, 1).contains(Drake));
+        Assertions.assertFalse(MusicData.getTrending(1, 1).contains(Jcole));
+        Assertions.assertFalse(MusicData.getTrending(1, 1).contains(Taylor));
 
     }
 
