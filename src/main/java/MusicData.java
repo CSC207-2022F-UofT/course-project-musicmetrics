@@ -17,7 +17,7 @@ public class MusicData{
     public static void setData() throws FileNotFoundException {
 
         for (int week=1; week<=3; week++) {
-            Scanner sc = new Scanner(new File("/Users/michael/IdeaProjects/course-project-musicmetrics/src/main/java/Data_" + week));
+            Scanner sc = new Scanner(new File("src/main/java/Data_" + week));
             sc.useDelimiter(", ");
             sc.nextLine();
             ArrayList<Artist> allArtists = new ArrayList<>();
@@ -232,7 +232,7 @@ public class MusicData{
      * @param genre the genre being searched for
      * @return list of all Artists in that genre
      */
-    public List<Artist> getArtistsByGenre(String genre){
+    public static List<Artist> getArtistsByGenre(String genre){
         int week = getLatestWeek();
         List<Artist> artist_in_genre = new ArrayList<>();
         ArrayList<Artist> w_data = getArtists(week);
@@ -268,7 +268,7 @@ public class MusicData{
      * @param amount how many top Artists are we looking for
      * @return List of Artists who had the top streams of the week
      */
-    public List<Artist> getTop(int week, int amount){
+    public static List<Artist> getTop(int week, int amount){
         ArrayList<Artist> w_data = getArtists(week);
         List<Artist> top = new ArrayList<>();
 

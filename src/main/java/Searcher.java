@@ -8,7 +8,6 @@ public class Searcher {
     private List<String> actions = new ArrayList<>();
     private List<String> artists = new ArrayList<>();
     private List<String> genres = new ArrayList<>();
-    private MusicData musicData = new MusicData();
 
     /**
      * Creates a new Searcher instance consisting of every possible action that the User can take.
@@ -26,8 +25,7 @@ public class Searcher {
         while (genreScanner.hasNextLine()) {
             this.genres.add(genreScanner.nextLine());
         }
-//        load music data
-//        this.musicData.setData();
+        MusicData.setData();
     }
 
     /**
@@ -48,18 +46,28 @@ public class Searcher {
     }
 
     /**
-     * Returns an ArrayList of top n Artist where n is given in the parameter action.
-     * Returns null if the keyword "top" is not found in the given action.
+     * Prints out relevant information based on the given action.
+     * Available actions: top, recommend
      *
      * @param action the action that User chose to take
-     * @return an ArrayList of Artist of size n
      */
-    public List<Artist> actionResult(String action) {
+    public void actionResult(String action) {
         if (action.startsWith("top")) {
             String[] split = action.split(" ");
-            return this.musicData.getTop(MusicData.getLatestWeek(), Integer.parseInt(split[1]));
+            List<Artist> artists = MusicData.getTop(MusicData.getLatestWeek(), Integer.parseInt(split[1]));
+            for (int i = 0;i < artists.size();i++) {
+                System.out.println((i + 1) + ". " + artists.get(i).getName());
+            }
         }
-        return null;
+        else if (action.startsWith("recommend")) {
+            String genre = action.substring(10, action.indexOf("artist") - 1);
+            MusicData mD = new MusicData();
+            GuestUser gU = new GuestUser();
+            Artist artist = mD.recommendArtist(genre, false, gU);
+            for (Map.Entry<String, Object> entry : artist.getInfo().entrySet()) {
+                System.out.println(entry.getKey() + ": " + entry.getValue());
+            }
+        }
     }
 
     /**
@@ -87,7 +95,7 @@ public class Searcher {
      * @return an Artist with the given name
      */
     public Artist artistResult(String name) {
-        List<Artist> artists = this.musicData.getArtists(MusicData.getLatestWeek());
+        List<Artist> artists = MusicData.getArtists(MusicData.getLatestWeek());
         for (Artist artist : artists) {
             if (artist.getName().equals(name)) {
                 return artist;
@@ -121,7 +129,7 @@ public class Searcher {
      * @return an ArrayList of Artist with the given genre
      */
     public List<Artist> genreResult(String genre) {
-        return musicData.getArtistsByGenre(genre);
+        return MusicData.getArtistsByGenre(genre);
     }
 
     /**
@@ -131,7 +139,7 @@ public class Searcher {
      *
      * @param keyword relativity keyword
      * @param str the String being compared to keyword to find relativity
-     * @return a double relevant score (0 <= returnValue <= 1.0)
+     * @return a double relevant score (0 <= returnValue <= 100.0)
      */
     public static double getRelevantScore(String keyword, String str) {
         if (str.length() > keyword.length() && str.toLowerCase().contains(keyword.toLowerCase())) {
@@ -183,12 +191,9 @@ public class Searcher {
                 }
                 System.out.print("Please choose one of suggestions above (provide index): ");
                 try {
-                    int index = Integer.parseInt(scanner.nextLine());
+                    int index = Integer.parseInt(scanner.nextLine().strip());
                     if (1 <= index && index <= actions.size()) {
-                        List<Artist> artists = searcher.actionResult(actions.get(Integer.parseInt(input.strip()) - 1));
-                        for (int i = 0;i < artists.size();i++) {
-                            System.out.println((i + 1) + ". " + artists.get(i).getName());
-                        }
+                        searcher.actionResult(actions.get(index - 1));
                     }
                     else {
                         System.out.println("Invalid index");
@@ -196,8 +201,6 @@ public class Searcher {
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid index");
                 }
-
-
             }
         }
         else if (input.equalsIgnoreCase("artist")) {
@@ -213,14 +216,12 @@ public class Searcher {
                 }
                 System.out.print("Please choose one of artists above you want to see (provide index): ");
                 try {
-                    int index = Integer.parseInt(scanner.nextLine());
+                    int index = Integer.parseInt(scanner.nextLine().strip());
                     if (1 <= index && index <= artists.size()) {
-                        Artist artist = searcher.artistResult(artists.get(Integer.parseInt(input.strip()) - 1));
-                        System.out.println("Name: " + artist.getName());
-                        System.out.println("Genre: " + artist.getGenre());
-                        System.out.println("Streams: " + artist.getStreams());
-                        System.out.println("Follows: " + artist.getFollows());
-
+                        Artist artist = searcher.artistResult(artists.get(index - 1));
+                        for (Map.Entry<String, Object> entry : artist.getInfo().entrySet()) {
+                            System.out.println(entry.getKey() + ": " + entry.getValue());
+                        }
                     }
                     else {
                         System.out.println("Invalid index");
@@ -228,45 +229,37 @@ public class Searcher {
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid index");
                 }
-
             }
         }
         else if (input.equalsIgnoreCase("genres")) {
-            System.out.print("What genre would you like a recommendation in? ");
+            System.out.print("What genre are you interested in? ");
             input = scanner.nextLine();
             List<String> genres = searcher.filterGenre(input);
             if (genres.size() == 0) {
                 System.out.println("It seems like we don't have that genre.");
-            }
-            else {
-                for (int i = 0;i < genres.size();i++) {
+            } else {
+                for (int i = 0; i < genres.size(); i++) {
                     System.out.println((i + 1) + ". " + genres.get(i));
                 }
-                System.out.print("Please choose one of genres above you want a recommendation in (provide index): ");
+                System.out.print("Please choose one of genres above you are interested (provide index): ");
                 try {
-                    int index = Integer.parseInt(scanner.nextLine());
+                    int index = Integer.parseInt(scanner.nextLine().strip());
                     if (1 <= index && index <= genres.size()) {
-                        MusicData mD = new MusicData();
-                        GuestUser gU = new GuestUser();
-                        Artist artist = mD.recommendArtist(genres.get(Integer.parseInt(input.strip()) - 1), false, gU);
-                        System.out.println("Name: " + artist.getName());
-                        System.out.println("Genre: " + artist.getGenre());
-                        System.out.println("Streams: " + artist.getStreams());
-                        System.out.println("Follows: " + artist.getFollows());
-                    }
-                    else {
+                        List<Artist> artists = searcher.genreResult(genres.get(index - 1));
+                        for (int i = 0;i < artists.size();i++) {
+                            System.out.println((i + 1) + ". " + artists.get(i).getName());
+                        }
+                    } else {
                         System.out.println("Invalid index");
                     }
-                    }
-                catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     System.out.println("Invalid index");
                 }
-                }
-
-            }
-        else {
-            System.out.println("Invalid search type, please enter keyword, genres or artist.");
             }
         }
+        else {
+            System.out.println("Invalid search type, please enter keyword, genres or artist.");
+        }
     }
+}
 
