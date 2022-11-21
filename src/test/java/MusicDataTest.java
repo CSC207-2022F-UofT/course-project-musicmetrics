@@ -48,10 +48,10 @@ public class MusicDataTest {
 
         //Test getTop
         // This one should only include Kendrick since he has the most streams and the amount = 1
-        Assertions.assertEquals(MusicData.getTop(1, 1).indexOf(Kendrick), 0);
+        Assertions.assertEquals(MusicData.getTop(1, 1).get(0), Kendrick);
         Assertions.assertFalse(MusicData.getTop(1, 1).contains(Drake));
         // This one should include Jcole and Kendrick since the amount = 2 and Jcole is 2nd highest streams
-        Assertions.assertEquals(MusicData.getTop(1, 2).indexOf(Jcole), 1);
+        Assertions.assertEquals(MusicData.getTop(1, 2).get(1), Jcole);
 
 
 
