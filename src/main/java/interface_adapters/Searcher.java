@@ -1,3 +1,9 @@
+package interface_adapters;
+
+import entities.Artist;
+import entities.GuestUser;
+import use_cases.MusicData;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -13,15 +19,15 @@ public class Searcher {
      * Creates a new Searcher instance consisting of every possible action that the User can take.
      */
     public Searcher() throws FileNotFoundException {
-        Scanner actionScanner = new Scanner(new File("src/main/java/database/actions"));
+        Scanner actionScanner = new Scanner(new File("src/main/java/interface_adapters/searcher_database/actions"));
         while (actionScanner.hasNextLine()) {
             this.actions.add(actionScanner.nextLine());
         }
-        Scanner artistScanner = new Scanner(new File("src/main/java/database/artists"));
+        Scanner artistScanner = new Scanner(new File("src/main/java/interface_adapters/searcher_database/artists"));
         while (artistScanner.hasNextLine()) {
             this.artists.add(artistScanner.nextLine());
         }
-        Scanner genreScanner = new Scanner(new File("src/main/java/database/genres"));
+        Scanner genreScanner = new Scanner(new File("src/main/java/interface_adapters/searcher_database/genres"));
         while (genreScanner.hasNextLine()) {
             this.genres.add(genreScanner.nextLine());
         }

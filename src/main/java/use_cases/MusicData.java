@@ -1,12 +1,19 @@
+package use_cases;
+
+import entities.Artist;
+import entities.RegisteredUser;
+import entities.User;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
+
 public class MusicData{
     /**
      * NOTE: Assume that an Artist will have information for EVERY WEEK in the Hashmap
      */
-    static HashMap<Integer, ArrayList<Artist>> data = new HashMap<>();
+    public static HashMap<Integer, ArrayList<Artist>> data = new HashMap<>();
 
 
     /**
@@ -152,7 +159,7 @@ public class MusicData{
      *
      * @return  latest week in the Hashmap (aka the highest integer)
      */
-    static int getLatestWeek() {
+    public static int getLatestWeek() {
         return Collections.max(data.keySet());
     }
 
