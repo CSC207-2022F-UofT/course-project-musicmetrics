@@ -168,7 +168,7 @@ public class Searcher {
     public static void main(String[] args) throws FileNotFoundException {
         Searcher searcher = new Searcher();
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Please choose search type (keyword, artist): ");
+        System.out.print("Please choose search type (keyword, artist, genres): ");
         String input = scanner.nextLine();
         if (input.equalsIgnoreCase("keyword")) {
             System.out.print("What do you want to search? ");
@@ -231,8 +231,42 @@ public class Searcher {
 
             }
         }
+        else if (input.equalsIgnoreCase("genres")) {
+            System.out.print("What genre would you like a recommendation in? ");
+            input = scanner.nextLine();
+            List<String> genres = searcher.filterGenre(input);
+            if (genres.size() == 0) {
+                System.out.println("It seems like we don't have that genre.");
+            }
+            else {
+                for (int i = 0;i < genres.size();i++) {
+                    System.out.println((i + 1) + ". " + genres.get(i));
+                }
+                System.out.print("Please choose one of genres above you want a recommendation in (provide index): ");
+                try {
+                    int index = Integer.parseInt(scanner.nextLine());
+                    if (1 <= index && index <= genres.size()) {
+                        MusicData mD = new MusicData();
+                        GuestUser gU = new GuestUser();
+                        Artist artist = mD.recommendArtist(genres.get(Integer.parseInt(input.strip()) - 1), false, gU);
+                        System.out.println("Name: " + artist.getName());
+                        System.out.println("Genre: " + artist.getGenre());
+                        System.out.println("Streams: " + artist.getStreams());
+                        System.out.println("Follows: " + artist.getFollows());
+                    }
+                    else {
+                        System.out.println("Invalid index");
+                    }
+                    }
+                catch (NumberFormatException e) {
+                    System.out.println("Invalid index");
+                }
+                }
+
+            }
         else {
-            System.out.println("Invalid search type, please enter keyword or artist.");
+            System.out.println("Invalid search type, please enter keyword, genres or artist.");
+            }
         }
     }
-}
+
