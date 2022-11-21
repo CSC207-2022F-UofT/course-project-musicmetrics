@@ -271,7 +271,6 @@ public class MusicData{
         List<Artist> top = new ArrayList<>();
 
         List<Integer> streams = new ArrayList<>();
-        for (Artist a : w_data){ streams.add(a.getStreams());}
         Collections.sort(streams);
 
         for (int amt = 0; amt < amount; amt++){
@@ -282,6 +281,7 @@ public class MusicData{
                 }
             }
         }
+
         return top;
     }
 
