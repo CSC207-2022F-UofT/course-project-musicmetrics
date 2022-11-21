@@ -27,11 +27,11 @@ public class MusicDataTest {
         test.addArtist(Drake);
         Assertions.assertEquals(MusicData.data.size(), 1);
         test.addArtist(Jcole);
-        Assertions.assertEquals(MusicData.data.size(), 2);
+        Assertions.assertEquals(MusicData.data.get(1).size(), 2);
         test.addArtist(Kendrick);
-        Assertions.assertEquals(MusicData.data.size(), 3);
+        Assertions.assertEquals(MusicData.data.get(1).size(), 3);
         test.addArtist(Taylor);
-        Assertions.assertEquals(MusicData.data.size(), 4);
+        Assertions.assertEquals(MusicData.data.get(1).size(), 4);
 
         //Test that data hashmap has correct latest week
         Assertions.assertEquals(MusicData.getLatestWeek(),1);
