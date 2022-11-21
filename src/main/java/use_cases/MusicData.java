@@ -24,7 +24,7 @@ public class MusicData{
     public static void setData() throws FileNotFoundException {
 
         for (int week=1; week<=3; week++) {
-            Scanner sc = new Scanner(new File("src/main/java/Data_" + week));
+            Scanner sc = new Scanner(new File("src/main/java/use_cases/music_database/Data_" + week));
             sc.useDelimiter(", ");
             sc.nextLine();
             ArrayList<Artist> allArtists = new ArrayList<>();
