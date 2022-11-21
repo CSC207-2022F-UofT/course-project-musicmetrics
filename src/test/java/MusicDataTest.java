@@ -45,7 +45,13 @@ public class MusicDataTest {
         Assertions.assertEquals(MusicData.getFollows(Drake, testweek).get(1),1000);
 
         //Test getTop
-        Assertions.assertEquals(MusicData.getTop(1, 1).get(1), Kendrick);
+        // This one should only include Kendrick since he has the most streams and the amount = 1
+        Assertions.assertTrue(MusicData.getTop(1, 1).contains(Kendrick));
+        Assertions.assertFalse(MusicData.getTop(1, 1).contains(Drake));
+        // This one should include Jcole and Kendrick since the amount = 2 and Jcole is 2nd highest streams
+        Assertions.assertTrue(MusicData.getTop(1, 2).contains(Jcole));
+
+
 
         //Test getGenres
         Assertions.assertTrue(MusicData.getGenres().contains("Pop"));
