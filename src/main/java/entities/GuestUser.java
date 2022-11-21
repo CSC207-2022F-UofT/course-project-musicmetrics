@@ -1,8 +1,11 @@
-import java.io.IOException;
+package entities;
+
+import use_cases.UserData;
+
 import java.util.List;
 import java.util.Scanner;
 
-public class GuestUser extends User{
+public class GuestUser extends User {
     public GuestUser(){
     }
 
@@ -43,6 +46,6 @@ public class GuestUser extends User{
         System.out.println("Please enter your email address.");
         // sends an email
         System.out.println("An email to reset your password has been sent to " + emailInput.next());
-        // email leads to her instance of RegisteredUser
+        // email leads to her instance of Entities.RegisteredUser
     }
 }

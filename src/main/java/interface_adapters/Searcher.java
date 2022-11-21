@@ -1,7 +1,11 @@
+package interface_adapters;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
+import use_cases.MusicData;
+import entities.*;
 
 public class Searcher {
 
@@ -11,18 +15,18 @@ public class Searcher {
     private MusicData musicData = new MusicData();
 
     /**
-     * Creates a new Searcher instance consisting of every possible action that the User can take.
+     * Creates a new InterfaceAdapters.Searcher instance consisting of every possible action that the Entities.User can take.
      */
     public Searcher() throws FileNotFoundException {
-        Scanner actionScanner = new Scanner(new File("src/main/java/database/actions"));
+        Scanner actionScanner = new Scanner(new File("src/main/java/interface_adapters/searcher_database/actions"));
         while (actionScanner.hasNextLine()) {
             this.actions.add(actionScanner.nextLine());
         }
-        Scanner artistScanner = new Scanner(new File("src/main/java/database/artists"));
+        Scanner artistScanner = new Scanner(new File("src/main/java/interface_adapters/searcher_database/artists"));
         while (artistScanner.hasNextLine()) {
             this.artists.add(artistScanner.nextLine());
         }
-        Scanner genreScanner = new Scanner(new File("src/main/java/database/genres"));
+        Scanner genreScanner = new Scanner(new File("src/main/java/interface_adapters/searcher_database/genres"));
         while (genreScanner.hasNextLine()) {
             this.genres.add(genreScanner.nextLine());
         }
@@ -31,9 +35,9 @@ public class Searcher {
     }
 
     /**
-     * Returns an ArrayList of at most 10 most relevant actions that the User can take based on the given keyword.
+     * Returns an ArrayList of at most 10 most relevant actions that the Entities.User can take based on the given keyword.
      *
-     * @param keyword the search keyword that the User provided
+     * @param keyword the search keyword that the Entities.User provided
      * @return an ArrayList of at most 10 suggestions
      */
     public List<String> filterKeyword(String keyword) {
@@ -48,11 +52,11 @@ public class Searcher {
     }
 
     /**
-     * Returns an ArrayList of top n Artist where n is given in the parameter action.
+     * Returns an ArrayList of top n Entities.Artist where n is given in the parameter action.
      * Returns null if the keyword "top" is not found in the given action.
      *
-     * @param action the action that User chose to take
-     * @return an ArrayList of Artist of size n
+     * @param action the action that Entities.User chose to take
+     * @return an ArrayList of Entities.Artist of size n
      */
     public List<Artist> actionResult(String action) {
         if (action.startsWith("top")) {
@@ -63,9 +67,9 @@ public class Searcher {
     }
 
     /**
-     * Returns an ArrayList of at most 10 most relevant Artist that the User can navigate based on the given keyword.
+     * Returns an ArrayList of at most 10 most relevant Entities.Artist that the Entities.User can navigate based on the given keyword.
      *
-     * @param keyword the search keyword that the User provided
+     * @param keyword the search keyword that the Entities.User provided
      * @return an ArrayList of at most 10 suggestions
      */
     public List<String> filterArtist(String keyword) {
@@ -80,11 +84,11 @@ public class Searcher {
     }
 
     /**
-     * Returns an Artist whose name is the given parameter name.
-     * Returns null if Artist with name is not found in the MusicData.
+     * Returns an Entities.Artist whose name is the given parameter name.
+     * Returns null if Entities.Artist with name is not found in the use_cases.MusicData.
      *
      * @param name the name of the artist
-     * @return an Artist with the given name
+     * @return an Entities.Artist with the given name
      */
     public Artist artistResult(String name) {
         List<Artist> artists = this.musicData.getArtists(MusicData.getLatestWeek());
@@ -97,9 +101,9 @@ public class Searcher {
     }
 
     /**
-     * Returns an ArrayList of at most 10 most relevant Genre that the User can navigate based on the given keyword.
+     * Returns an ArrayList of at most 10 most relevant Genre that the Entities.User can navigate based on the given keyword.
      *
-     * @param keyword the search keyword that the User provided
+     * @param keyword the search keyword that the Entities.User provided
      * @return an ArrayList of at most 10 suggestions
      */
     public List<String> filterGenre(String keyword) {
@@ -118,7 +122,7 @@ public class Searcher {
      * Returns an ArrayList of Artists within the given genre.
      *
      * @param genre the name of the genre
-     * @return an ArrayList of Artist with the given genre
+     * @return an ArrayList of Entities.Artist with the given genre
      */
     public List<Artist> genreResult(String genre) {
         return musicData.getArtistsByGenre(genre);

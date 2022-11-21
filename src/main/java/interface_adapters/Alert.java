@@ -1,3 +1,5 @@
+package interface_adapters;
+
 public class Alert {
     int stream;
     int stream_in_period;
