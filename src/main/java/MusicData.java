@@ -17,17 +17,11 @@ public class MusicData{
     public static void setData() throws FileNotFoundException {
 
         for (int week=1; week<=3; week++) {
-            Scanner sc = new Scanner(new File("/Users/michael/IdeaProjects/course-project-musicmetrics/src/main/java/Data_" + week));
+            Scanner sc = new Scanner(new File("database/Data_" + week));
             sc.useDelimiter(", ");
             sc.nextLine();
             ArrayList<Artist> allArtists = new ArrayList<>();
             while (sc.hasNextLine()) {
-//                System.out.println(week);
-//                System.out.println(sc.next());
-//                System.out.println(sc.next());
-//                System.out.println(sc.next());
-//                System.out.println(sc.next());
-//                System.out.println(sc.next());
 
                 Artist a = setArtistData(sc, week);
                 allArtists.add(a); //add Artist to allArtists arraylist
@@ -96,7 +90,7 @@ public class MusicData{
      * @param b Artist instance from later week
      * @return Boolean whether there has been a trending-worthy increase
      */
-    public static Boolean isTrending(Artist a, Artist b){
+    private static Boolean isTrending(Artist a, Artist b){
         return (b.getStreams() > a.getStreams()*1.10 || b.getStreams() > a.getStreams() + 10000000);
     }
 
@@ -152,7 +146,7 @@ public class MusicData{
      *
      * @return  latest week in the Hashmap (aka the highest integer)
      */
-    static int getLatestWeek() {
+    public static int getLatestWeek() {
         return Collections.max(data.keySet());
     }
 
@@ -177,7 +171,7 @@ public class MusicData{
 
 //    Helper method for getStreams that returns artist streams of a week
 //    Assumes artists for MusicData is stored in a key(week) to value(array of artists relationship)
-    private int getStreamsHelper(String name, int week) {
+    private static int getStreamsHelper(String name, int week) {
         List<Artist> week_data = getArtists(week);
         for (Artist artist: week_data) {
             if (artist.getName().equals(name)) {
