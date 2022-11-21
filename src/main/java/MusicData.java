@@ -330,6 +330,7 @@ public class MusicData{
         return null;
     }
 
+
     public static void main(String[] args) throws FileNotFoundException {
         MusicData.setData();
         System.out.println(getGenres());
