@@ -1,9 +1,15 @@
+package entities;
+
+import interface_adapters.Alert;
+import interface_adapters.Searcher;
+import use_cases.UserData;
+
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
 
-public class RegisteredUser extends User{
+public class RegisteredUser extends User {
     private final String email;
     private String password;
     public ArrayList<String> follows;
@@ -38,8 +44,8 @@ public class RegisteredUser extends User{
     }
 
     /**
-     * UserData's logout method is used
-     * @return a new GuestUser instance
+     * use_cases.UserData's logout method is used
+     * @return a new Entities.GuestUser instance
      * throws Exception if user is not logged in or does not exist in database
      */
     public GuestUser logout() throws Exception {
@@ -55,14 +61,14 @@ public class RegisteredUser extends User{
     }
 
     /**
-     * @return password String of RegisteredUser
+     * @return password String of Entities.RegisteredUser
      */
     public String getPassword() {
         return this.password;
     }
 
     /**
-     * @return email String of RegisteredUser
+     * @return email String of Entities.RegisteredUser
      */
     public String getEmail() {
         return this.email;
@@ -75,10 +81,10 @@ public class RegisteredUser extends User{
     public void setFollows(ArrayList<String> follows) {this.follows = follows; }
 
     /**
-     * Adds an artist the RegisteredUser want to follow to their followings.
+     * Adds an artist the Entities.RegisteredUser want to follow to their followings.
      */
     public void addFollow() throws FileNotFoundException {
-        // Asks for the input of the user for the artist to use in the Searcher
+        // Asks for the input of the user for the artist to use in the InterfaceAdapters.Searcher
         Searcher searcher = new Searcher();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the name of the artist:");
@@ -94,10 +100,10 @@ public class RegisteredUser extends User{
 
 
     /**
-     * Removes an artist the RegisteredUser want to remove from their followings.
+     * Removes an artist the Entities.RegisteredUser want to remove from their followings.
      */
     public void removeFollow() throws FileNotFoundException {
-        // Asks for the input of the user for the artist to use in the Searcher
+        // Asks for the input of the user for the artist to use in the InterfaceAdapters.Searcher
         Searcher searcher = new Searcher();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the name of the artist:");

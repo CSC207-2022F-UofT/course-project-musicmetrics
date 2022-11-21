@@ -1,16 +1,19 @@
+package use_cases;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
+import entities.*;
 
 public class UserData {
 
-    // Keys are Bool values and have an arraylist of RegisteredUser objects mapped to the key.
-    //  True if User is logged-in currently
-    //  False if User is Logged-out currently
-    //  When a User logs in, their User object instance should be moved from False to True
+    // Keys are Bool values and have an arraylist of Entities.RegisteredUser objects mapped to the key.
+    //  True if Entities.User is logged-in currently
+    //  False if Entities.User is Logged-out currently
+    //  When a Entities.User logs in, their Entities.User object instance should be moved from False to True
     static HashMap<Boolean, ArrayList<RegisteredUser>> data = new HashMap<>();
     FileWriter registeredFile = new FileWriter("AllRegisteredUsers.txt");
     FileWriter loggedInFile = new FileWriter("LoggedInUsers.txt");
@@ -47,7 +50,7 @@ public class UserData {
     }
 
     /**
-     * @param u is a RegisteredUser object
+     * @param u is a Entities.RegisteredUser object
      * @return true/false bool telling if the user is logged in or not (True= logged in, false= not logged in)
      * or throws an exception which says that the Registered user is not in database
      */
@@ -66,7 +69,7 @@ public class UserData {
     }
 
     /**
-     * @param u RegisteredUser object
+     * @param u Entities.RegisteredUser object
      * @return true/false boolean telling if the user exists in the database or not
      */
     public boolean checkUser(RegisteredUser u) {
@@ -84,10 +87,10 @@ public class UserData {
     }
 
     /**
-     * USE THIS IF you want to work with a RegisteredUser's instance object but only have their email
+     * USE THIS IF you want to work with a Entities.RegisteredUser's instance object but only have their email
      *
-     * @param email string representing a RegisteredUser's email
-     * @return the instance object for the desired RegisteredUser
+     * @param email string representing a Entities.RegisteredUser's email
+     * @return the instance object for the desired Entities.RegisteredUser
      * @throws Exception if user is not in database
      */
     private RegisteredUser getUser(String email) throws Exception {
@@ -96,7 +99,7 @@ public class UserData {
                 return u;
             }
         }
-        throw new Exception("User not found");
+        throw new Exception("Entities.User not found");
     }
 
     /**
@@ -104,14 +107,14 @@ public class UserData {
      * @param password a string representing a password for a registered user
      */
     public void saveUser(String email, String password) throws IOException {
-        // create new RegisteredUser
+        // create new Entities.RegisteredUser
         RegisteredUser newUser = new RegisteredUser(email, password);
-        // add new RegisteredUser into data
+        // add new Entities.RegisteredUser into data
         var loggedIn = data.get(true);
         loggedIn.add(newUser);
-        // add new RegisteredUser into AllRegisteredUsers text file
+        // add new Entities.RegisteredUser into AllRegisteredUsers text file
         writeToTextFile(registeredFile, email + ", " + password + "\n");
-        // add new RegisteredUser into LoggedInUsers text file
+        // add new Entities.RegisteredUser into LoggedInUsers text file
         writeToTextFile(loggedInFile, email + ", " + password + "\n");
     }
 
@@ -120,9 +123,9 @@ public class UserData {
         // check if the user is stored in data - user has to be logged-in in order to delete their account
         if (data.get(true).contains(userToDelete)) {
             data.get(true).remove(userToDelete);
-            // remove RegisteredUser from AllRegisteredUsers text file
+            // remove Entities.RegisteredUser from AllRegisteredUsers text file
             deleteFromTextFile(registeredFile, email + ", " + password + "\n");
-            // remove RegisteredUser from LoggedInUsers text file
+            // remove Entities.RegisteredUser from LoggedInUsers text file
             deleteFromTextFile(loggedInFile, email + ", " + password + "\n");
             return true;
         }
@@ -132,7 +135,7 @@ public class UserData {
     /**
      * @param email    a string representing an email for a registered user
      * @param password a string representing a password for a registered user
-     * @return the RegisteredUser instance for this email and password
+     * @return the Entities.RegisteredUser instance for this email and password
      * @throws Exception Already logged in, incorrect password, or email not found.
      */
     public RegisteredUser logInUser(String email, String password) throws Exception {
@@ -159,7 +162,7 @@ public class UserData {
     /**
      * @param email    a string representing an email address for a registered user
      * @param password a string representing a password for a registered user
-     * @return a GuestUser (if successfully logged out)
+     * @return a Entities.GuestUser (if successfully logged out)
      * * @throws Exception if incorrect password, already logged out, or email not found
      */
     public GuestUser logoutUser(String email, String password) throws Exception {
