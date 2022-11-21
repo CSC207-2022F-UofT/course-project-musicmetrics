@@ -26,9 +26,16 @@ class SearcherTest {
     public void GetRelevantScoreDifferentIndexDifferentLength2() {
         double score1 = Searcher.getRelevantScore("t", "tea party lets go");
         double score2 = Searcher.getRelevantScore("t", "bts");
-        System.out.println(score1);
-        System.out.println(score2);
         Assertions.assertTrue(score1 > score2);
+    }
+
+    @Test
+    public void GetRelevantScoreDifferentIndexDifferentLength3() {
+        double score1 = Searcher.getRelevantScore("te", "tea party lets go");
+        double score2 = Searcher.getRelevantScore("te", "I ate pizza");
+        double score3 = Searcher.getRelevantScore("te", "Everyone, attention!");
+        Assertions.assertTrue(score1 > score2);
+        Assertions.assertTrue(score2 > score3);
     }
 
     @Test

@@ -8,6 +8,7 @@ public class Searcher {
     private List<String> actions = new ArrayList<>();
     private List<String> artists = new ArrayList<>();
     private List<String> genres = new ArrayList<>();
+    private MusicData musicData = new MusicData();
 
     /**
      * Creates a new Searcher instance consisting of every possible action that the User can take.
@@ -45,6 +46,21 @@ public class Searcher {
     }
 
     /**
+     * Returns an ArrayList of top n Artist where n is given in the parameter action.
+     * Returns null if the keyword "top" is not found in the given action.
+     *
+     * @param action the action that User chose to take
+     * @return an ArrayList of Artist of size n
+     */
+    public List<Artist> actionResult(String action) {
+        if (action.startsWith("top")) {
+            String[] split = action.split(" ");
+            return this.musicData.getTop(MusicData.getLatestWeek(), Integer.parseInt(split[1]));
+        }
+        return null;
+    }
+
+    /**
      * Returns an ArrayList of at most 10 most relevant Artist that the User can navigate based on the given keyword.
      *
      * @param keyword the search keyword that the User provided
@@ -59,6 +75,23 @@ public class Searcher {
             }
         }
         return getKeyListSortedByValue(scoreMap);
+    }
+
+    /**
+     * Returns an Artist whose name is the given parameter name.
+     * Returns null if Artist with name is not found in the MusicData.
+     *
+     * @param name the name of the artist
+     * @return an Artist with the given name
+     */
+    public Artist artistResult(String name) {
+        List<Artist> artists = this.musicData.getArtists(MusicData.getLatestWeek());
+        for (Artist artist : artists) {
+            if (artist.getName().equals(name)) {
+                return artist;
+            }
+        }
+        return null;
     }
 
     /**
@@ -77,6 +110,16 @@ public class Searcher {
         }
         return getKeyListSortedByValue(scoreMap);
 
+    }
+
+    /**
+     * Returns an ArrayList of Artists within the given genre.
+     *
+     * @param genre the name of the genre
+     * @return an ArrayList of Artist with the given genre
+     */
+    public List<Artist> genreResult(String genre) {
+        return musicData.getArtistsByGenre(genre);
     }
 
     /**
