@@ -45,7 +45,7 @@ public class MusicDataTest {
         Assertions.assertEquals(MusicData.getFollows(Drake, testweek).get(1),1000);
 
         //Test getTop
-        Assertions.assertEquals(MusicData.getTop(1, 1).get(0), Kendrick);
+        Assertions.assertEquals(MusicData.getTop(1, 1).get(1), Kendrick);
 
         //Test getGenres
         Assertions.assertTrue(MusicData.getGenres().contains("Pop"));
