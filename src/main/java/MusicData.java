@@ -137,7 +137,7 @@ public class MusicData{
 
     /**
      *
-     * @return  latest week in the Hashmap (aka highest integer)
+     * @return  latest week in the Hashmap (aka the highest integer)
      */
     static int getLatestWeek() {
         return Collections.max(data.keySet());
@@ -274,6 +274,26 @@ public class MusicData{
         return top;
     }
 
+
+    public HashMap<Integer, Integer> getFollows(Artist artist, List<Integer> weeks) {
+        HashMap<Integer, Integer> follows = new HashMap<>();
+        String artistName = artist.getName();
+        for (int week : weeks) {
+            follows.put(week, getFollowsHelper(artistName, week));
+        }
+
+        return follows;
+    }
+
+    private int getFollowsHelper(String name, int week) {
+        List<Artist> weekData = getArtists(week);
+        for (Artist artist: weekData) {
+            if (artist.getName().equals(name)) {
+                return artist.getFollows();
+            }
+        }
+        return 0;
+    }
 
     /**
      * return info of artist needed
