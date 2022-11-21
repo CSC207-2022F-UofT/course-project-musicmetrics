@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
-
 public class MusicData{
     /**
      * NOTE: Assume that an Artist will have information for EVERY WEEK in the Hashmap
@@ -15,14 +14,21 @@ public class MusicData{
      *
      * @throws FileNotFoundException for Scanner sc
      */
-    public void setData() throws FileNotFoundException {
+    public static void setData() throws FileNotFoundException {
 
         for (int week=1; week<=3; week++) {
-            Scanner sc = new Scanner(new File("Data_" + week));
-            sc.useDelimiter(",");
+            Scanner sc = new Scanner(new File("/Users/michael/IdeaProjects/course-project-musicmetrics/src/main/java/Data_" + week));
+            sc.useDelimiter(", ");
             sc.nextLine();
             ArrayList<Artist> allArtists = new ArrayList<>();
             while (sc.hasNextLine()) {
+//                System.out.println(week);
+//                System.out.println(sc.next());
+//                System.out.println(sc.next());
+//                System.out.println(sc.next());
+//                System.out.println(sc.next());
+//                System.out.println(sc.next());
+
                 Artist a = setArtistData(sc, week);
                 allArtists.add(a); //add Artist to allArtists arraylist
             }
@@ -40,7 +46,7 @@ public class MusicData{
      *
      * @return Artist instance with current week's info stored
      */
-    public Artist setArtistData(Scanner sc, int week){
+    public static Artist setArtistData(Scanner sc, int week){
         String name, genre;
         int streams, follows;
 
@@ -49,7 +55,7 @@ public class MusicData{
         streams = Integer.parseInt(sc.next());
         follows = Integer.parseInt(sc.next());
         genre = sc.next();
-        Boolean[] likes = new Boolean[0];
+        Boolean[] likes = likesConverter(sc.next());
 
         return new Artist(follows, genre, name, likes, week, streams);
     }
@@ -63,7 +69,7 @@ public class MusicData{
      * @param endWeek second week to compare streams from
      * @return list of all artists trending this week
      */
-    public List<Artist> getTrending(int startWeek, int endWeek) {
+    public static List<Artist> getTrending(int startWeek, int endWeek) {
         List<Artist> trending = new ArrayList<>();
         ArrayList<Artist> startData = data.get(startWeek);
         ArrayList<Artist> endData = data.get(endWeek);
@@ -73,6 +79,13 @@ public class MusicData{
                 if (a.getName().equals(b.getName())){if (isTrending(a, b)){trending.add(b); } }
             }
         }
+
+//        StringBuilder to_return = new StringBuilder();
+//        for (Artist a : trending){
+//            to_return.append(a.getName());
+//            to_return.append("\n");
+//        }
+//        return to_return;
         return trending;
     }
 
@@ -83,7 +96,7 @@ public class MusicData{
      * @param b Artist instance from later week
      * @return Boolean whether there has been a trending-worthy increase
      */
-    public Boolean isTrending(Artist a, Artist b){
+    public static Boolean isTrending(Artist a, Artist b){
         return (b.getStreams() > a.getStreams()*1.10 || b.getStreams() > a.getStreams() + 10000000);
     }
 
@@ -180,9 +193,9 @@ public class MusicData{
      * @param binary a string of 1s and 0s to represent likes
      * @return boolean array corresponding to binary
      */
-    private Boolean[] likesConverter(String binary) {
+    private static Boolean[] likesConverter(String binary) {
         String[] binaryList = binary.split(" ");
-        Boolean[] likes = new Boolean[50];
+        Boolean[] likes = new Boolean[binary.length()];
         for(int i = 0; i < binaryList.length; i++){
             String s = binaryList[i];
             likes[i] = s.equals("1");
@@ -192,7 +205,7 @@ public class MusicData{
 
 
 //    returns list of artist objects for current week
-    public ArrayList<Artist> getArtists(int week){
+    public static ArrayList<Artist> getArtists(int week){
         return data.get(week);
     }
 
@@ -237,7 +250,7 @@ public class MusicData{
      *
      * @return list of unique genres that artists are in
      */
-    public List<String> getGenres(){
+    public static List<String> getGenres(){
         int week = getLatestWeek();
         List<String> all_genres = new ArrayList<>();
         ArrayList<Artist> w_data = getArtists(week);
@@ -315,6 +328,11 @@ public class MusicData{
             return artistObj.getInfo();
         }
         return null;
+    }
+
+    public static void main(String[] args) throws FileNotFoundException {
+        MusicData.setData();
+        System.out.println(getGenres());
     }
 
 }
