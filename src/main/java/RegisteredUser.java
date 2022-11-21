@@ -1,5 +1,7 @@
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 public class RegisteredUser extends User{
     private final String email;
@@ -66,8 +68,45 @@ public class RegisteredUser extends User{
         return this.email;
     }
 
-    public void setFollows() {
+    /**
+     *
+     * @param follows following ArrayList to set
+     */
+    public void setFollows(ArrayList<String> follows) {this.follows = follows; }
 
+    /**
+     * Adds an artist the RegisteredUser want to follow to their followings.
+     */
+    public void addFollow() throws FileNotFoundException {
+        // Asks for the input of the user for the artist to use in the Searcher
+        Searcher searcher = new Searcher();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the name of the artist:");
+        String artist = scanner.nextLine();
+        List<String> artists = searcher.filterArtist(artist);
+        // check if artist in database and check if not already following artist-- if so, append to following ArrayList
+        if (artists.contains(artist)) {
+            if (!follows.contains(artist)) {
+                follows.add(artist);
+            }
+        }
+    }
+
+
+    /**
+     * Removes an artist the RegisteredUser want to remove from their followings.
+     */
+    public void removeFollow() throws FileNotFoundException {
+        // Asks for the input of the user for the artist to use in the Searcher
+        Searcher searcher = new Searcher();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the name of the artist:");
+        String artist = scanner.nextLine();
+        List<String> artists = searcher.filterArtist(artist);
+        // check if artist in database -- if so, remove from following ArrayList
+        if (artists.contains(artist)) {
+            follows.remove(artist);
+        }
     }
 
     /**
