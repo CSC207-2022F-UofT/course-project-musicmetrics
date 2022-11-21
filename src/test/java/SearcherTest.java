@@ -58,8 +58,8 @@ class SearcherTest {
         Searcher searcher = new Searcher();
         List<String> expected = new ArrayList<>();
         expected.add("top 5 artists of the past week");
+        expected.add("top 14 artists of the past week");
         expected.add("top 10 artists of the past week");
-        expected.add("top 20 artists of the past week");
         List<String> actual = searcher.filterKeyword("artists of");
         Assertions.assertEquals(expected, actual);
     }
