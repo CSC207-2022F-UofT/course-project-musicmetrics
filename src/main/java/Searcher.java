@@ -1,7 +1,6 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Searcher {
@@ -9,12 +8,26 @@ public class Searcher {
     private List<String> actions = new ArrayList<>();
     private List<String> artists = new ArrayList<>();
     private List<String> genres = new ArrayList<>();
+    private MusicData musicData = new MusicData();
 
     /**
      * Creates a new Searcher instance consisting of every possible action that the User can take.
      */
-    public Searcher() {
-        // should read from a file
+    public Searcher() throws FileNotFoundException {
+        Scanner actionScanner = new Scanner(new File("src/main/java/database/actions"));
+        while (actionScanner.hasNextLine()) {
+            this.actions.add(actionScanner.nextLine());
+        }
+        Scanner artistScanner = new Scanner(new File("src/main/java/database/artists"));
+        while (artistScanner.hasNextLine()) {
+            this.artists.add(artistScanner.nextLine());
+        }
+        Scanner genreScanner = new Scanner(new File("src/main/java/database/genres"));
+        while (genreScanner.hasNextLine()) {
+            this.genres.add(genreScanner.nextLine());
+        }
+//        load music data
+//        this.musicData.setData();
     }
 
     /**
@@ -28,15 +41,25 @@ public class Searcher {
         for (String action : this.actions) {
             double score = getRelevantScore(keyword, action);
             if (score > 0) {
-                if (scoreMap.size() < 10) {
-                    scoreMap.put(action, score);
-                }
-                else {
-                    break;
-                }
+                scoreMap.put(action, score);
             }
         }
         return getKeyListSortedByValue(scoreMap);
+    }
+
+    /**
+     * Returns an ArrayList of top n Artist where n is given in the parameter action.
+     * Returns null if the keyword "top" is not found in the given action.
+     *
+     * @param action the action that User chose to take
+     * @return an ArrayList of Artist of size n
+     */
+    public List<Artist> actionResult(String action) {
+        if (action.startsWith("top")) {
+            String[] split = action.split(" ");
+            return this.musicData.getTop(MusicData.getLatestWeek(), Integer.parseInt(split[1]));
+        }
+        return null;
     }
 
     /**
@@ -50,15 +73,27 @@ public class Searcher {
         for (String artist : this.artists) {
             double score = getRelevantScore(keyword, artist);
             if (score > 0) {
-                if (scoreMap.size() < 10) {
-                    scoreMap.put(artist, score);
-                }
-                else {
-                    break;
-                }
+                scoreMap.put(artist, score);
             }
         }
         return getKeyListSortedByValue(scoreMap);
+    }
+
+    /**
+     * Returns an Artist whose name is the given parameter name.
+     * Returns null if Artist with name is not found in the MusicData.
+     *
+     * @param name the name of the artist
+     * @return an Artist with the given name
+     */
+    public Artist artistResult(String name) {
+        List<Artist> artists = this.musicData.getArtists(MusicData.getLatestWeek());
+        for (Artist artist : artists) {
+            if (artist.getName().equals(name)) {
+                return artist;
+            }
+        }
+        return null;
     }
 
     /**
@@ -72,15 +107,21 @@ public class Searcher {
         for (String genre : this.genres) {
             double score = getRelevantScore(keyword, genre);
             if (score > 0) {
-                if (scoreMap.size() < 10) {
-                    scoreMap.put(genre, score);
-                }
-                else {
-                    break;
-                }
+                scoreMap.put(genre, score);
             }
         }
         return getKeyListSortedByValue(scoreMap);
+
+    }
+
+    /**
+     * Returns an ArrayList of Artists within the given genre.
+     *
+     * @param genre the name of the genre
+     * @return an ArrayList of Artist with the given genre
+     */
+    public List<Artist> genreResult(String genre) {
+        return musicData.getArtistsByGenre(genre);
     }
 
     /**
@@ -92,11 +133,11 @@ public class Searcher {
      * @param str the String being compared to keyword to find relativity
      * @return a double relevant score (0 <= returnValue <= 1.0)
      */
-    private double getRelevantScore(String keyword, String str) {
+    public static double getRelevantScore(String keyword, String str) {
         if (str.length() > keyword.length() && str.toLowerCase().contains(keyword.toLowerCase())) {
-            return 1.0 / (str.toLowerCase().indexOf(keyword.toLowerCase() + 1));
+            return 100.0 / ((str.toLowerCase().indexOf(keyword.toLowerCase()) * 100.0) + str.length());
         }
-        return 0;
+        return 0.0;
     }
 
     /**
@@ -105,17 +146,127 @@ public class Searcher {
      * @param map a map contains generic type as its key and double as its value
      * @return an ArrayList of keys of the map sorted by values
      */
-    private <T> List<T> getKeyListSortedByValue(Map<T, Double> map) {
+    public static <T> List<T> getKeyListSortedByValue(Map<T, Double> map) {
         List<T> sortedList = new ArrayList<>();
         if (map.size() <= 1) {
             sortedList.addAll(map.keySet());
             return sortedList;
         }
         List<Map.Entry<T, Double>> entries = map.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue()).collect(Collectors.toList());
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).collect(Collectors.toList());
         for (Map.Entry<T, Double> entry : entries) {
-            sortedList.add(entry.getKey());
+            if (sortedList.size() < 10) {
+                sortedList.add(entry.getKey());
+            }
+            else {
+                break;
+            }
         }
         return sortedList;
     }
-}
+
+    public static void main(String[] args) throws FileNotFoundException {
+        Searcher searcher = new Searcher();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Please choose search type (keyword, artist, genres): ");
+        String input = scanner.nextLine();
+        if (input.equalsIgnoreCase("keyword")) {
+            System.out.print("What do you want to search? ");
+            input = scanner.nextLine();
+            List<String> actions = searcher.filterKeyword(input);
+            if (actions.size() == 0) {
+                System.out.println("There is no action that you can take based on the provided keyword.");
+            }
+            else {
+                for (int i = 0;i < actions.size();i++) {
+                    System.out.println((i + 1) + ". " + actions.get(i));
+                }
+                System.out.print("Please choose one of suggestions above (provide index): ");
+                try {
+                    int index = Integer.parseInt(scanner.nextLine());
+                    if (1 <= index && index <= actions.size()) {
+                        List<Artist> artists = searcher.actionResult(actions.get(Integer.parseInt(input.strip()) - 1));
+                        for (int i = 0;i < artists.size();i++) {
+                            System.out.println((i + 1) + ". " + artists.get(i).getName());
+                        }
+                    }
+                    else {
+                        System.out.println("Invalid index");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid index");
+                }
+
+
+            }
+        }
+        else if (input.equalsIgnoreCase("artist")) {
+            System.out.print("What artist do you want to search? ");
+            input = scanner.nextLine();
+            List<String> artists = searcher.filterArtist(input);
+            if (artists.size() == 0) {
+                System.out.println("It seems like we don't have such artist.");
+            }
+            else {
+                for (int i = 0;i < artists.size();i++) {
+                    System.out.println((i + 1) + ". " + artists.get(i));
+                }
+                System.out.print("Please choose one of artists above you want to see (provide index): ");
+                try {
+                    int index = Integer.parseInt(scanner.nextLine());
+                    if (1 <= index && index <= artists.size()) {
+                        Artist artist = searcher.artistResult(artists.get(Integer.parseInt(input.strip()) - 1));
+                        System.out.println("Name: " + artist.getName());
+                        System.out.println("Genre: " + artist.getGenre());
+                        System.out.println("Streams: " + artist.getStreams());
+                        System.out.println("Follows: " + artist.getFollows());
+
+                    }
+                    else {
+                        System.out.println("Invalid index");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid index");
+                }
+
+            }
+        }
+        else if (input.equalsIgnoreCase("genres")) {
+            System.out.print("What genre would you like a recommendation in? ");
+            input = scanner.nextLine();
+            List<String> genres = searcher.filterGenre(input);
+            if (genres.size() == 0) {
+                System.out.println("It seems like we don't have that genre.");
+            }
+            else {
+                for (int i = 0;i < genres.size();i++) {
+                    System.out.println((i + 1) + ". " + genres.get(i));
+                }
+                System.out.print("Please choose one of genres above you want a recommendation in (provide index): ");
+                try {
+                    int index = Integer.parseInt(scanner.nextLine());
+                    if (1 <= index && index <= genres.size()) {
+                        MusicData mD = new MusicData();
+                        GuestUser gU = new GuestUser();
+                        Artist artist = mD.recommendArtist(genres.get(Integer.parseInt(input.strip()) - 1), false, gU);
+                        System.out.println("Name: " + artist.getName());
+                        System.out.println("Genre: " + artist.getGenre());
+                        System.out.println("Streams: " + artist.getStreams());
+                        System.out.println("Follows: " + artist.getFollows());
+                    }
+                    else {
+                        System.out.println("Invalid index");
+                    }
+                    }
+                catch (NumberFormatException e) {
+                    System.out.println("Invalid index");
+                }
+                }
+
+            }
+        else {
+            System.out.println("Invalid search type, please enter keyword, genres or artist.");
+            }
+        }
+    }
+
