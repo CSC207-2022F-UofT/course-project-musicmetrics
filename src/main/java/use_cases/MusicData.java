@@ -162,7 +162,7 @@ public class MusicData{
      * @param weeks the weeks of stream data that will be accessed
      * @return a hashmap of weeks to streams
      */
-    public HashMap<Integer, Integer> getStreams(Artist artist, List<Integer> weeks) {
+    public static HashMap<Integer, Integer> getStreams(Artist artist, List<Integer> weeks) {
         HashMap<Integer,Integer> to_return = new HashMap<>();
         String name = artist.getName();
         for (int i: weeks) {
@@ -230,7 +230,7 @@ public class MusicData{
      * @param genre the genre being searched for
      * @return list of all Artists in that genre
      */
-    public List<Artist> getArtistsByGenre(String genre){
+    public static List<Artist> getArtistsByGenre(String genre){
         int week = getLatestWeek();
         List<Artist> artist_in_genre = new ArrayList<>();
         ArrayList<Artist> w_data = getArtists(week);
@@ -266,7 +266,7 @@ public class MusicData{
      * @param amount how many top Artists are we looking for
      * @return List of Artists who had the top streams of the week
      */
-    public List<Artist> getTop(int week, int amount){
+    public static List<Artist> getTop(int week, int amount){
         ArrayList<Artist> w_data = getArtists(week);
         List<Artist> top = new ArrayList<>();
 
@@ -286,7 +286,7 @@ public class MusicData{
     }
 
 
-    public HashMap<Integer, Integer> getFollows(Artist artist, List<Integer> weeks) {
+    public static HashMap<Integer, Integer> getFollows(Artist artist, List<Integer> weeks) {
         HashMap<Integer, Integer> follows = new HashMap<>();
         String artistName = artist.getName();
         for (int week : weeks) {
@@ -296,7 +296,7 @@ public class MusicData{
         return follows;
     }
 
-    private int getFollowsHelper(String name, int week) {
+    private static int getFollowsHelper(String name, int week) {
         List<Artist> weekData = getArtists(week);
         for (Artist artist: weekData) {
             if (artist.getName().equals(name)) {

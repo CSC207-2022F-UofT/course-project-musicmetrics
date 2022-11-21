@@ -1,6 +1,8 @@
+import entities.Artist;
 import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import use_cases.MusicData;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
