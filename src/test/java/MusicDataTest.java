@@ -19,6 +19,7 @@ public class MusicDataTest {
     @Test()
     public void TestHashMap() throws FileNotFoundException {
         MusicData test = new MusicData();
+        MusicData.setData();
         List<Integer> testweek = new ArrayList<>();
         testweek.add(1);
 
