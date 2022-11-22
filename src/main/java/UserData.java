@@ -21,30 +21,26 @@ public class UserData {
         data.put(false, new ArrayList<>());
         // read off loggedInFile and append to data
         Scanner loggedInUsers = new Scanner("LoggedInUsers.txt");
+        String line = loggedInUsers.nextLine(); // skip header
         while (loggedInUsers.hasNextLine()) {
-            String line = loggedInUsers.nextLine();
             String[] temp = line.split(",");
             RegisteredUser user = new RegisteredUser(temp[0], temp[1]);
-            ArrayList<RegisteredUser> updatedValues = data.get(true);
-            updatedValues.add(user);
-            // update values of true key in data
-            data.put(true, updatedValues);
+            data.get(true).add(user);
             // read off registeredUsers file and append to data
-            Scanner registeredUsers = new Scanner("AllRegisteredUsers.txt");
-            while (registeredUsers.hasNextLine()) {
-                String line2 = registeredUsers.nextLine();
-                String[] temp2 = line2.split(", ");
-                // check if user is already in data - logged in
-                if (!data.get(true).contains(this.getUser(temp2[0]))) {
-                    RegisteredUser user2 = new RegisteredUser(temp2[0], temp2[1]);
-                    ArrayList<RegisteredUser> updatedValues2 = data.get(false);
-                    updatedValues2.add(user);
-                    // update values in false key in data
-                    data.put(false, updatedValues2);
+            loggedInUsers.nextLine();
+        } loggedInUsers.close();
+        Scanner registeredUsers = new Scanner("AllRegisteredUsers.txt");
+        String line2 = registeredUsers.nextLine(); // skip header
+        while (registeredUsers.hasNextLine()) {
+            String[] temp2 = line2.split(", ");
+            // check if user is already in data - logged in
+            if (!data.get(true).contains(this.getUser(temp2[0]))) {
+                RegisteredUser user2 = new RegisteredUser(temp2[0], temp2[1]);
+                data.get(false).add(user2);
                 }
-            }
+            registeredUsers.nextLine();
+            } registeredUsers.close();
         }
-    }
 
     /**
      * @param u is a RegisteredUser object
@@ -90,7 +86,7 @@ public class UserData {
      * @return the instance object for the desired RegisteredUser
      * @throws Exception if user is not in database
      */
-    private RegisteredUser getUser(String email) throws Exception {
+    public RegisteredUser getUser(String email) throws Exception {
         for (RegisteredUser u : getUsers()) {
             if (Objects.equals(u.toString(), email)) {
                 return u;
@@ -102,19 +98,27 @@ public class UserData {
     /**
      * @param email    a string representing an email for a registered user
      * @param password a string representing a password for a registered user
+     * @return true/false boolean representing whether user is saved successfully into data
      */
-    public void saveUser(String email, String password) throws IOException {
+    public boolean saveUser(String email, String password) throws Exception {
         // create new RegisteredUser
-        RegisteredUser newUser = new RegisteredUser(email, password);
-        // add new RegisteredUser into data
-        var loggedIn = data.get(true);
-        loggedIn.add(newUser);
-        // add new RegisteredUser into AllRegisteredUsers text file
-        writeToTextFile(registeredFile, email + ", " + password + "\n");
-        // add new RegisteredUser into LoggedInUsers text file
-        writeToTextFile(loggedInFile, email + ", " + password + "\n");
+        if (!data.get(true).contains(this.getUser(email)) && !data.get(false).contains(this.getUser(email))) {
+            RegisteredUser newUser = new RegisteredUser(email, password);
+            // add new RegisteredUser into data
+            data.get(true).add(newUser);
+            // add new RegisteredUser into AllRegisteredUsers text file
+            writeToTextFile(registeredFile, email + ", " + password + "\n");
+            // add new RegisteredUser into LoggedInUsers text file
+            writeToTextFile(loggedInFile, email + ", " + password + "\n");
+            return true;
+        }
+        return false;
     }
-
+    /**
+     * @param email    a string representing an email for a registered user
+     * @param password a string representing a password for a registered user
+     * @return true/false boolean representing whether user is deleted successfully into data
+     */
     public boolean deleteUser(String email, String password) throws Exception {
         RegisteredUser userToDelete = this.getUser(email);
         // check if the user is stored in data - user has to be logged-in in order to delete their account
@@ -201,6 +205,7 @@ public class UserData {
     public void deleteFromTextFile(FileWriter filename, String toRemove) throws IOException {
         Scanner scanned = new Scanner((Readable) filename);
         StringBuilder content = new StringBuilder();
+        scanned.nextLine(); // skip header
         while (scanned.hasNextLine()) {
             // read and store line temporarily if it doesn't match the string to be removed
             if (!Objects.equals(scanned.nextLine(), toRemove)) {
@@ -208,9 +213,13 @@ public class UserData {
                 content.append("\n"); // is this necessary
             }
             // update the text file by creating a new FileWriter object to replace the original FileWriter
-            FileWriter foo = new FileWriter(String.valueOf(filename), false);
-            foo.write(String.valueOf(content));
-            filename = foo; // does filename get reassigned successfully
-        }
+            try {
+                FileWriter foo = new FileWriter(String.valueOf(filename), false);
+                foo.write(String.valueOf(content));
+                filename = foo; // does filename get reassigned successfully
+            } catch (Exception e) {
+                System.out.println("File not updated successfully.");
+            }
+        } scanned.close();
     }
 }
