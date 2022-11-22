@@ -34,16 +34,16 @@ public class UserData {
         } loggedInUsers.close();
         Scanner registeredUsers = new Scanner("AllRegisteredUsers.txt");
         registeredUsers.nextLine(); // skip header
-            while (registeredUsers.hasNextLine()) {
-                String line2 = registeredUsers.nextLine();
-                String[] temp2 = line2.split(", ");
-                // check if user is already in data - logged in
-                if (!data.get(true).contains(this.getUser(temp2[0]))) {
-                    RegisteredUser user2 = new RegisteredUser(temp2[0], temp2[1]);
-                    data.get(false).add(user2);
-                }
-            } registeredUsers.close();
-        }
+        while (registeredUsers.hasNextLine()) {
+            String line2 = registeredUsers.nextLine();
+            String[] temp2 = line2.split(", ");
+            // check if user is already in data - logged in
+            if (!data.get(true).contains(this.getUser(temp2[0]))) {
+                RegisteredUser user2 = new RegisteredUser(temp2[0], temp2[1]);
+                data.get(false).add(user2);
+            }
+        } registeredUsers.close();
+    }
 
     /**
      * @param u is a Entities.RegisteredUser object
