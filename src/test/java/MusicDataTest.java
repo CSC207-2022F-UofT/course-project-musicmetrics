@@ -6,15 +6,20 @@ import use_cases.MusicData;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+/// This test DOES NOT use the data from music_database
+/// INSTEAD it uses a narrower set of data, containing 4 artists as seen below
 public class MusicDataTest {
 
     @Test()
     public void TestHashMap() throws FileNotFoundException {
         MusicData test = new MusicData();
+        // Created a new HashMap for the sole purpose of testing, to have a narrow data set of 4 artists
+        MusicData.data = new HashMap<>();
         Artist Drake = new Artist(1000, "Hip-Hop/Rap", "Drake",
                 new Boolean[] {true, false, false, false, true}, 1, 1000);
         Artist Jcole = new Artist(1000, "Hip-Hop/Rap", "Jcole",
@@ -48,10 +53,10 @@ public class MusicDataTest {
 
         //Test getTop
         // This one should only include Kendrick since he has the most streams and the amount = 1
-        // Assertions.assertEquals(MusicData.getTop(1, 1).get(0), Kendrick);
-        // Assertions.assertFalse(MusicData.getTop(1, 1).contains(Drake));
+        Assertions.assertTrue(MusicData.getTop(1, 1).contains(Kendrick));
+        Assertions.assertFalse(MusicData.getTop(1, 1).contains(Drake));
         // This one should include Jcole and Kendrick since the amount = 2 and Jcole is 2nd highest streams
-        // Assertions.assertEquals(MusicData.getTop(1, 2).get(1), Jcole);
+        Assertions.assertTrue(MusicData.getTop(1, 2).contains(Jcole));
 
         //Test getGenres
         Assertions.assertTrue(MusicData.getGenres().contains("Pop"));
