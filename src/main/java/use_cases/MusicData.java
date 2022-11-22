@@ -212,7 +212,7 @@ public class MusicData{
      *
      * @param artist An Entities.Artist Object
      */
-    public void addArtist(Artist artist) {
+    public static void addArtist(Artist artist) {
         if (data.containsKey(artist.time)) {
             data.get(artist.time).add(artist);
             }

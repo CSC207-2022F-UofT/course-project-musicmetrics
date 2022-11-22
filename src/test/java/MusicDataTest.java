@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,68 +19,58 @@ public class MusicDataTest {
     @Test()
     public void TestHashMap() throws FileNotFoundException {
         MusicData test = new MusicData();
-        // Created a new HashMap for the sole purpose of testing, to have a narrow data set of 4 artists
-        Artist Drake = new Artist(1000, "Hip-Hop/Rap", "Drake",
-                new Boolean[] {true, false, false, false, true}, 1, 1000);
-        Artist Jcole = new Artist(1000, "Hip-Hop/Rap", "Jcole",
-                new Boolean[] {true, true, false, false, false}, 1, 2000);
-        Artist Kendrick = new Artist(1000, "Hip-Hop/Rap", "Kendrick",
-                new Boolean[] {true, true, false, false, true}, 1, 3000);
-        Artist Taylor = new Artist(1000, "Pop", "Taylor Swift",
-                new Boolean[] {true, true, false, false, true}, 1, 1000);
-        MusicData.data.put(1, new ArrayList<>());
-        MusicData.data.put(2, new ArrayList<>());
-
-        //Test the length of Hashmap and if it correctly added the artists
-        test.addArtist(Drake);
-        Assertions.assertEquals(MusicData.data.size(), 2);
-        test.addArtist(Jcole);
-        Assertions.assertEquals(MusicData.data.get(1).size(), 2);
-        test.addArtist(Kendrick);
-        Assertions.assertEquals(MusicData.data.get(1).size(), 3);
-        test.addArtist(Taylor);
-        Assertions.assertEquals(MusicData.data.get(1).size(), 4);
-
-        //Test that data hashmap has correct latest week
-        Assertions.assertEquals(MusicData.getLatestWeek(),2);
         List<Integer> testweek = new ArrayList<>();
         testweek.add(1);
 
-        //Test getStreams
-        Assertions.assertEquals(MusicData.getStreams(Drake, testweek).get(1), 1000);
+        //Test the length of Hashmap and if it correctly added the artists in database
+        Assertions.assertEquals(MusicData.data.get(1).size(), 14);
 
-        //Test follows
-        Assertions.assertEquals(MusicData.getFollows(Drake, testweek).get(1),1000);
+        //Test that data hashmap has correct latest week
+        Assertions.assertEquals(MusicData.getLatestWeek(),3);
+
+        //Test getArtistData
+        Assertions.assertEquals(Objects.requireNonNull(MusicData.getArtistData("Drake", 1)).get("TimeStamp"),  1);
+        Assertions.assertEquals(Objects.requireNonNull(MusicData.getArtistData("Drake", 1)).get("Genre"),  "Hip-Hop/Rap");
+        Assertions.assertEquals(Objects.requireNonNull(MusicData.getArtistData("Drake", 1)).size(),  5);
+
+        //Test getArtistsByGenre
+        Assertions.assertEquals(6, MusicData.getArtistsByGenre("Pop").size());
+        Assertions.assertNotEquals(4, MusicData.getArtistsByGenre("Hip-Hop/Rap").size());
+
+
+        //Test addArtist and getArtist
+        Assertions.assertEquals(14, MusicData.getArtists(1).size());
+        Artist Tester = new Artist(2000, "Country", "Tester",
+                new Boolean[] {true, false, false, false, true}, 1, 1000);
+        MusicData.addArtist(Tester);
+        //Length should be 15 since 1 new artist was added
+        Assertions.assertEquals(MusicData.data.get(1).size(), 15);
+        Assertions.assertEquals(15, MusicData.getArtists(1).size());
+
+        //Test getStreams
+        Assertions.assertEquals(MusicData.getStreams(Tester, testweek).get(1), 1000);
+
+        //Test getFollows
+        Assertions.assertEquals(MusicData.getFollows(Tester, testweek).get(1),2000);
 
         //Test getTop
-        // This one should only include Kendrick since he has the most streams and the amount = 1
-        Assertions.assertTrue(MusicData.getArtists(1).contains(Kendrick));
-        Assertions.assertTrue(MusicData.getTop(1, 1).contains(Kendrick));
-        Assertions.assertFalse(MusicData.getTop(1, 1).contains(Drake));
+        Assertions.assertEquals(1, MusicData.getTop(1, 1).size());
+        Assertions.assertEquals("Drake", MusicData.getTop(1, 1).get(0).toString());
 
         //Test getGenres
         Assertions.assertTrue(MusicData.getGenres().contains("Pop"));
         Assertions.assertTrue(MusicData.getGenres().contains("Hip-Hop/Rap"));
+        Assertions.assertFalse(MusicData.getGenres().contains("TESTGENRE"));
+        Artist TesterGenre = new Artist(2000, "TESTGENRE", "TesterGenre",
+                new Boolean[] {true, false, false, false, true}, 1, 1000);
+        MusicData.addArtist(TesterGenre);
+        Assertions.assertTrue(MusicData.getGenres().contains("TESTGENRE"));
 
         //Test getTrending
-        // Increased Kendrick's streams by 10000, for the purpose of testing getTrending
-        Artist Drake2 = new Artist(1000, "Hip-Hop/Rap", "Drake",
-                new Boolean[] {true, false, false, false, true}, 2, 1000);
-        Artist Jcole2 = new Artist(1000, "Hip-Hop/Rap", "Jcole",
-                new Boolean[] {true, true, false, false, false}, 2, 2000);
-        Artist Kendrick2 = new Artist(1000, "Hip-Hop/Rap", "Kendrick",
-                new Boolean[] {true, true, false, false, true}, 2, 13000);
-        Artist Taylor2 = new Artist(1000, "Pop", "Taylor Swift",
-                new Boolean[] {true, true, false, false, true}, 2, 1000);
-        test.addArtist(Drake2);
-        test.addArtist(Jcole2);
-        test.addArtist(Kendrick2);
-        test.addArtist(Taylor2);
-        // Since Kendrick is the only artist who has an increase in streams, he should be the only artist in the list
-        Assertions.assertTrue(MusicData.getTrending(1, 2).contains(Kendrick2));
-        Assertions.assertFalse(MusicData.getTrending(1, 2).contains(Drake2));
-        Assertions.assertFalse(MusicData.getTrending(1, 2).contains(Jcole2));
-        Assertions.assertFalse(MusicData.getTrending(1, 2).contains(Taylor2));
+        Assertions.assertEquals("Drake", MusicData.getTrending(1, 1).get(0).toString());
+        Assertions.assertEquals(1, MusicData.getTrending(1, 1).size());
+        Assertions.assertEquals("Bad Bunny", MusicData.getTrending(1, 1).get(1).toString());
+        Assertions.assertEquals(2, MusicData.getTrending(1, 2).size());
 
     }
 
