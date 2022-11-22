@@ -19,7 +19,6 @@ public class MusicDataTest {
     public void TestHashMap() throws FileNotFoundException {
         MusicData test = new MusicData();
         // Created a new HashMap for the sole purpose of testing, to have a narrow data set of 4 artists
-        test.data = new HashMap<>();
         Artist Drake = new Artist(1000, "Hip-Hop/Rap", "Drake",
                 new Boolean[] {true, false, false, false, true}, 1, 1000);
         Artist Jcole = new Artist(1000, "Hip-Hop/Rap", "Jcole",
@@ -28,9 +27,10 @@ public class MusicDataTest {
                 new Boolean[] {true, true, false, false, true}, 1, 3000);
         Artist Taylor = new Artist(1000, "Pop", "Taylor Swift",
                 new Boolean[] {true, true, false, false, true}, 1, 1000);
+        MusicData.data.put(1, new ArrayList<>());
+        MusicData.data.put(2, new ArrayList<>());
 
         //Test the length of Hashmap and if it correctly added the artists
-        Assertions.assertEquals(MusicData.data.size(), 0);
         test.addArtist(Drake);
         Assertions.assertEquals(MusicData.data.size(), 1);
         test.addArtist(Jcole);
@@ -53,10 +53,10 @@ public class MusicDataTest {
 
         //Test getTop
         // This one should only include Kendrick since he has the most streams and the amount = 1
-        Assertions.assertTrue(test.getTop(1, 1).contains(Kendrick));
-        Assertions.assertFalse(test.getTop(1, 1).contains(Drake));
+        Assertions.assertTrue(MusicData.getTop(1, 1).contains(Kendrick));
+        Assertions.assertFalse(MusicData.getTop(1, 1).contains(Drake));
         // This one should include Jcole and Kendrick since the amount = 2 and Jcole is 2nd highest streams
-        Assertions.assertTrue(test.getTop(1, 2).contains(Jcole));
+        Assertions.assertTrue(MusicData.getTop(1, 2).contains(Jcole));
 
         //Test getGenres
         Assertions.assertTrue(MusicData.getGenres().contains("Pop"));
