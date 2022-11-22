@@ -68,9 +68,10 @@ public class MusicDataTest {
         Assertions.assertTrue(MusicData.getGenres().contains("TESTGENRE"));
 
         //Test getTrending
-        Assertions.assertEquals("Drake", MusicData.getTrending(1, 2).get(0).toString());
-        Assertions.assertEquals(1, MusicData.getTrending(1, 1).size());
-
+        Artist TesterGenre2 = new Artist(2000, "TESTGENRE", "TesterGenre",
+                new Boolean[] {true, false, false, false, true}, 2, 1000);
+        MusicData.addArtist(TesterGenre2);
+        Assertions.assertFalse(MusicData.getTrending(1, 2).contains(TesterGenre2));
     }
 
 }
