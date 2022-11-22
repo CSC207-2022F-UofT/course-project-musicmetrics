@@ -19,7 +19,7 @@ public class MusicDataTest {
     public void TestHashMap() throws FileNotFoundException {
         MusicData test = new MusicData();
         // Created a new HashMap for the sole purpose of testing, to have a narrow data set of 4 artists
-        MusicData.data = new HashMap<>();
+        test.data = new HashMap<>();
         Artist Drake = new Artist(1000, "Hip-Hop/Rap", "Drake",
                 new Boolean[] {true, false, false, false, true}, 1, 1000);
         Artist Jcole = new Artist(1000, "Hip-Hop/Rap", "Jcole",
