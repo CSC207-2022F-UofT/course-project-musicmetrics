@@ -1,3 +1,7 @@
+package entities;
+
+import use_cases.MusicData;
+
 import java.util.HashMap;
 
 public class Artist {
@@ -9,14 +13,14 @@ public class Artist {
     public int time;
 
     /**
-     *Creates a new Artist object with everything blank
+     *Creates a new Entities.Artist object with everything blank
      */
     public Artist() {
 
     }
 
     /**
-     *Creates a new Artist object with the follows, genre and likes.
+     *Creates a new Entities.Artist object with the follows, genre and likes.
      *
      * @param follows The follows of the artist
      * @param genre The genre of the artist

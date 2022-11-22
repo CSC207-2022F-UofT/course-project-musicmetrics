@@ -1,9 +1,13 @@
+import entities.GuestUser;
+import entities.RegisteredUser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import use_cases.UserData;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
-import java.util.concurrent.ExecutionException;
+
 
 
 public class UserDataTest {
