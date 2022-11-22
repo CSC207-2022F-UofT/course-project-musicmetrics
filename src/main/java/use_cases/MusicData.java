@@ -279,6 +279,7 @@ public class MusicData{
             streams.add(a.getStreams());
         }
         Collections.sort(streams);
+        Collections.reverse(streams);
 
         for (int amt = 0; amt < amount; amt++){
             for (Artist a : w_data){
