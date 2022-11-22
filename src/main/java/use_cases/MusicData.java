@@ -251,10 +251,14 @@ public class MusicData{
     public static List<String> getGenres(){
         int week = getLatestWeek();
         List<String> all_genres = new ArrayList<>();
-        ArrayList<Artist> w_data = getArtists(week);
-
-        for (Artist a : w_data){all_genres.add(a.getGenre()); }
-
+        for (int w = 1; w<=week; w++) {
+            ArrayList<Artist> w_data = getArtists(w);
+            for (Artist a : w_data) {
+                if (!(all_genres.contains(a.getGenre()))) {
+                    all_genres.add(a.getGenre());
+                }
+            }
+        }
         return all_genres.stream().distinct().collect(Collectors.toList());
     }
 
