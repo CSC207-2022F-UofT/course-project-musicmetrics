@@ -32,7 +32,7 @@ public class MusicDataTest {
 
         //Test the length of Hashmap and if it correctly added the artists
         test.addArtist(Drake);
-        Assertions.assertEquals(MusicData.data.size(), 1);
+        Assertions.assertEquals(MusicData.data.size(), 2);
         test.addArtist(Jcole);
         Assertions.assertEquals(MusicData.data.get(1).size(), 2);
         test.addArtist(Kendrick);
