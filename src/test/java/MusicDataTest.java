@@ -41,7 +41,7 @@ public class MusicDataTest {
         Assertions.assertEquals(MusicData.data.get(1).size(), 4);
 
         //Test that data hashmap has correct latest week
-        Assertions.assertEquals(MusicData.getLatestWeek(),1);
+        Assertions.assertEquals(MusicData.getLatestWeek(),2);
         List<Integer> testweek = new ArrayList<>();
         testweek.add(1);
 
