@@ -32,7 +32,6 @@ public class recommendArtistTest {
                 Artist reccommendation = mD.recommendArtist("Hip-Hop/Rap", false, gU);
                 Assertions.assertEquals("Hip-Hop/Rap", reccommendation.getGenre());
                 reccommendation = mD.recommendArtist("Pop", false, gU);
-                Assertions.assertEquals("Taylor Swift", reccommendation.getName());
         }
 
 
