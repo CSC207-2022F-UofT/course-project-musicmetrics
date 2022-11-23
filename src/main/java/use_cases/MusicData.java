@@ -103,7 +103,7 @@ public class MusicData{
      * Gets an artist recommendation within a specific genre, random if similar is false, otherwise uses the similarties
      * with artists the user follows.
      *
-     * @param genre the genre the recommedation is within
+     * @param genre the genre the recommendation is within
      * @param similar if the recommendation should be based on the user's followers or random
      * @param rUser the user that is making the request, should be registeredUser if similar is true
      * @return an artist recommeneded for the Entities.User

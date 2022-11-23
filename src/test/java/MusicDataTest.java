@@ -72,6 +72,9 @@ public class MusicDataTest {
                 new Boolean[] {true, false, false, false, true}, 2, 1000);
         MusicData.addArtist(TesterGenre2);
         Assertions.assertFalse(MusicData.getTrending(1, 2).contains(TesterGenre2));
+
+        //Test recommendArtist
+
     }
 
 }
