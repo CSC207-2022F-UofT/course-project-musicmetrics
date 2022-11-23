@@ -7,20 +7,21 @@ public class Alert {
     String message;
     static double growth_rate = 1.25;
     ArrayList<String> tops ;
+    RegisteredUser user;
 
-    public Alert(){
+    public Alert(RegisteredUser user){
         ArrayList<String> tops = new ArrayList<String>();
-
+        this.user = user;
 
     }
 
     /** trigger checks if the artists streams had the sufficient amount of growth compare to its last week
      * streams
-     * @param user is the list of all artists that in trigger, their streams are compared and the top ones
+     * user is the list of all artists that in trigger, their streams are compared and the top ones
      *                will be determined.
      */
-    public void trigger(RegisteredUser user){
-        List<Artist> follows = user.getFollows();
+    public void trigger(){
+        List<Artist> follows = this.user.getFollows();
         for (Artist i: follows){
             List<Integer> weeks = Arrays.asList(MusicData.getLatestWeek() - 1, MusicData.getLatestWeek());
 
@@ -39,8 +40,7 @@ public class Alert {
     }
 
     /**
-     * this method returns a list of top artists names
-     * @return
+     * @return this method returns a list of top artists names
      */
     public ArrayList<String> showtops(){
         return this.tops;
