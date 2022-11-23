@@ -184,7 +184,7 @@ public class MusicData{
 
 //    Helper method for getStreams that returns artist streams of a week
 //    Assumes artists for MusicData is stored in a key(week) to value(array of artists relationship)
-    private int getStreamsHelper(String name, int week) {
+    private static int getStreamsHelper(String name, int week) {
         List<Artist> week_data = getArtists(week);
         for (Artist artist: week_data) {
             if (artist.getName().equals(name)) {
