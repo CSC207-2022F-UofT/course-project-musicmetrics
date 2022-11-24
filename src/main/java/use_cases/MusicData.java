@@ -110,7 +110,7 @@ public class MusicData{
 
     /**
      * Gets an artist recommendation within a specific genre, random if similar is false, otherwise uses the similarties
-     * with artists the user follows.
+     * with artists the user follows. Recommendation not within follows.
      *
      * @param genre the genre the recommendation is within
      * @param similar if the recommendation should be based on the user's followers or random
@@ -124,11 +124,27 @@ public class MusicData{
             //generate a recommendation off of similarity scores to followed artists within the genre
             //get the User's follows and initialize the current highest similarity score (the one of the recommendation)
             List<Artist> registeredUserFollows = ((RegisteredUser) rUser).getFollows(); //similar is true means user is registered
+            //get Artists not Followed within the same genre
+            List<Artist> nonFollow = getArtistsByGenre(genre);
+            for(Artist artistWithinGenre : sameGenre){ //filter out the ones followed
+                for (Artist followed : registeredUserFollows) {
+                    if (followed.getName().equals(artistWithinGenre.getName())) {
+                        nonFollow.remove(artistWithinGenre);
+                        break;
+                    }
+                }
+            }
+            //if the user follows everyone return a random person they follow
+            if(nonFollow.size() == 0){
+                int randomInt = new Random().nextInt(sameGenre.size());
+                recommendation = sameGenre.get(randomInt);
+                return recommendation;
+            }
             double recommendationSimilarityScore = 0.0;
-            for(Artist artistWithinGenre : sameGenre){
+            for(Artist artistNotFollowed : nonFollow){
                 //for each artist within the recommended genre, generate the total similarity score to artistWithinGenre
                 double similarityScore = 0.0;
-                Boolean[] artistSimilarties = artistWithinGenre.getLikes();
+                Boolean[] artistSimilarties = artistNotFollowed.getLikes();
                 for(Artist follow : registeredUserFollows){
                     Boolean[] followSimilarities = follow.getLikes();
                     for(int i = 0; i < artistSimilarties.length; i++){
@@ -141,7 +157,7 @@ public class MusicData{
                 //than the average of the current recommendation
                 similarityScore = similarityScore / registeredUserFollows.size();
                 if(similarityScore > recommendationSimilarityScore){
-                    recommendation = artistWithinGenre;
+                    recommendation = artistNotFollowed;
                     recommendationSimilarityScore = similarityScore;
                 }
             }
@@ -341,6 +357,23 @@ public class MusicData{
 
         if (!(artistObj==null)) {
             return artistObj.getInfo();
+        }
+        return null;
+    }
+
+    /**
+     * Returns an Artist whose name is the given parameter name.
+     * Returns null if Artist with name is not found in the MusicData.
+     *
+     * @param name the name of the artist
+     * @return an Artist with the given name
+     */
+    public static Artist artistResult(String name) {
+        List<Artist> artists = MusicData.getArtists(MusicData.getLatestWeek());
+        for (Artist artist : artists) {
+            if (artist.getName().equals(name)) {
+                return artist;
+            }
         }
         return null;
     }
