@@ -43,16 +43,12 @@ class SearcherTest {
     public void FilterKeywordCommonKeyword() throws FileNotFoundException {
         Searcher searcher = new Searcher();
         List<String> expected = new ArrayList<>();
-        expected.add("top 5 genres");
-        expected.add("top 20 genres");
-        expected.add("top 10 genres");
         expected.add("top 5 artists");
         expected.add("top 10 artists");
-        expected.add("top 20 artists");
-        expected.add("top 5 genres of the past week");
+        expected.add("top 14 artists");
         expected.add("top 5 artists of the past week");
-        expected.add("top 10 genres of the past week");
-        expected.add("top 20 genres of the past week");
+        expected.add("top 14 artists of the past week");
+        expected.add("top 10 artists of the past week");
         List<String> actual = searcher.filterKeyword("top");
         Assertions.assertEquals(expected, actual);
     }
@@ -62,8 +58,8 @@ class SearcherTest {
         Searcher searcher = new Searcher();
         List<String> expected = new ArrayList<>();
         expected.add("top 5 artists of the past week");
+        expected.add("top 14 artists of the past week");
         expected.add("top 10 artists of the past week");
-        expected.add("top 20 artists of the past week");
         List<String> actual = searcher.filterKeyword("artists of");
         Assertions.assertEquals(expected, actual);
     }
