@@ -2,6 +2,7 @@ package entities;
 
 import interface_adapters.Alert;
 import interface_adapters.Searcher;
+import use_cases.MusicData;
 import use_cases.UserData;
 
 import java.io.FileNotFoundException;
@@ -93,7 +94,7 @@ public class RegisteredUser extends User {
         // check if artist in database and check if not already following artist-- if so, append to following ArrayList
         if (artists.contains(artist)) {
             if (!follows.contains(artist)) {
-                follows.add(searcher.artistResult(artist));
+                follows.add(MusicData.artistResult(artist));
             }
         }
     }
@@ -111,7 +112,7 @@ public class RegisteredUser extends User {
         List<String> artists = searcher.filterArtist(artist);
         // check if artist in database -- if so, remove from following ArrayList
         if (artists.contains(artist)) {
-            follows.remove(searcher.artistResult(artist));
+            follows.remove(MusicData.artistResult(artist));
         }
     }
 
@@ -121,6 +122,6 @@ public class RegisteredUser extends User {
      * @return a List of artists the registeredUser follows
      */
     public List<Artist> getFollows() {
-        return new ArrayList<Artist>();
+        return this.follows;
     }
 }

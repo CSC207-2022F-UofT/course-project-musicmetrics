@@ -93,22 +93,7 @@ public class Searcher {
         return getKeyListSortedByValue(scoreMap);
     }
 
-    /**
-     * Returns an Artist whose name is the given parameter name.
-     * Returns null if Artist with name is not found in the MusicData.
-     *
-     * @param name the name of the artist
-     * @return an Artist with the given name
-     */
-    public Artist artistResult(String name) {
-        List<Artist> artists = MusicData.getArtists(MusicData.getLatestWeek());
-        for (Artist artist : artists) {
-            if (artist.getName().equals(name)) {
-                return artist;
-            }
-        }
-        return null;
-    }
+
 
     /**
      * Returns an ArrayList of at most 10 most relevant Genre that the User can navigate based on the given keyword.
@@ -224,7 +209,7 @@ public class Searcher {
                 try {
                     int index = Integer.parseInt(scanner.nextLine().strip());
                     if (1 <= index && index <= artists.size()) {
-                        Artist artist = searcher.artistResult(artists.get(index - 1));
+                        Artist artist = MusicData.artistResult(artists.get(index - 1));
                         for (Map.Entry<String, Object> entry : artist.getInfo().entrySet()) {
                             System.out.println(entry.getKey() + ": " + entry.getValue());
                         }
