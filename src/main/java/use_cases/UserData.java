@@ -1,7 +1,6 @@
 package use_cases;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -15,34 +14,39 @@ public class UserData {
     //  False if Entities.User is Logged-out currently
     //  When a Entities.User logs in, their Entities.User object instance should be moved from False to True
     static HashMap<Boolean, ArrayList<RegisteredUser>> data = new HashMap<>();
-    FileWriter registeredFile = new FileWriter("AllRegisteredUsers.txt");
-    FileWriter loggedInFile = new FileWriter("LoggedInUsers.txt");
+    File registeredFile = new File("AllRegisteredUsers.txt");
+    File loggedInFile = new File("LoggedInUsers.txt");
 
     public UserData() throws Exception {
         // initialize data HashMap
         data.put(true, new ArrayList<>());
         data.put(false, new ArrayList<>());
         // read off loggedInFile and append to data
-        Scanner loggedInUsers = new Scanner("LoggedInUsers.txt");
+        Scanner loggedInUsers = new Scanner("LoggedInUsers.txt").useDelimiter(",");
         loggedInUsers.nextLine(); // skip header
+        String email = "";
+        String password = "";
+
         while (loggedInUsers.hasNextLine()) {
-            String line = loggedInUsers.nextLine();
-            String[] temp = line.split(",");
-            RegisteredUser user = new RegisteredUser(temp[0], temp[1]);
+            email = loggedInUsers.next();
+            password = loggedInUsers.next();
+            RegisteredUser user = new RegisteredUser(email, password);
             data.get(true).add(user);
             // read off registeredUsers file and append to data
-        } loggedInUsers.close();
-        Scanner registeredUsers = new Scanner("AllRegisteredUsers.txt");
+        }
+        loggedInUsers.close();
+        Scanner registeredUsers = new Scanner("AllRegisteredUsers.txt").useDelimiter(",");
         registeredUsers.nextLine(); // skip header
         while (registeredUsers.hasNextLine()) {
-            String line2 = registeredUsers.nextLine();
-            String[] temp2 = line2.split(", ");
+            email = registeredUsers.next();
+            password = registeredUsers.next();
             // check if user is already in data - logged in
-            if (!data.get(true).contains(this.getUser(temp2[0]))) {
-                RegisteredUser user2 = new RegisteredUser(temp2[0], temp2[1]);
+            if (!data.get(true).contains(this.getUser(email))) {
+                RegisteredUser user2 = new RegisteredUser(email, password);
                 data.get(false).add(user2);
             }
-        } registeredUsers.close();
+        }
+        registeredUsers.close();
     }
 
     /**
@@ -109,11 +113,12 @@ public class UserData {
             // add new Entities.RegisteredUser into data
             data.get(true).add(newUser);
             // add new Entities.RegisteredUser into AllRegisteredUsers text file
-            writeToTextFile(registeredFile, email + ", " + password + "\n");
+            writeToTextFile(registeredFile, email + ", " + password);
             // add new Entities.RegisteredUser into LoggedInUsers text file
-            writeToTextFile(loggedInFile, email + ", " + password + "\n");
+            writeToTextFile(loggedInFile, email + ", " + password);
             return true;
-        } return false;
+        }
+        return false;
     }
 
     public boolean deleteUser(String email, String password) throws Exception {
@@ -189,29 +194,38 @@ public class UserData {
      * @param toAdd    a string that is to be written onto the file
      *                 this method write a string onto the text file
      */
-    public void writeToTextFile(FileWriter filename, String toAdd) throws IOException {
-        filename.write(toAdd);
-        filename.close();
+    public void writeToTextFile(File filename, String toAdd) throws IOException {
+        FileWriter fw = new FileWriter(filename);
+        fw.write(toAdd);
+        fw.close();
     }
+
 
     /**
      * @param filename a File that needs to be updated
      * @param toRemove a string that is to be removed from the file
      *                 this method removes a string from the text file
      */
-    public void deleteFromTextFile(FileWriter filename, String toRemove) throws IOException {
-        Scanner scanned = new Scanner((Readable) filename);
-        StringBuilder content = new StringBuilder();
-        while (scanned.hasNextLine()) {
-            // read and store line temporarily if it doesn't match the string to be removed
-            if (!Objects.equals(scanned.nextLine(), toRemove)) {
-                content.append(scanned.nextLine());
-                content.append("\n"); // is this necessary
+    public void deleteFromTextFile(File filename, String toRemove) throws IOException {
+        File oldFile = new File(String.valueOf(filename));
+        File newFile = new File("temp.txt"); // create new file to hold updated content
+        FileWriter newFileWriter = new FileWriter(newFile, false);
+        PrintWriter pw = new PrintWriter(newFileWriter); // to write onto the new file
+        Scanner scanOld = new Scanner(oldFile); // to read the old file
+
+        String currentLine;
+        currentLine = scanOld.nextLine(); // skip header
+        newFileWriter.write("Email, password");
+        while (scanOld.hasNextLine()) {
+            if (!Objects.equals(currentLine, toRemove)) {
+                pw.println(currentLine);
             }
-            // update the text file by creating a new FileWriter object to replace the original FileWriter
-            FileWriter foo = new FileWriter(String.valueOf(filename), false);
-            foo.write(String.valueOf(content));
-            filename = foo; // does filename get reassigned successfully
-        } scanned.close();
+            currentLine = scanOld.nextLine();
+        }
+        scanOld.close(); // close scanner
+        newFileWriter.close(); // close FileWriter
+        pw.close();
+        // rename old file to new file
+        filename = newFile;
     }
 }

@@ -44,7 +44,7 @@ public class UserDataTest {
 
         // Test writeToTextFile
         File file1 = new File("main/AllRegisteredUsers.txt");
-        u.writeToTextFile(new FileWriter(file1), "New line added.");
+        u.writeToTextFile(file1, "New line added.");
         Scanner checkAdded = new Scanner(file1);
         checkAdded.nextLine();
         var line = "";
@@ -55,13 +55,12 @@ public class UserDataTest {
 
 
         // Test deleteFromTextFile
-        u.deleteFromTextFile(new FileWriter(file1), "New line added.");
+        u.deleteFromTextFile(file1, "New line added.");
         Scanner checkRemoved = new Scanner(file1);
         checkRemoved.nextLine();
         var line2 = "";
         while (checkRemoved.hasNextLine()) {
             line2 = checkRemoved.nextLine();
-
         }
         Assertions.assertEquals(line2, "fgh@gmail.com, password135");
 
