@@ -1,5 +1,5 @@
 package drivers;
-import interface_adapters.*;
+import interface_adapters.Searcher;
 
 import javax.swing.*;
 import java.awt.*;

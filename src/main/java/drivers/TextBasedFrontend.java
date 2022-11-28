@@ -1,12 +1,11 @@
 package drivers;
 import interface_adapters.*;
+import use_cases.RecommendArtist;
 
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class TextBasedFrontend {
-
-    static User user = new GuestUser();
 
     public static void main(String[] args) throws FileNotFoundException {
         MusicData.setData();
@@ -25,6 +24,7 @@ public class TextBasedFrontend {
                         System.out.println("login : log in to already existing account");
                         System.out.println("logout : log out from logged in account");
                         System.out.println("register : register a new account");
+                        System.out.println("recommend : get an artist recommendation within a specific genre");
                         System.out.println("search : search for data in out program");
                         System.out.println("profile : user profile");
                         System.out.println("exit : terminate the program");
@@ -38,11 +38,22 @@ public class TextBasedFrontend {
                     case "register":
                         System.out.println("Command \"register\" is not yet supported.");
                         break;
+                    case "recommend":
+                        System.out.println("Command \"recommend\" is not yet supported.");
+                        //make user select a genre
+                        String genre = "music";
+                        if (UserPresenter.checkIfGuestUser()){
+                            RecommendController.randomRecommend(genre);
+                        }
+                        else{
+                            RecommendController.similarRecommend(genre);
+                        }
+                        break;
                     case "search":
                         Searcher.main(null);
                         break;
                     case "profile":
-                        if (user instanceof GuestUser) {
+                        if (UserPresenter.checkIfGuestUser()) {
                             System.out.println("You are a Guest User. Type \"register\" to sign-up or type \"login\" to sign-in if you already have an account.");
                         }
                         break;
