@@ -1,8 +1,5 @@
 package use_cases;
-
-import entities.Artist;
-import entities.RegisteredUser;
-import entities.User;
+import entities.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
