@@ -1,11 +1,12 @@
 package use_cases;
+import entities.*;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
-import entities.*;
+
 
 public class UserData {
 

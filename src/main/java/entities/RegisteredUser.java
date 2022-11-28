@@ -1,9 +1,5 @@
 package entities;
 
-import interface_adapters.Alert;
-import interface_adapters.Searcher;
-import use_cases.UserData;
-
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +8,7 @@ import java.util.*;
 public class RegisteredUser extends User {
     private final String email;
     private String password;
-    public ArrayList<String> follows;
+    public ArrayList<Artist> follows;
 
     public RegisteredUser(String email, String password) {
         this.email = email;
@@ -78,7 +74,7 @@ public class RegisteredUser extends User {
      *
      * @param follows following ArrayList to set
      */
-    public void setFollows(ArrayList<String> follows) {this.follows = follows; }
+    public void setFollows(ArrayList<Artist> follows) {this.follows = follows; }
 
     /**
      * Adds an artist the Entities.RegisteredUser want to follow to their followings.
@@ -93,7 +89,7 @@ public class RegisteredUser extends User {
         // check if artist in database and check if not already following artist-- if so, append to following ArrayList
         if (artists.contains(artist)) {
             if (!follows.contains(artist)) {
-                follows.add(artist);
+                follows.add(MusicData.artistResult(artist));
             }
         }
     }
@@ -111,7 +107,7 @@ public class RegisteredUser extends User {
         List<String> artists = searcher.filterArtist(artist);
         // check if artist in database -- if so, remove from following ArrayList
         if (artists.contains(artist)) {
-            follows.remove(artist);
+            follows.remove(MusicData.artistResult(artist));
         }
     }
 
@@ -121,6 +117,6 @@ public class RegisteredUser extends User {
      * @return a List of artists the registeredUser follows
      */
     public List<Artist> getFollows() {
-        return new ArrayList<Artist>();
+        return this.follows;
     }
 }
