@@ -8,8 +8,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
 
-
-
 public class UserDataTest {
 
     @Test
@@ -43,26 +41,26 @@ public class UserDataTest {
         }
 
         // Test writeToTextFile
-        File file1 = new File("main/AllRegisteredUsers.txt");
-        u.writeToTextFile(file1, "New line added.");
-        Scanner checkAdded = new Scanner(file1);
-        checkAdded.nextLine();
-        var line = "";
-        while (checkAdded.hasNextLine()) {
-            line = checkAdded.nextLine();
-        }
-        Assertions.assertEquals(line, "New line added.");
+//        File file1 = new File("main/AllRegisteredUsers.txt");
+//        u.writeToTextFile(file1, "New line added.");
+//        Scanner checkAdded = new Scanner(file1);
+//        checkAdded.nextLine();
+//        var line = "";
+//        while (checkAdded.hasNextLine()) {
+//            line = checkAdded.nextLine();
+//        }
+//        Assertions.assertEquals(line, "New line added.");
 
 
         // Test deleteFromTextFile
-        u.deleteFromTextFile(file1, "New line added.");
-        Scanner checkRemoved = new Scanner(file1);
-        checkRemoved.nextLine();
-        var line2 = "";
-        while (checkRemoved.hasNextLine()) {
-            line2 = checkRemoved.nextLine();
-        }
-        Assertions.assertEquals(line2, "fgh@gmail.com, password135");
+//        u.deleteFromTextFile(file1, "New line added.");
+//        Scanner checkRemoved = new Scanner(file1);
+//        checkRemoved.nextLine();
+//        var line2 = "";
+//        while (checkRemoved.hasNextLine()) {
+//            line2 = checkRemoved.nextLine();
+//        }
+//        Assertions.assertEquals(line2, "fgh@gmail.com, password135");
 
 
         //Test saveUser

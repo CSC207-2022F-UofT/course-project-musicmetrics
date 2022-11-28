@@ -113,9 +113,9 @@ public class UserData {
             // add new Entities.RegisteredUser into data
             data.get(true).add(newUser);
             // add new Entities.RegisteredUser into AllRegisteredUsers text file
-            writeToTextFile(registeredFile, email + ", " + password);
-            // add new Entities.RegisteredUser into LoggedInUsers text file
-            writeToTextFile(loggedInFile, email + ", " + password);
+//            writeToTextFile(registeredFile, email + ", " + password);
+//            // add new Entities.RegisteredUser into LoggedInUsers text file
+//            writeToTextFile(loggedInFile, email + ", " + password);
             return true;
         }
         return false;
@@ -127,9 +127,9 @@ public class UserData {
         if (data.get(true).contains(userToDelete)) {
             data.get(true).remove(userToDelete);
             // remove Entities.RegisteredUser from AllRegisteredUsers text file
-            deleteFromTextFile(registeredFile, email + ", " + password + "\n");
-            // remove Entities.RegisteredUser from LoggedInUsers text file
-            deleteFromTextFile(loggedInFile, email + ", " + password + "\n");
+//            deleteFromTextFile(registeredFile, email + ", " + password + "\n");
+//            // remove Entities.RegisteredUser from LoggedInUsers text file
+//            deleteFromTextFile(loggedInFile, email + ", " + password + "\n");
             return true;
         }
         return false;
@@ -152,7 +152,7 @@ public class UserData {
                         data.get(false).remove(u);
                         data.get(true).add(u);
                         // add user to LoggedInUsers text file
-                        writeToTextFile(loggedInFile, email + ", " + password + "\n");
+//                        writeToTextFile(loggedInFile, email + ", " + password + "\n");
                         return u;
                     }
                     throw new Exception("Incorrect password");
@@ -176,7 +176,7 @@ public class UserData {
                         data.get(true).remove(u);
                         data.get(false).add(u);
                         // remove user from LoggedInUsers text file
-                        deleteFromTextFile(loggedInFile, email + ", " + password + "\n");
+//                        deleteFromTextFile(loggedInFile, email + ", " + password + "\n");
                         return new GuestUser();
                     }
                     throw new Exception("Incorrect password");
@@ -194,11 +194,11 @@ public class UserData {
      * @param toAdd    a string that is to be written onto the file
      *                 this method write a string onto the text file
      */
-    public void writeToTextFile(File filename, String toAdd) throws IOException {
-        FileWriter fw = new FileWriter(filename);
-        fw.write(toAdd);
-        fw.close();
-    }
+//    public void writeToTextFile(File filename, String toAdd) throws IOException {
+//        FileWriter fw = new FileWriter(filename);
+//        fw.write(toAdd);
+//        fw.close();
+//    }
 
 
     /**
@@ -206,26 +206,26 @@ public class UserData {
      * @param toRemove a string that is to be removed from the file
      *                 this method removes a string from the text file
      */
-    public void deleteFromTextFile(File filename, String toRemove) throws IOException {
-        File oldFile = new File(String.valueOf(filename));
-        File newFile = new File("temp.txt"); // create new file to hold updated content
-        FileWriter newFileWriter = new FileWriter(newFile, false);
-        PrintWriter pw = new PrintWriter(newFileWriter); // to write onto the new file
-        Scanner scanOld = new Scanner(oldFile); // to read the old file
-
-        String currentLine;
-        currentLine = scanOld.nextLine(); // skip header
-        newFileWriter.write("Email, password");
-        while (scanOld.hasNextLine()) {
-            if (!Objects.equals(currentLine, toRemove)) {
-                pw.println(currentLine);
-            }
-            currentLine = scanOld.nextLine();
-        }
-        scanOld.close(); // close scanner
-        newFileWriter.close(); // close FileWriter
-        pw.close();
-        // rename old file to new file
-        filename = newFile;
-    }
+//    public void deleteFromTextFile(File filename, String toRemove) throws IOException {
+//        File oldFile = new File(String.valueOf(filename));
+//        File newFile = new File("temp.txt"); // create new file to hold updated content
+//        FileWriter newFileWriter = new FileWriter(newFile, false);
+//        PrintWriter pw = new PrintWriter(newFileWriter); // to write onto the new file
+//        Scanner scanOld = new Scanner(oldFile); // to read the old file
+//
+//        String currentLine;
+//        currentLine = scanOld.nextLine(); // skip header
+//        newFileWriter.write("Email, password");
+//        while (scanOld.hasNextLine()) {
+//            if (!Objects.equals(currentLine, toRemove)) {
+//                pw.println(currentLine);
+//            }
+//            currentLine = scanOld.nextLine();
+//        }
+//        scanOld.close(); // close scanner
+//        newFileWriter.close(); // close FileWriter
+//        pw.close();
+//        // rename old file to new file
+//        filename = newFile;
+//    }
 }
