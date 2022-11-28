@@ -1,7 +1,5 @@
 package drivers;
-
-import interface_adapters.Searcher;
-import use_cases.MusicData;
+import interface_adapters.*;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -11,7 +9,6 @@ import java.util.List;
 
 /*
 Java Swing Frontend, simply run the file to use.
-
 Check Java Swing documentation for more info.
  */
 public class Frontend extends JFrame{
