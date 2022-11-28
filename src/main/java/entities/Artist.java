@@ -1,7 +1,5 @@
 package entities;
 
-import use_cases.MusicData;
-
 import java.util.HashMap;
 
 public class Artist {
@@ -75,22 +73,5 @@ public class Artist {
 
     public String toString() { return this.name;}
 
-    /**
-     *
-     * @param artistTwo     An artist's name
-     * @return      A HashMap with artist name as keys
-     *                  returns null if artistTwo does not have data correlating to artistOne's week/timestamp
-     *
-     * When comparing artists, the method will compare the two artists based on THE FIRST ARTIST'S timestamp.
-     *      EX: if this artist instance is for week 3, then it will be compared against artistTwo's week 3.
-     */
-    public HashMap<String, Object> Compare(String artistTwo) {
-        HashMap<String, Object> data = new HashMap<>();
-        data.put(this.getName(), this.getInfo());
-        if (MusicData.data.containsKey(this.getTimeStamp())) {
-            data.put(artistTwo, MusicData.getArtistData(artistTwo, this.getTimeStamp()));
-            return data;
-        }
-        return null;
-    }
+
 }
