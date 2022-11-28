@@ -57,9 +57,10 @@ public class Searcher {
     public void actionResult(String action) {
         if (action.startsWith("top")) {
             String[] split = action.split(" ");
-            List<Artist> artists = MusicData.getTop(MusicData.getLatestWeek(), Integer.parseInt(split[1]));
+            int amt = Integer.parseInt(split[1]);
+            List<String> artists = ArtistComparer.topArtistNames(amt);
             for (int i = 0;i < artists.size();i++) {
-                System.out.println((i + 1) + ". " + artists.get(i).getName());
+                System.out.println((i + 1) + ". " + artists.get(i));
             }
         }
         else if (action.startsWith("recommend")) {
