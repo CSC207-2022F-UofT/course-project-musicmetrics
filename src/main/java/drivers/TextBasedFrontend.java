@@ -1,9 +1,5 @@
 package drivers;
-
-import entities.GuestUser;
-import entities.User;
-import interface_adapters.Searcher;
-import use_cases.MusicData;
+import interface_adapters.*;
 
 import java.io.FileNotFoundException;
 import java.util.Scanner;

@@ -1,7 +1,5 @@
 package entities;
 
-import use_cases.MusicData;
-
 import java.util.HashMap;
 
 public class Artist {

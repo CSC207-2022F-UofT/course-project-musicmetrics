@@ -1,7 +1,5 @@
 package drivers;
-
-import interface_adapters.Searcher;
-import use_cases.MusicData;
+import interface_adapters.*;
 
 import javax.swing.*;
 import java.awt.event.*;

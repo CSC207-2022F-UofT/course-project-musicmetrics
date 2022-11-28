@@ -1,9 +1,6 @@
 package entities;
 
-import use_cases.UserData;
-
 import java.util.List;
-import java.util.Scanner;
 
 public class GuestUser extends User {
     public GuestUser(){

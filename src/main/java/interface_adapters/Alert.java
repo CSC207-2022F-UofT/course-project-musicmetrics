@@ -1,8 +1,5 @@
 package interface_adapters;
-
-import entities.Artist;
-import entities.RegisteredUser;
-import use_cases.MusicData;
+import use_cases.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
