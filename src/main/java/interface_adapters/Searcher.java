@@ -28,7 +28,7 @@ public class Searcher {
         while (genreScanner.hasNextLine()) {
             this.genres.add(genreScanner.nextLine());
         }
-        MusicData.setData();
+        MusicDataBuilder.setData();
     }
 
     /**
