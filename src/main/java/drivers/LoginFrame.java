@@ -1,7 +1,5 @@
 package drivers;
-
-import entities.RegisteredUser;
-import use_cases.UserData;
+import interface_adapters.*;
 
 import javax.swing.*;
 import java.awt.*;

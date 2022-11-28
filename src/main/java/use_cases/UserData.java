@@ -1,4 +1,5 @@
 package use_cases;
+import entities.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -6,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
-import entities.*;
+
 
 public class UserData {
 

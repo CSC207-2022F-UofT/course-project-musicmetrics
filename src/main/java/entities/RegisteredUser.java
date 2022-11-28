@@ -1,10 +1,5 @@
 package entities;
 
-import interface_adapters.Alert;
-import interface_adapters.Searcher;
-import use_cases.MusicData;
-import use_cases.UserData;
-
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;

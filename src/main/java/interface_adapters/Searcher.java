@@ -1,8 +1,5 @@
 package interface_adapters;
-
-import entities.Artist;
-import entities.GuestUser;
-import use_cases.MusicData;
+import use_cases.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
