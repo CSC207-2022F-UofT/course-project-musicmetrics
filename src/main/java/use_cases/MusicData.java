@@ -365,7 +365,7 @@ public class MusicData{
      * @param name the name of the artist
      * @return an Artist with the given name
      */
-    public static Artist artistResult(String name) {
+    public static Artist getArtistByName(String name) {
         List<Artist> artists = MusicData.getArtists(MusicData.getLatestWeek());
         for (Artist artist : artists) {
             if (artist.getName().equals(name)) {
@@ -374,7 +374,6 @@ public class MusicData{
         }
         return null;
     }
-
 
     public static void main(String[] args) throws FileNotFoundException {
         MusicData.setData();
