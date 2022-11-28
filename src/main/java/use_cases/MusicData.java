@@ -1,5 +1,8 @@
 package use_cases;
-import entities.*;
+import entities.Artist;
+import entities.GuestUser;
+import entities.RegisteredUser;
+import entities.User;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -375,6 +378,41 @@ public class MusicData{
         return null;
     }
 
+    /**
+     * Prints out relevant information based on the given action.
+     * Available actions: top, recommend
+     *
+     * @param action the action that User chose to take
+     */
+    public static void actionResult(String action) {
+        if (action.startsWith("top")) {
+            String[] split = action.split(" ");
+            int amt = Integer.parseInt(split[1]);
+            List<String> artists = use_cases.ArtistComparer.topArtistNames(amt);
+            for (int i = 0;i < artists.size();i++) {
+                System.out.println((i + 1) + ". " + artists.get(i));
+            }
+        }
+        else if (action.startsWith("recommend")) {
+            String genre = action.substring(10, action.indexOf("artist") - 1);
+            MusicData mD = new MusicData();
+            GuestUser gU = new GuestUser();
+            Artist artist = mD.recommendArtist(genre, false, gU);
+            for (Map.Entry<String, Object> entry : artist.getInfo().entrySet()) {
+                System.out.println(entry.getKey() + ": " + entry.getValue());
+            }
+        }
+    }
+
+    /**
+     * Returns an ArrayList of Artists within the given genre.
+     *
+     * @param genre the name of the genre
+     * @return an ArrayList of Artist with the given genre
+     */
+    public List<Artist> genreResult(String genre) {
+        return MusicData.getArtistsByGenre(genre);
+    }
 
     public static void main(String[] args) throws FileNotFoundException {
         MusicData.setData();

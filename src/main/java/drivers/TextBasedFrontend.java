@@ -6,8 +6,6 @@ import java.util.Scanner;
 
 public class TextBasedFrontend {
 
-    static User user = new GuestUser();
-
     public static void main(String[] args) throws FileNotFoundException {
         MusicData.setData();
         System.out.println("Welcome to MusicMetric!");
@@ -42,7 +40,7 @@ public class TextBasedFrontend {
                         Searcher.main(null);
                         break;
                     case "profile":
-                        if (user instanceof GuestUser) {
+                        if (UserPresenter.checkIfGuestUser()) {
                             System.out.println("You are a Guest User. Type \"register\" to sign-up or type \"login\" to sign-in if you already have an account.");
                         }
                         break;

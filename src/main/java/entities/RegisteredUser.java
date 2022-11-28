@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
 
-public class RegisteredUser extends User {
+public class RegisteredUser extends entities.User {
     private final String email;
     private String password;
-    public ArrayList<Artist> follows;
+    public ArrayList<entities.Artist> follows;
 
     public RegisteredUser(String email, String password) {
         this.email = email;
@@ -44,7 +44,7 @@ public class RegisteredUser extends User {
      * @return a new Entities.GuestUser instance
      * throws Exception if user is not logged in or does not exist in database
      */
-    public GuestUser logout() throws Exception {
+    public entities.GuestUser logout() throws Exception {
         UserData u = new UserData();
         return u.logoutUser(this.email, this.password);
     }
@@ -74,7 +74,7 @@ public class RegisteredUser extends User {
      *
      * @param follows following ArrayList to set
      */
-    public void setFollows(ArrayList<Artist> follows) {this.follows = follows; }
+    public void setFollows(ArrayList<entities.Artist> follows) {this.follows = follows; }
 
     /**
      * Adds an artist the Entities.RegisteredUser want to follow to their followings.
@@ -116,7 +116,7 @@ public class RegisteredUser extends User {
      *
      * @return a List of artists the registeredUser follows
      */
-    public List<Artist> getFollows() {
+    public List<entities.Artist> getFollows() {
         return this.follows;
     }
 }
