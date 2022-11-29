@@ -1,5 +1,5 @@
 package interface_adapters;
-import use_cases.*;
+import use_cases.MusicData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
