@@ -1,5 +1,8 @@
 package use_cases;
-import entities.*;
+import entities.Artist;
+import entities.GuestUser;
+import entities.RegisteredUser;
+import entities.User;
 
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -46,67 +49,7 @@ public class MusicData{
     }
 
 
-    /**
-     * Gets an artist recommendation within a specific genre, random if similar is false, otherwise uses the similarties
-     * with artists the user follows. Recommendation not within follows.
-     *
-     * @param genre the genre the recommendation is within
-     * @param similar if the recommendation should be based on the user's followers or random
-     * @param rUser the user that is making the request, should be registeredUser if similar is true
-     * @return an artist recommeneded for the User
-     */
-    public Artist recommendArtist(String genre, boolean similar, User rUser) {
-        Artist recommendation = new Artist();
-        List<Artist> sameGenre = getArtistsByGenre(genre);
-        if(similar){
-            //generate a recommendation off of similarity scores to followed artists within the genre
-            //get the User's follows and initialize the current highest similarity score (the one of the recommendation)
-            List<Artist> registeredUserFollows = ((RegisteredUser) rUser).getFollows(); //similar is true means user is registered
-            //get Artists not Followed within the same genre
-            List<Artist> nonFollow = getArtistsByGenre(genre);
-            for(Artist artistWithinGenre : sameGenre){ //filter out the ones followed
-                for (Artist followed : registeredUserFollows) {
-                    if (followed.getName().equals(artistWithinGenre.getName())) {
-                        nonFollow.remove(artistWithinGenre);
-                        break;
-                    }
-                }
-            }
-            //if the user follows everyone return a random person they follow
-            if(nonFollow.size() == 0){
-                int randomInt = new Random().nextInt(sameGenre.size());
-                recommendation = sameGenre.get(randomInt);
-                return recommendation;
-            }
-            double recommendationSimilarityScore = 0.0;
-            for(Artist artistNotFollowed : nonFollow){
-                //for each artist within the recommended genre, generate the total similarity score to artistWithinGenre
-                double similarityScore = 0.0;
-                Boolean[] artistSimilarties = artistNotFollowed.getLikes();
-                for(Artist follow : registeredUserFollows){
-                    Boolean[] followSimilarities = follow.getLikes();
-                    for(int i = 0; i < artistSimilarties.length && i < followSimilarities.length; i++){
-                        if(followSimilarities[i] == artistSimilarties[i]){
-                            similarityScore = similarityScore + 1;
-                        }
-                    }
-                }
-                //generate an average similarity score and then change the recommendation if the average is greater
-                //than the average of the current recommendation
-                similarityScore = similarityScore / registeredUserFollows.size();
-                if(similarityScore > recommendationSimilarityScore){
-                    recommendation = artistNotFollowed;
-                    recommendationSimilarityScore = similarityScore;
-                }
-            }
-        } else{
-            //generate a recommendation randomly within the genre
-            int randomInt = new Random().nextInt(sameGenre.size());
-            recommendation = sameGenre.get(randomInt);
-        }
 
-        return recommendation;
-    }
 
 
     /**
@@ -299,6 +242,41 @@ public class MusicData{
         return null;
     }
 
+    /**
+     * Prints out relevant information based on the given action.
+     * Available actions: top, recommend
+     *
+     * @param action the action that User chose to take
+     */
+    public static void actionResult(String action) {
+        if (action.startsWith("top")) {
+            String[] split = action.split(" ");
+            int amt = Integer.parseInt(split[1]);
+            List<String> artists = use_cases.ArtistComparer.topArtistNames(amt);
+            for (int i = 0;i < artists.size();i++) {
+                System.out.println((i + 1) + ". " + artists.get(i));
+            }
+        }
+        else if (action.startsWith("recommend")) {
+            String genre = action.substring(10, action.indexOf("artist") - 1);
+            MusicData mD = new MusicData();
+            GuestUser gU = new GuestUser();
+            Artist artist = RecommendArtist.recommend(genre, false, gU);
+            for (Map.Entry<String, Object> entry : artist.getInfo().entrySet()) {
+                System.out.println(entry.getKey() + ": " + entry.getValue());
+            }
+        }
+    }
+
+    /**
+     * Returns an ArrayList of Artists within the given genre.
+     *
+     * @param genre the name of the genre
+     * @return an ArrayList of Artist with the given genre
+     */
+    public List<Artist> genreResult(String genre) {
+        return MusicData.getArtistsByGenre(genre);
+    }
 
     public static void main(String[] args) throws FileNotFoundException {
         MusicDataBuilder.setData();
