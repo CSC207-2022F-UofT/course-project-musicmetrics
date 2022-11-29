@@ -1,5 +1,5 @@
 package use_cases;
-import entities.*;
+import entities.Artist;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,9 +17,9 @@ public class ArtistComparer {
      */
     public HashMap<String, Object> compare(String artistOne, String artistTwo, int week) {
         HashMap<String, Object> data = new HashMap<>();
-        if (MusicData.data.containsKey(week)) {
-            data.put(artistOne, MusicData.getArtistData(artistOne, week));
-            data.put(artistTwo, MusicData.getArtistData(artistTwo, week));
+        if (use_cases.MusicData.data.containsKey(week)) {
+            data.put(artistOne, use_cases.MusicData.getArtistData(artistOne, week));
+            data.put(artistTwo, use_cases.MusicData.getArtistData(artistTwo, week));
             return data;
         }
         return null;
@@ -32,7 +32,7 @@ public class ArtistComparer {
      * @return names - a list of the top artists' names
      */
     public static List<String> topArtistNames(int amt) {
-        List<Artist> artists = MusicData.getTop(MusicData.getLatestWeek(), amt);
+        List<Artist> artists = use_cases.MusicData.getTop(use_cases.MusicData.getLatestWeek(), amt);
         List<String> names = new ArrayList<String>();
         for (Artist a : artists){names.add(a.getName()); }
         return names;
