@@ -4,7 +4,6 @@ import entities.GuestUser;
 import entities.RegisteredUser;
 import entities.User;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,58 +13,6 @@ public class MusicData{
      * NOTE: Assume that an Artist will have information for EVERY WEEK in the Hashmap
      */
     public static HashMap<Integer, ArrayList<Artist>> data = new HashMap<>();
-
-
-    /**
-     * reads from relevant data files and stores info in data Hashmap
-     *
-     * @throws FileNotFoundException for Scanner sc
-     */
-    public static void setData() throws FileNotFoundException {
-
-        for (int week=1; week<=3; week++) {
-            Scanner sc = new Scanner(new File("src/main/java/use_cases/music_database/Data_" + week));
-            sc.useDelimiter(", ");
-            sc.nextLine();
-            ArrayList<Artist> allArtists = new ArrayList<>();
-            while (sc.hasNextLine()) {
-//                System.out.println(week);
-//                System.out.println(sc.next());
-//                System.out.println(sc.next());
-//                System.out.println(sc.next());
-//                System.out.println(sc.next());
-//                System.out.println(sc.next());
-
-                Artist a = setArtistData(sc, week);
-                allArtists.add(a); //add Artist to allArtists arraylist
-            }
-            data.put(week, allArtists); //store information in data HashMap
-            sc.close();
-        }
-    }
-
-
-    /**
-     * Reads info from relevant file and stores in a new Artist instance
-     *
-     * @param sc Scanner passed from setData to read this line
-     * @param week Current week and file data is extracted from
-     *
-     * @return Artist instance with current week's info stored
-     */
-    public static Artist setArtistData(Scanner sc, int week){
-        String name, genre;
-        int streams, follows;
-
-        //read all info
-        name = sc.next();
-        streams = Integer.parseInt(sc.next());
-        follows = Integer.parseInt(sc.next());
-        genre = sc.next();
-        Boolean[] likes = likesConverter(sc.next());
-
-        return new Artist(follows, genre, name, likes, week, streams);
-    }
 
 
     /**
@@ -87,12 +34,6 @@ public class MusicData{
             }
         }
 
-//        StringBuilder to_return = new StringBuilder();
-//        for (Artist a : trending){
-//            to_return.append(a.getName());
-//            to_return.append("\n");
-//        }
-//        return to_return;
         return trending;
     }
 
@@ -149,23 +90,6 @@ public class MusicData{
         }
         return 0;
     }
-
-    /**
-     * converts a string of 1s and 0s into a boolean array
-     *
-     * @param binary a string of 1s and 0s to represent likes
-     * @return boolean array corresponding to binary
-     */
-    private static Boolean[] likesConverter(String binary) {
-        String[] binaryList = binary.split(" ");
-        Boolean[] likes = new Boolean[binary.length()];
-        for(int i = 0; i < binaryList.length; i++){
-            String s = binaryList[i];
-            likes[i] = s.equals("1");
-        }
-        return likes;
-    }
-
 
 //    returns list of artist objects for current week
     public static ArrayList<Artist> getArtists(int week){
@@ -355,7 +279,7 @@ public class MusicData{
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        MusicData.setData();
+        MusicDataBuilder.setData();
         System.out.println(getGenres());
     }
 
