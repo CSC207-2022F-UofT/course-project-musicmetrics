@@ -57,14 +57,7 @@ public class TextBasedFrontend {
                                 try {
                                     int index = Integer.parseInt(scanner.nextLine().strip());
                                     if (1 <= index && index <= actions.size()) {
-                                        String action = actions.get(index - 1);
-                                        if (action.startsWith("top")) {
-                                            String[] split = action.split(" ");
-                                            List<Artist> artists = MusicData.getTop(MusicData.getLatestWeek(), Integer.parseInt(split[1]));
-                                            for (int i = 0;i < artists.size();i++) {
-                                                System.out.println((i + 1) + ". " + artists.get(i).getName());
-                                            }
-                                        }
+                                        searcher.actionResult(actions.get(index - 1));
                                     }
                                     else {
                                         System.out.println("Invalid index");
@@ -75,7 +68,7 @@ public class TextBasedFrontend {
                             }
                         }
                         else if (input.equalsIgnoreCase("artist")) {
-                            System.out.print("What artist do you want to search? ");
+                            System.out.print("What artist you want to search? ");
                             input = scanner.nextLine();
                             List<String> artists = searcher.filterArtist(input);
                             if (artists.size() == 0) {
