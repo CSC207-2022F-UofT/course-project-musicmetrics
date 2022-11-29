@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class GuestUser extends entities.User {
     public GuestUser(){
@@ -23,6 +24,5 @@ public class GuestUser extends entities.User {
 
     public void deleteUser(){
     }
-
 
 }
