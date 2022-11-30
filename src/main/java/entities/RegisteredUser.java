@@ -89,7 +89,7 @@ public class RegisteredUser extends entities.User {
         // check if artist in database and check if not already following artist-- if so, append to following ArrayList
         if (artists.contains(artist)) {
             if (!follows.contains(artist)) {
-                follows.add(MusicData.artistResult(artist));
+                follows.add(MusicData.getArtistByName(artist));
             }
         }
     }
@@ -107,7 +107,7 @@ public class RegisteredUser extends entities.User {
         List<String> artists = searcher.filterArtist(artist);
         // check if artist in database -- if so, remove from following ArrayList
         if (artists.contains(artist)) {
-            follows.remove(MusicData.artistResult(artist));
+            follows.remove(MusicData.getArtistByName(artist));
         }
     }
 

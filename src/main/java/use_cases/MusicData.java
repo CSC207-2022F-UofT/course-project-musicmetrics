@@ -226,13 +226,30 @@ public class MusicData{
     }
 
     /**
+     * Returns the information an Artist whose name is the given parameter name.
+     * Returns an empty HashMap if Artist with name is not found in the MusicData.
+     *
+     * @param name the name of the artist
+     * @return information of an Artist with the given name stored in HashMap
+     */
+    public static HashMap<String, Object> getArtistInfoByName(String name) {
+        List<Artist> artists = MusicData.getArtists(MusicData.getLatestWeek());
+        for (Artist artist : artists) {
+            if (artist.getName().equals(name)) {
+                return artist.getInfo();
+            }
+        }
+        return new HashMap<>();
+    }
+
+    /**
      * Returns an Artist whose name is the given parameter name.
      * Returns null if Artist with name is not found in the MusicData.
      *
      * @param name the name of the artist
      * @return an Artist with the given name
      */
-    public static Artist artistResult(String name) {
+    public static Artist getArtistByName(String name) {
         List<Artist> artists = MusicData.getArtists(MusicData.getLatestWeek());
         for (Artist artist : artists) {
             if (artist.getName().equals(name)) {
@@ -243,39 +260,37 @@ public class MusicData{
     }
 
     /**
-     * Prints out relevant information based on the given action.
-     * Available actions: top, recommend
+     * Returns a List of relevant information based on the given action.
+     * Returns null if the given action is not available.
+     * Available actions: top, trending
      *
      * @param action the action that User chose to take
+     * @return a List of relevant information
      */
-    public static void actionResult(String action) {
+    public static List<String> actionResult(String action) {
+        String[] split = action.split(" ");
         if (action.startsWith("top")) {
-            String[] split = action.split(" ");
-            int amt = Integer.parseInt(split[1]);
-            List<String> artists = use_cases.ArtistComparer.topArtistNames(amt);
-            for (int i = 0;i < artists.size();i++) {
-                System.out.println((i + 1) + ". " + artists.get(i));
-            }
+            return ArtistComparer.topArtistNames(Integer.parseInt(split[1]));
         }
-        else if (action.startsWith("recommend")) {
-            String genre = action.substring(10, action.indexOf("artist") - 1);
-            MusicData mD = new MusicData();
-            GuestUser gU = new GuestUser();
-            Artist artist = RecommendArtist.recommend(genre, false, gU);
-            for (Map.Entry<String, Object> entry : artist.getInfo().entrySet()) {
-                System.out.println(entry.getKey() + ": " + entry.getValue());
-            }
+        else if (action.contains("trending")) {
+            return ArtistComparer.trendingArtistNames(1, MusicData.getLatestWeek(), Integer.parseInt(split[0]));
         }
+        return null;
     }
 
     /**
-     * Returns an ArrayList of Artists within the given genre.
+     * Returns an ArrayList of the name of Artists within the given genre.
      *
      * @param genre the name of the genre
-     * @return an ArrayList of Artist with the given genre
+     * @return an ArrayList of the name of Artists with the given genre
      */
-    public List<Artist> genreResult(String genre) {
-        return MusicData.getArtistsByGenre(genre);
+    public static List<String> getArtistsNameByGenre(String genre) {
+        List<Artist> artists = getArtistsByGenre(genre);
+        List<String> names = new ArrayList<>();
+        for (Artist artist : artists) {
+            names.add(artist.getName());
+        }
+        return names;
     }
 
     public static void main(String[] args) throws FileNotFoundException {
