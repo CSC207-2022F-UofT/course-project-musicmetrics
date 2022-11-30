@@ -1,6 +1,5 @@
 package drivers;
 import interface_adapters.*;
-import use_cases.MusicData;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -69,7 +68,7 @@ public class TextBasedFrontend {
                                 try {
                                     int index = Integer.parseInt(scanner.nextLine().strip());
                                     if (1 <= index && index <= actions.size()) {
-                                        List<String> artists = MusicData.actionResult(actions.get(index - 1));
+                                        List<String> artists = searcher.actionResult(actions.get(index - 1));
                                         if (artists != null) {
                                             for (int i = 0;i < artists.size();i++) {
                                                 System.out.println((i + 1) + ". " + artists.get(i));
@@ -102,7 +101,7 @@ public class TextBasedFrontend {
                                 try {
                                     int index = Integer.parseInt(scanner.nextLine().strip());
                                     if (1 <= index && index <= artists.size()) {
-                                        Map<String, Object> info = MusicData.getArtistInfoByName(artists.get(index - 1));
+                                        Map<String, Object> info = searcher.getArtistInfoByName(artists.get(index - 1));
                                         for (Map.Entry<String, Object> entry : info.entrySet()) {
                                             System.out.println(entry.getKey() + ": " + entry.getValue());
                                         }
@@ -129,7 +128,7 @@ public class TextBasedFrontend {
                                 try {
                                     int index = Integer.parseInt(scanner.nextLine().strip());
                                     if (1 <= index && index <= genres.size()) {
-                                        List<String> artists = MusicData.getArtistsNameByGenre(genres.get(index - 1));
+                                        List<String> artists = searcher.genreResult(genres.get(index - 1));
                                         for (int i = 0;i < artists.size();i++) {
                                             System.out.println((i + 1) + ". " + artists.get(i));
                                         }

@@ -1,5 +1,5 @@
 package interface_adapters;
-import use_cases.MusicDataBuilder;
+import use_cases.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -128,5 +128,46 @@ public class Searcher {
         }
         return sortedList;
     }
+
+    /**
+     * Returns a List of relevant information based on the given action.
+     * Returns null if the given action is not available.
+     * Available actions: top, trending
+     *
+     * @param action the action that User chose to take
+     * @return a List of relevant information
+     */
+    public List<String> actionResult(String action) {
+        String[] split = action.split(" ");
+        if (action.startsWith("top")) {
+            return ArtistComparer.topArtistNames(Integer.parseInt(split[1]));
+        }
+        else if (action.contains("trending")) {
+            return ArtistComparer.trendingArtistNames(1, MusicData.getLatestWeek(), Integer.parseInt(split[0]));
+        }
+        return null;
+    }
+
+    /**
+     * Returns the information an Artist whose name is the given parameter name.
+     * Returns an empty HashMap if Artist with name is not found in the MusicData.
+     *
+     * @param name the name of the artist
+     * @return information of an Artist with the given name stored in HashMap
+     */
+    public HashMap<String, Object> getArtistInfoByName(String name) {
+        return MusicData.getArtistByName(name).getInfo();
+    }
+
+    /**
+     * Returns an ArrayList of the name of Artists within the given genre.
+     *
+     * @param genre the name of the genre
+     * @return an ArrayList of the name of Artists with the given genre
+     */
+    public List<String> genreResult(String genre) {
+        return MusicData.getArtistsNameByGenre(genre);
+    }
+
 }
 
