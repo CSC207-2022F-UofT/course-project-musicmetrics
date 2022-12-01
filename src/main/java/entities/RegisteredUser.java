@@ -8,6 +8,7 @@ import java.util.*;
 public class RegisteredUser extends User {
     private final String email;
     private String password;
+
     public ArrayList<Artist> follows;
 
     public RegisteredUser(String email, String password) {
@@ -37,16 +38,6 @@ public class RegisteredUser extends User {
     @Override
     public boolean checkPermissions() {
         return true;
-    }
-
-    /**
-     * use_cases.UserData's logout method is used
-     * @return a new Entities.GuestUser instance
-     * throws Exception if user is not logged in or does not exist in database
-     */
-    public GuestUser logout() throws Exception {
-        UserData u = new UserData();
-        return u.logoutUser(this.email, this.password);
     }
 
     /**
