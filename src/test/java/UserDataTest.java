@@ -40,9 +40,9 @@ public class UserDataTest {
             System.out.println("checkStatus case passed: user not in database");
         }
 
-         Test writeToTextFile
-        File file1 = new File("main/AllRegisteredUsers.txt");
-        u.writeToTextFile(file1, "New line added.");
+        // Test writeToTextFile
+        File file1 = new File("main/java/entities/AllRegisteredUsers.txt");
+        u.writeToTextFile("main/java/entities/AllRegisteredUsers.txt", "New line added.");
         Scanner checkAdded = new Scanner(file1);
         checkAdded.nextLine();
         var line = "";

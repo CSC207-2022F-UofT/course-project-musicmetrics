@@ -1,6 +1,4 @@
-import entities.GuestUser;
 import entities.RegisteredUser;
-import interface_adapters.Alert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -35,11 +33,7 @@ public class RegisteredUserTest {
 
     @Test
     public void testLogOut() {
-        try {
-            assert (u.logout() instanceof GuestUser);
-        } catch (Exception e) {
-            System.out.println("Unsuccessful logout.");
-        }
+        // need to update this with frontend
     }
 
     @Test
