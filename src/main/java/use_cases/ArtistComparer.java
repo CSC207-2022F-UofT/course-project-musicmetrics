@@ -37,4 +37,18 @@ public class ArtistComparer {
         for (Artist a : artists){names.add(a.getName()); }
         return names;
     }
+
+    public static List<String> trendingArtistNames(int startWeek, int endWeek, int amt) {
+        List<Artist> artists = MusicData.getTrending(startWeek, endWeek);
+        List<String> names = new ArrayList<>();
+        for (Artist artist : artists) {
+            if (names.size() < amt) {
+                names.add(artist.getName());
+            }
+            else {
+                break;
+            }
+        }
+        return names;
+    }
 }
