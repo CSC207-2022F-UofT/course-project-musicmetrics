@@ -2,14 +2,14 @@ package drivers;
 import interface_adapters.*;
 
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class TextBasedFrontend {
 
-    static User user = new GuestUser();
-
     public static void main(String[] args) throws FileNotFoundException {
-        MusicData.setData();
+        Searcher searcher = new Searcher(); // also sets up the MusicData
         System.out.println("Welcome to MusicMetric!");
         Scanner scanner = new Scanner(System.in);
         System.out.print("Please type a command (type \"help\" for command list): ");
@@ -25,6 +25,7 @@ public class TextBasedFrontend {
                         System.out.println("login : log in to already existing account");
                         System.out.println("logout : log out from logged in account");
                         System.out.println("register : register a new account");
+                        System.out.println("recommend : get an artist recommendation within a specific genre");
                         System.out.println("search : search for data in out program");
                         System.out.println("profile : user profile");
                         System.out.println("exit : terminate the program");
@@ -38,11 +39,113 @@ public class TextBasedFrontend {
                     case "register":
                         System.out.println("Command \"register\" is not yet supported.");
                         break;
+                    case "recommend":
+                        System.out.println("Command \"recommend\" is not yet supported.");
+                        //make user select a genre
+                        String genre = "music";
+                        if (UserPresenter.checkIfGuestUser()){
+                            RecommendController.randomRecommend(genre);
+                        }
+                        else{
+                            RecommendController.similarRecommend(genre);
+                        }
+                        break;
                     case "search":
-                        Searcher.main(null);
+                        System.out.print("Please choose search type (keyword, artist, genres): ");
+                        input = scanner.nextLine();
+                        if (input.equalsIgnoreCase("keyword")) {
+                            System.out.print("What do you want to search? ");
+                            input = scanner.nextLine();
+                            List<String> actions = searcher.filterKeyword(input);
+                            if (actions.size() == 0) {
+                                System.out.println("There is no action that you can take based on the provided keyword.");
+                            }
+                            else {
+                                for (int i = 0;i < actions.size();i++) {
+                                    System.out.println((i + 1) + ". " + actions.get(i));
+                                }
+                                System.out.print("Please choose one of suggestions above (provide index): ");
+                                try {
+                                    int index = Integer.parseInt(scanner.nextLine().strip());
+                                    if (1 <= index && index <= actions.size()) {
+                                        List<String> artists = searcher.actionResult(actions.get(index - 1));
+                                        if (artists != null) {
+                                            for (int i = 0;i < artists.size();i++) {
+                                                System.out.println((i + 1) + ". " + artists.get(i));
+                                            }
+                                        }
+                                        else {
+                                            System.out.println("Something went wrong, please try again.");
+                                        }
+                                    }
+                                    else {
+                                        System.out.println("Invalid index");
+                                    }
+                                } catch (NumberFormatException e) {
+                                    System.out.println("Invalid index");
+                                }
+                            }
+                        }
+                        else if (input.equalsIgnoreCase("artist")) {
+                            System.out.print("What artist do you want to search? ");
+                            input = scanner.nextLine();
+                            List<String> artists = searcher.filterArtist(input);
+                            if (artists.size() == 0) {
+                                System.out.println("It seems like we don't have such artist.");
+                            }
+                            else {
+                                for (int i = 0;i < artists.size();i++) {
+                                    System.out.println((i + 1) + ". " + artists.get(i));
+                                }
+                                System.out.print("Please choose one of artists above you want to see (provide index): ");
+                                try {
+                                    int index = Integer.parseInt(scanner.nextLine().strip());
+                                    if (1 <= index && index <= artists.size()) {
+                                        Map<String, Object> info = searcher.getArtistInfoByName(artists.get(index - 1));
+                                        for (Map.Entry<String, Object> entry : info.entrySet()) {
+                                            System.out.println(entry.getKey() + ": " + entry.getValue());
+                                        }
+                                    }
+                                    else {
+                                        System.out.println("Invalid index");
+                                    }
+                                } catch (NumberFormatException e) {
+                                    System.out.println("Invalid index");
+                                }
+                            }
+                        }
+                        else if (input.equalsIgnoreCase("genres")) {
+                            System.out.print("What genre are you interested in? ");
+                            input = scanner.nextLine();
+                            List<String> genres = searcher.filterGenre(input);
+                            if (genres.size() == 0) {
+                                System.out.println("It seems like we don't have that genre.");
+                            } else {
+                                for (int i = 0; i < genres.size(); i++) {
+                                    System.out.println((i + 1) + ". " + genres.get(i));
+                                }
+                                System.out.print("Please choose one of genres above you are interested (provide index): ");
+                                try {
+                                    int index = Integer.parseInt(scanner.nextLine().strip());
+                                    if (1 <= index && index <= genres.size()) {
+                                        List<String> artists = searcher.genreResult(genres.get(index - 1));
+                                        for (int i = 0;i < artists.size();i++) {
+                                            System.out.println((i + 1) + ". " + artists.get(i));
+                                        }
+                                    } else {
+                                        System.out.println("Invalid index");
+                                    }
+                                } catch (NumberFormatException e) {
+                                    System.out.println("Invalid index");
+                                }
+                            }
+                        }
+                        else {
+                            System.out.println("Invalid search type, please enter keyword, genres or artist.");
+                        }
                         break;
                     case "profile":
-                        if (user instanceof GuestUser) {
+                        if (UserPresenter.checkIfGuestUser()) {
                             System.out.println("You are a Guest User. Type \"register\" to sign-up or type \"login\" to sign-in if you already have an account.");
                         }
                         break;

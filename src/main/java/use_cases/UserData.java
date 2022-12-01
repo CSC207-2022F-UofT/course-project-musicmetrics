@@ -1,5 +1,6 @@
 package use_cases;
-import entities.*;
+import entities.GuestUser;
+import entities.RegisteredUser;
 
 import java.io.*;
 import java.util.ArrayList;

@@ -1,5 +1,5 @@
 package drivers;
-import interface_adapters.*;
+import interface_adapters.Searcher;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -9,7 +9,6 @@ import java.util.List;
 
 /*
 Java Swing Frontend, simply run the file to use.
-
 Check Java Swing documentation for more info.
  */
 public class Frontend extends JFrame{

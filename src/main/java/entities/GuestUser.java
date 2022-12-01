@@ -1,8 +1,9 @@
 package entities;
 
 import java.util.List;
+import java.util.Scanner;
 
-public class GuestUser extends User {
+public class GuestUser extends entities.User {
     public GuestUser(){
     }
 
@@ -10,8 +11,12 @@ public class GuestUser extends User {
         return true;
     }
 
-    public List<User> getUser(){
+    public List<entities.User> getUser(){
         return null;
+    }
+
+    public void register() {
+        // calls on userdata to save user
     }
 
     public void saveUser(){
@@ -20,8 +25,4 @@ public class GuestUser extends User {
     public void deleteUser(){
     }
 
-    public void logInUser() throws Exception {
-    }
-    public void logoutUser(){
-    }
 }
