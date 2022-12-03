@@ -39,15 +39,6 @@ public class RegisteredUser extends entities.User {
         return true;
     }
 
-    /**
-     * use_cases.UserData's logout method is used
-     * @return a new Entities.GuestUser instance
-     * throws Exception if user is not logged in or does not exist in database
-     */
-    public entities.GuestUser logout() throws Exception {
-        UserData u = new UserData();
-        return u.logoutUser(this.email, this.password);
-    }
 
     /**
      * @param newPassword String that will be the new password

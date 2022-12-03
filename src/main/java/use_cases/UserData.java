@@ -2,8 +2,7 @@ package use_cases;
 import entities.GuestUser;
 import entities.RegisteredUser;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -17,38 +16,39 @@ public class UserData {
     //  False if Entities.User is Logged-out currently
     //  When a Entities.User logs in, their Entities.User object instance should be moved from False to True
     static HashMap<Boolean, ArrayList<RegisteredUser>> data = new HashMap<>();
-    FileWriter registeredFile = new FileWriter("AllRegisteredUsers.txt");
-    FileWriter loggedInFile = new FileWriter("LoggedInUsers.txt");
+    File registeredFile = new File("AllRegisteredUsers.txt");
+    File loggedInFile = new File("LoggedInUsers.txt");
 
     public UserData() throws Exception {
         // initialize data HashMap
         data.put(true, new ArrayList<>());
         data.put(false, new ArrayList<>());
         // read off loggedInFile and append to data
-        Scanner loggedInUsers = new Scanner("LoggedInUsers.txt");
+        Scanner loggedInUsers = new Scanner("LoggedInUsers.txt").useDelimiter(",");
+        loggedInUsers.nextLine(); // skip header
+        String email = "";
+        String password = "";
+
         while (loggedInUsers.hasNextLine()) {
-            String line = loggedInUsers.nextLine();
-            String[] temp = line.split(",");
-            RegisteredUser user = new RegisteredUser(temp[0], temp[1]);
-            ArrayList<RegisteredUser> updatedValues = data.get(true);
-            updatedValues.add(user);
-            // update values of true key in data
-            data.put(true, updatedValues);
+            email = loggedInUsers.next();
+            password = loggedInUsers.next();
+            RegisteredUser user = new RegisteredUser(email, password);
+            data.get(true).add(user);
             // read off registeredUsers file and append to data
-            Scanner registeredUsers = new Scanner("AllRegisteredUsers.txt");
-            while (registeredUsers.hasNextLine()) {
-                String line2 = registeredUsers.nextLine();
-                String[] temp2 = line2.split(", ");
-                // check if user is already in data - logged in
-                if (!data.get(true).contains(this.getUser(temp2[0]))) {
-                    RegisteredUser user2 = new RegisteredUser(temp2[0], temp2[1]);
-                    ArrayList<RegisteredUser> updatedValues2 = data.get(false);
-                    updatedValues2.add(user);
-                    // update values in false key in data
-                    data.put(false, updatedValues2);
-                }
+        }
+        loggedInUsers.close();
+        Scanner registeredUsers = new Scanner("AllRegisteredUsers.txt").useDelimiter(",");
+        registeredUsers.nextLine(); // skip header
+        while (registeredUsers.hasNextLine()) {
+            email = registeredUsers.next();
+            password = registeredUsers.next();
+            // check if user is already in data - logged in
+            if (!data.get(true).contains(this.getUser(email))) {
+                RegisteredUser user2 = new RegisteredUser(email, password);
+                data.get(false).add(user2);
             }
         }
+        registeredUsers.close();
     }
 
     /**
@@ -95,7 +95,7 @@ public class UserData {
      * @return the instance object for the desired Entities.RegisteredUser
      * @throws Exception if user is not in database
      */
-    private RegisteredUser getUser(String email) throws Exception {
+    public RegisteredUser getUser(String email) throws Exception {
         for (RegisteredUser u : getUsers()) {
             if (Objects.equals(u.toString(), email)) {
                 return u;
@@ -108,16 +108,16 @@ public class UserData {
      * @param email    a string representing an email for a registered user
      * @param password a string representing a password for a registered user
      */
-    public void saveUser(String email, String password) throws IOException {
-        // create new Entities.RegisteredUser
-        RegisteredUser newUser = new RegisteredUser(email, password);
-        // add new Entities.RegisteredUser into data
-        var loggedIn = data.get(true);
-        loggedIn.add(newUser);
-        // add new Entities.RegisteredUser into AllRegisteredUsers text file
-        writeToTextFile(registeredFile, email + ", " + password + "\n");
-        // add new Entities.RegisteredUser into LoggedInUsers text file
-        writeToTextFile(loggedInFile, email + ", " + password + "\n");
+    public boolean saveUser(String email, String password) throws Exception {
+        if (!data.get(true).contains(this.getUser(email)) && !data.get(false).contains(this.getUser(email))) {
+            // create new Entities.RegisteredUser
+            RegisteredUser newUser = new RegisteredUser(email, password);
+            data.get(true).add(newUser);
+            // add user to LoggedInUsers text file
+//          writeToTextFile(loggedInFile, email + ", " + password + "\n");
+            return true;
+        }
+        return false;
     }
 
     public boolean deleteUser(String email, String password) throws Exception {
@@ -125,10 +125,6 @@ public class UserData {
         // check if the user is stored in data - user has to be logged-in in order to delete their account
         if (data.get(true).contains(userToDelete)) {
             data.get(true).remove(userToDelete);
-            // remove Entities.RegisteredUser from AllRegisteredUsers text file
-            deleteFromTextFile(registeredFile, email + ", " + password + "\n");
-            // remove Entities.RegisteredUser from LoggedInUsers text file
-            deleteFromTextFile(loggedInFile, email + ", " + password + "\n");
             return true;
         }
         return false;
@@ -151,7 +147,7 @@ public class UserData {
                         data.get(false).remove(u);
                         data.get(true).add(u);
                         // add user to LoggedInUsers text file
-                        writeToTextFile(loggedInFile, email + ", " + password + "\n");
+//                        writeToTextFile(loggedInFile, email + ", " + password + "\n");
                         return u;
                     }
                     throw new Exception("Incorrect password");
@@ -174,8 +170,6 @@ public class UserData {
                     if (Objects.equals(u.getPassword(), password)) {
                         data.get(true).remove(u);
                         data.get(false).add(u);
-                        // remove user from LoggedInUsers text file
-                        deleteFromTextFile(loggedInFile, email + ", " + password + "\n");
                         return new GuestUser();
                     }
                     throw new Exception("Incorrect password");
@@ -188,34 +182,30 @@ public class UserData {
         throw new Exception("Email not found");
     }
 
-    /**
-     * @param filename a File that needs to be updated
-     * @param toAdd    a string that is to be written onto the file
-     *                 this method write a string onto the text file
-     */
-    public void writeToTextFile(FileWriter filename, String toAdd) throws IOException {
-        filename.write(toAdd);
-        filename.close();
+    public void writeToTextFile(String filename, String toRemove) throws IOException {
+        File file = new File(filename);
+        FileWriter fw = new FileWriter(file);
+        PrintWriter pw = new PrintWriter(fw);
+        pw.println(toRemove);
     }
 
-    /**
-     * @param filename a File that needs to be updated
-     * @param toRemove a string that is to be removed from the file
-     *                 this method removes a string from the text file
-     */
-    public void deleteFromTextFile(FileWriter filename, String toRemove) throws IOException {
-        Scanner scanned = new Scanner((Readable) filename);
-        StringBuilder content = new StringBuilder();
-        while (scanned.hasNextLine()) {
-            // read and store line temporarily if it doesn't match the string to be removed
-            if (!Objects.equals(scanned.nextLine(), toRemove)) {
-                content.append(scanned.nextLine());
-                content.append("\n"); // is this necessary
-            }
-            // update the text file by creating a new FileWriter object to replace the original FileWriter
-            FileWriter foo = new FileWriter(String.valueOf(filename), false);
-            foo.write(String.valueOf(content));
-            filename = foo; // does filename get reassigned successfully
-        }
-    }
+//    public void deleteFromTextFile(String filename, String toRemove) throws IOException {
+//        Scanner scanned = new Scanner(new File(filename));
+//        StringBuilder content = new StringBuilder();
+//        scanned.nextLine(); // skip header
+//        while (scanned.hasNextLine()) {
+//            // read and store line temporarily if it doesn't match the string to be removed
+//            if (!Objects.equals(scanned.nextLine(), toRemove)) {
+//                content.append(scanned.nextLine());
+//                content.append("\n"); // is this necessary
+//            }
+//        }
+//        try {
+//            FileWriter foo = new FileWriter(String.valueOf(filename), false);
+//            foo.write(String.valueOf(content));
+//            filename = foo; // does filename get reassigned successfully
+//        } catch (Exception e) {
+//            // check this
+//        } scanned.close();
+//    }
 }

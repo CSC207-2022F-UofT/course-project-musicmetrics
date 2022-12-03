@@ -15,10 +15,6 @@ public class GuestUser extends entities.User {
         return null;
     }
 
-    public void register() {
-        // calls on userdata to save user
-    }
-
     public void saveUser(){
     }
 
