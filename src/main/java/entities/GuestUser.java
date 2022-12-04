@@ -1,7 +1,5 @@
 package entities;
-
 import java.util.List;
-import java.util.Scanner;
 
 public class GuestUser extends entities.User {
     public GuestUser(){
@@ -15,10 +13,9 @@ public class GuestUser extends entities.User {
         return null;
     }
 
-    public void saveUser(){
-    }
-
-    public void deleteUser(){
+    @Override
+    public boolean checkPermissions() {
+        return false;
     }
 
 }

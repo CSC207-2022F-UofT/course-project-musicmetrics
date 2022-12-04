@@ -19,9 +19,9 @@ public class Alert {
 
     }
 
-    /** trigger checks if the artists streams had the sufficient amount of growth compare to its last week
+    /** Trigger checks if the artists streams had the sufficient amount of growth compare to its last week
      * streams
-     * user is the list of all artists that in trigger, their streams are compared and the top ones
+     * User is the list of all artists that in trigger, their streams are compared and the top ones
      *                will be determined.
      */
     public void trigger(){
@@ -39,6 +39,10 @@ public class Alert {
             }
         }
     }
+
+    /**
+     * Sends an alert
+     */
     public void sendAlert(){
         this.message = this.tops.get(this.tops.size() - 1);
     }

@@ -66,6 +66,12 @@ public class UserData {
         throw new Exception(u.toString() + " is not in database");
     }
 
+    /**
+     * @param email is a string denoting the email of user to be checked
+     * @return true/false bool telling if the user is logged in or not (True= logged in, false= not logged in)
+     * or throws an exception which says that the Registered user is not in database
+     */
+
     public boolean checkStatus(String email) throws Exception {
         return checkStatus(getUser(email));
     }
@@ -120,6 +126,14 @@ public class UserData {
         return false;
     }
 
+    /**
+     * Deletes a user from the data HashMap
+     *
+     * @param email string denoting the email of user to be deleted
+     * @param password string denoting the password of user to be deleted
+     * @return boolean value true/false whether user is deleted successfully
+     */
+
     public boolean deleteUser(String email, String password) throws Exception {
         RegisteredUser userToDelete = this.getUser(email);
         // check if the user is stored in data - user has to be logged-in in order to delete their account
@@ -131,6 +145,8 @@ public class UserData {
     }
 
     /**
+     * Logs in a user based on email and password, returning their RegisteredUser instance if successful
+     *
      * @param email    a string representing an email for a registered user
      * @param password a string representing a password for a registered user
      * @return the Entities.RegisteredUser instance for this email and password
@@ -158,6 +174,8 @@ public class UserData {
     }
 
     /**
+     * Logs out a RegisteredUser based on their email and password
+     *
      * @param email    a string representing an email address for a registered user
      * @param password a string representing a password for a registered user
      * @return a Entities.GuestUser (if successfully logged out)
@@ -181,6 +199,14 @@ public class UserData {
         }
         throw new Exception("Email not found");
     }
+
+    /**
+     * Writes to a text file
+     *
+     * @param filename name of text file to be written to
+     * @param toRemove string to be removed from the text file
+     * @throws IOException
+     */
 
     public void writeToTextFile(String filename, String toRemove) throws IOException {
         File file = new File(filename);

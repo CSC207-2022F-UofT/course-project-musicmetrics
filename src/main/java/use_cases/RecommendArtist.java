@@ -14,7 +14,7 @@ public class RecommendArtist {
      * @param genre   the genre the recommendation is within
      * @param similar if the recommendation should be based on the user's followers or random
      * @param rUser   the user that is making the request, should be registeredUser if similar is true
-     * @return an artist recommeneded for the User
+     * @return an artist recommended for the User
      */
     public static Artist recommend(String genre, boolean similar, User rUser) {
         Artist recommendation = new Artist();
@@ -50,7 +50,9 @@ public class RecommendArtist {
 
     }
     /**
-     * generate a recommendation randomly within the genre
+     * Returns a recommendation generated randomly within the genre
+     * @param genre string that denotes the genre
+     * @return an Artist
      */
     private static Artist randomRecommend(String genre) {
         List<Artist> sameGenre = MusicData.getArtistsByGenre(genre);
@@ -59,7 +61,12 @@ public class RecommendArtist {
     }
 
     /**
-     * generate all the artists a user doesn't follow within a genre
+     * Generates a list of all the artists a user doesn't follow within a genre.
+     *
+     * @param registeredUserFollows which is a list of artists the user follows
+     * @param genre which denotes the genre to
+     * be searched
+     * @return a list of artists
      */
     private static List<Artist> findNonFollows(List<Artist> registeredUserFollows, String genre) {
         List<Artist> sameGenre = MusicData.getArtistsByGenre(genre);
@@ -77,7 +84,11 @@ public class RecommendArtist {
     }
 
     /**
-     * generate a similarity score between the artist and the user's follows
+     * Generate and returns a similarity score between the artist and the user's follows
+     *
+     * @param registeredUserFollows the list of artists the user follows
+     * @param artistNotFollowed an artist the user does not follow
+     * @return double denoting the similarity score
      */
     private static double generateSimilarityScore(List<Artist> registeredUserFollows, Artist artistNotFollowed) {
 

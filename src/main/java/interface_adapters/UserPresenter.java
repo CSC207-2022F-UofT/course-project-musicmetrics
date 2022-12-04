@@ -5,7 +5,7 @@ import use_cases.*;
 public class UserPresenter {
 
     /**
-     * checks if the user is a GuestUser
+     * Checks if the user is a GuestUser
      */
     public static boolean checkIfGuestUser(){
         return UserInteractor.isGuestUser;
