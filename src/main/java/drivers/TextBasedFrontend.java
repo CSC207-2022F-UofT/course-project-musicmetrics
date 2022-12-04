@@ -40,14 +40,25 @@ public class TextBasedFrontend {
                         System.out.println("Command \"register\" is not yet supported.");
                         break;
                     case "recommend":
-                        System.out.println("Command \"recommend\" is not yet supported.");
                         //make user select a genre
-                        String genre = "music";
-                        if (UserPresenter.checkIfGuestUser()){
-                            RecommendController.randomRecommend(genre);
-                        }
-                        else{
-                            RecommendController.similarRecommend(genre);
+                        String genre = genreAsker(scanner, searcher);
+                        if(!genre.equals("Invalid index")){
+                            if (UserPresenter.checkIfGuestUser()){
+                                String recNameRand = RecommendController.randomRecommend(genre);
+                                Map<String, Object> infoRand = searcher.getArtistInfoByName(recNameRand);
+                                System.out.println("You may be interested in the following artist:");
+                                for (Map.Entry<String, Object> entry : infoRand.entrySet()) {
+                                    System.out.println(entry.getKey() + ": " + entry.getValue());
+                                }
+                            }
+                            else{
+                                String recNameSim = RecommendController.similarRecommend(genre);
+                                Map<String, Object> infoSimi = searcher.getArtistInfoByName(recNameSim);
+                                System.out.println("You may be interested in the following artist:");
+                                for (Map.Entry<String, Object> entry : infoSimi.entrySet()) {
+                                    System.out.println(entry.getKey() + ": " + entry.getValue());
+                                }
+                            }
                         }
                         break;
                     case "search":
@@ -115,28 +126,11 @@ public class TextBasedFrontend {
                             }
                         }
                         else if (input.equalsIgnoreCase("genres")) {
-                            System.out.print("What genre are you interested in? ");
-                            input = scanner.nextLine();
-                            List<String> genres = searcher.filterGenre(input);
-                            if (genres.size() == 0) {
-                                System.out.println("It seems like we don't have that genre.");
-                            } else {
-                                for (int i = 0; i < genres.size(); i++) {
-                                    System.out.println((i + 1) + ". " + genres.get(i));
-                                }
-                                System.out.print("Please choose one of genres above you are interested (provide index): ");
-                                try {
-                                    int index = Integer.parseInt(scanner.nextLine().strip());
-                                    if (1 <= index && index <= genres.size()) {
-                                        List<String> artists = searcher.genreResult(genres.get(index - 1));
-                                        for (int i = 0;i < artists.size();i++) {
-                                            System.out.println((i + 1) + ". " + artists.get(i));
-                                        }
-                                    } else {
-                                        System.out.println("Invalid index");
-                                    }
-                                } catch (NumberFormatException e) {
-                                    System.out.println("Invalid index");
+                            String askedGenre = genreAsker(scanner, searcher);
+                            if(!askedGenre.equals("Invalid index")){
+                                List<String> artists = searcher.genreResult(askedGenre);
+                                for (int i = 0;i < artists.size();i++) {
+                                    System.out.println((i + 1) + ". " + artists.get(i));
                                 }
                             }
                         }
@@ -156,5 +150,34 @@ public class TextBasedFrontend {
         }
         System.out.println("Thank you for using MusicMetric.");
         System.exit(0);
+    }
+    /**
+     * helper function that asks the user to select a genre
+     *
+     * @return
+     */
+    private static String genreAsker(Scanner scanner, Searcher searcher) {
+        System.out.print("What genre are you interested in? ");
+        String input = scanner.nextLine();
+        List<String> genres = searcher.filterGenre(input);
+        if (genres.size() == 0) {
+            System.out.println("It seems like we don't have that genre.");
+        } else {
+            for (int i = 0; i < genres.size(); i++) {
+                System.out.println((i + 1) + ". " + genres.get(i));
+            }
+            System.out.print("Please choose one of genres above you are interested (provide index): ");
+            try {
+                int index = Integer.parseInt(scanner.nextLine().strip());
+                if (1 <= index && index <= genres.size()) {
+                    return genres.get(index - 1);
+                } else {
+                    System.out.println("Invalid index");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid index");
+            }
+        }
+        return "Invalid index";
     }
 }
