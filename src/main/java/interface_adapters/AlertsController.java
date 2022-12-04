@@ -6,6 +6,11 @@ import java.util.HashMap;
 
 
 public class AlertsController {
+    /**
+     *
+     * @param alert the alert for a user.
+     * @return returns each top artist names and their stream growth rate in front of their names.
+     */
 
     public StringBuilder format(Alert alert){
         StringBuilder message = new StringBuilder();
