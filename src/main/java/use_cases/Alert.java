@@ -1,10 +1,11 @@
-package interface_adapters;
-import use_cases.MusicData;
+package use_cases;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import entities.RegisteredUser;
+import entities.Artist;
 
 public class Alert {
     String message;
@@ -39,7 +40,7 @@ public class Alert {
         }
     }
     public void sendAlert(){
-        this.message = this.tops.get(this.tops.size() - 1) + "is now on fire";
+        this.message = this.tops.get(this.tops.size() - 1);
     }
 
     /**
