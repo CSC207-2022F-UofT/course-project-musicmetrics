@@ -1,8 +1,5 @@
 package use_cases;
 import entities.Artist;
-import entities.GuestUser;
-import entities.RegisteredUser;
-import entities.User;
 
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -47,9 +44,6 @@ public class MusicData{
     public static Boolean isTrending(Artist a, Artist b){
         return (b.getStreams() > a.getStreams()*1.10 || b.getStreams() > a.getStreams() + 10000000);
     }
-
-
-
 
 
     /**
@@ -106,7 +100,7 @@ public class MusicData{
             data.get(artist.time).add(artist);
             }
         if (!(data.containsKey(artist.time))){
-            ArrayList<Artist> artistList = new ArrayList<Artist>();
+            ArrayList<Artist> artistList = new ArrayList<>();
             artistList.add(artist);
             data.put(artist.time, artistList);
         }

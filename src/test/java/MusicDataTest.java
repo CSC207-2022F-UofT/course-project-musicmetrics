@@ -2,22 +2,22 @@ import entities.Artist;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import use_cases.MusicData;
+import use_cases.MusicDataBuilder;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.Assert.assertEquals;
 
-/// This test DOES NOT use the data from music_database
-/// INSTEAD it uses a narrower set of data, containing 4 artists as seen below
+/// This is the test class for MusicData
+/// it tests methods in MusicData, against the data in music_database, AS WELL AS additional data
+
 public class MusicDataTest {
 
     @Test()
     public void TestHashMap() throws FileNotFoundException {
-        MusicData test = new MusicData();
-        MusicData.setData();
+        MusicDataBuilder.setData();
         List<Integer> testweek = new ArrayList<>();
         testweek.add(1);
 
