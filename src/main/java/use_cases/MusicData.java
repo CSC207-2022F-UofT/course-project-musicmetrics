@@ -96,6 +96,7 @@ public class MusicData{
 
 
     /**
+     * FOR TESTING PURPOSES
      * Method used to add an artist to the data hashmap
      *
      * @param artist An Artist Object
@@ -112,6 +113,7 @@ public class MusicData{
     }
 
     /**
+     * FOR TESTING PURPOSES
      * Removes artist from the data hashmap
      * weeks do not need to be specified because it is assumed that if an artist is in the hashmap,
      * then it has data for every week
