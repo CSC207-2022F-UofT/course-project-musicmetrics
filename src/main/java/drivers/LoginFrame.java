@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import entities.RegisteredUser;
+import use_cases.UserData;
 
 public class LoginFrame extends JFrame implements ActionListener {
 

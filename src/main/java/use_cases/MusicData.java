@@ -72,9 +72,14 @@ public class MusicData{
         return to_return;
     }
 
-
-//    Helper method for getStreams that returns artist streams of a week
-//    Assumes artists for MusicData is stored in a key(week) to value(array of artists relationship)
+    /**
+     * Helper method for getStreams that returns artist streams of a week
+     * Assumes artists for MusicData is stored in a key(week) to value(array of artists relationship)
+     *
+     * @param name a string representing artist name
+     * @param week integer representing a week
+     * @return an integer representing streaming number
+     */
     private static int getStreamsHelper(String name, int week) {
         List<Artist> week_data = getArtists(week);
         for (Artist artist: week_data) {
@@ -92,6 +97,7 @@ public class MusicData{
 
 
     /**
+     * Method used to add an artist to the data hashmap
      *
      * @param artist An Artist Object
      */
@@ -106,9 +112,27 @@ public class MusicData{
         }
     }
 
+    /**
+     * Removes artist from the data hashmap
+     * weeks do not need to be specified because it is assumed that if an artist is in the hashmap,
+     * then it has data for every week
+     *
+     * @param artist a string representing an artist name
+     */
+    public static void removeArtist(String artist) {
+        for (int k : data.keySet()) {
+            data.get(k).removeIf(a -> Objects.equals(a.getName(), artist));
+            if (data.get(getLatestWeek()).size() == 0) {data.remove(getLatestWeek());}
+            // ^^ Removes the latest week if the artist that was removed was the only artist in that week
+            // We remove the latest week if it is empty for testing purposes and continuity
+            // If a week is empty and it is not the latest week, then we keep it in the hashmap.
+        }
+        if (data.get(getLatestWeek()).size() == 0) {data.remove(getLatestWeek());}
+    }
 
     /**
      * Retrieve all artists within given genre
+     * return null if genre does not exist or there are no artists
      *
      * @param genre the genre being searched for
      * @return list of all Artists in that genre
@@ -121,8 +145,8 @@ public class MusicData{
         for (Artist a : w_data){
             if (a.getGenre().equals(genre)){artist_in_genre.add(a); } //add artist to list if genre matches
         }
-
-        return artist_in_genre;
+        if (artist_in_genre.size() >= 1) {return artist_in_genre;}
+        else {return null;}
     }
 
 
@@ -176,7 +200,13 @@ public class MusicData{
         return top;
     }
 
-
+    /**
+     *
+     * @param artist an instance of artist
+     * @param weeks a list containing integers that represent a week
+     * @return a hashmap with an integer week as a key,
+     *          and an integer representing the amount of follows the artist has for that week
+     */
     public static HashMap<Integer, Integer> getFollows(Artist artist, List<Integer> weeks) {
         HashMap<Integer, Integer> follows = new HashMap<>();
         String artistName = artist.getName();
@@ -187,6 +217,13 @@ public class MusicData{
         return follows;
     }
 
+    /**
+     * Helper method used in getFollows
+     *
+     * @param name a string representing the name of an artist
+     * @param week an integer representing a week
+     * @return an integer representing the number of follows for the artist at a given week
+     */
     private static int getFollowsHelper(String name, int week) {
         List<Artist> weekData = getArtists(week);
         for (Artist artist: weekData) {
@@ -238,6 +275,7 @@ public class MusicData{
 
     /**
      * Returns an ArrayList of the name of Artists within the given genre.
+     * Returns null if genre does not exist in our database
      *
      * @param genre the name of the genre
      * @return an ArrayList of the name of Artists with the given genre
@@ -245,10 +283,12 @@ public class MusicData{
     public static List<String> getArtistsNameByGenre(String genre) {
         List<Artist> artists = MusicData.getArtistsByGenre(genre);
         List<String> names = new ArrayList<>();
+        if (artists == null) {return null;}
         for (Artist artist : artists) {
             names.add(artist.getName());
         }
-        return names;
+        if (names.size() >= 1) {return names;}
+        else {return null;}
     }
 
     public static void main(String[] args) throws FileNotFoundException {

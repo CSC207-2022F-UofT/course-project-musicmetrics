@@ -6,6 +6,8 @@ import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.util.List;
 
+import use_cases.MusicData;
+import use_cases.MusicDataBuilder;
 
 /*
 Java Swing Frontend, simply run the file to use.
@@ -56,7 +58,7 @@ public class Frontend extends JFrame{
 
 
     public static void main(String[] args) throws FileNotFoundException {
-        MusicData.setData();
+        MusicDataBuilder.setData();
         new Frontend();
     }
 }
