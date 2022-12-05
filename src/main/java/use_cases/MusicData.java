@@ -1,7 +1,6 @@
 package use_cases;
 import entities.Artist;
 
-import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -125,7 +124,7 @@ public class MusicData{
             if (data.get(getLatestWeek()).size() == 0) {data.remove(getLatestWeek());}
             // ^^ Removes the latest week if the artist that was removed was the only artist in that week
             // We remove the latest week if it is empty for testing purposes and continuity
-            // If a week is empty and it is not the latest week, then we keep it in the hashmap.
+            // If a week is empty, and it is not the latest week, then we keep it in the hashmap.
         }
         if (data.get(getLatestWeek()).size() == 0) {data.remove(getLatestWeek());}
     }
@@ -289,11 +288,6 @@ public class MusicData{
         }
         if (names.size() >= 1) {return names;}
         else {return null;}
-    }
-
-    public static void main(String[] args) throws FileNotFoundException {
-        MusicDataBuilder.setData();
-        System.out.println(getGenres());
     }
 
 }
