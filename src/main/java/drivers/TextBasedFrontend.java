@@ -10,6 +10,12 @@ public class TextBasedFrontend {
 
     public static void main(String[] args) throws FileNotFoundException {
         Searcher searcher = new Searcher(); // also sets up the MusicData
+        UserDataBuilder builder;
+        try {
+            builder = new UserDataBuilder();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("Welcome to MusicMetric!");
         Scanner scanner = new Scanner(System.in);
         System.out.print("Please type a command (type \"help\" for command list): ");
@@ -31,13 +37,35 @@ public class TextBasedFrontend {
                         System.out.println("exit : terminate the program");
                         break;
                     case "login":
-                        System.out.println("Command \"login\" is not yet supported.");
+                        System.out.print("Please type your email: ");
+                        String email = scanner.nextLine();
+                        System.out.print("Please type the password: ");
+                        String pwd = scanner.nextLine();
+                        try {
+                            builder.getUserData().logInUser(email, pwd);
+                            break;
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
                         break;
                     case "logout":
-                        System.out.println("Command \"logout\" is not yet supported.");
+                        try {
+                            builder.getUserData().logoutUser();
+                            break;
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
                         break;
                     case "register":
-                        System.out.println("Command \"register\" is not yet supported.");
+                        System.out.print("Please type your email: ");
+                        email = scanner.nextLine();
+                        System.out.print("Please type the password: ");
+                        pwd = scanner.nextLine();
+                        try {
+                            builder.getUserData().saveUser(email, pwd);
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
                         break;
                     case "recommend":
                         //make user select a genre

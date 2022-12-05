@@ -1,6 +1,7 @@
 package use_cases;
 import entities.GuestUser;
 import entities.RegisteredUser;
+import entities.User;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -19,26 +20,30 @@ public class UserData {
     File registeredFile = new File("AllRegisteredUsers.txt");
     File loggedInFile = new File("LoggedInUsers.txt");
 
+    private User user;
+
     public UserData() throws Exception {
         // initialize data HashMap
         data.put(true, new ArrayList<>());
         data.put(false, new ArrayList<>());
         // read off loggedInFile and append to data
-        Scanner loggedInUsers = new Scanner("LoggedInUsers.txt").useDelimiter(",");
-        loggedInUsers.nextLine(); // skip header
-        String email = "";
-        String password = "";
-
-        while (loggedInUsers.hasNextLine()) {
-            email = loggedInUsers.next();
-            password = loggedInUsers.next();
-            RegisteredUser user = new RegisteredUser(email, password);
-            data.get(true).add(user);
-            // read off registeredUsers file and append to data
-        }
-        loggedInUsers.close();
+//        Scanner loggedInUsers = new Scanner("LoggedInUsers.txt").useDelimiter(",");
+//        loggedInUsers.nextLine(); // skip header
+//        String email = "";
+//        String password = "";
+//
+//        while (loggedInUsers.hasNextLine()) {
+//            email = loggedInUsers.next();
+//            password = loggedInUsers.next();
+//            RegisteredUser user = new RegisteredUser(email, password);
+//            data.get(true).add(user);
+//            // read off registeredUsers file and append to data
+//        }
+//        loggedInUsers.close();
         Scanner registeredUsers = new Scanner("AllRegisteredUsers.txt").useDelimiter(",");
         registeredUsers.nextLine(); // skip header
+        String email = "";
+        String password = "";
         while (registeredUsers.hasNextLine()) {
             email = registeredUsers.next();
             password = registeredUsers.next();
@@ -49,6 +54,7 @@ public class UserData {
             }
         }
         registeredUsers.close();
+        this.user = new GuestUser();
     }
 
     /**
@@ -164,6 +170,7 @@ public class UserData {
                         data.get(true).add(u);
                         // add user to LoggedInUsers text file
 //                        writeToTextFile(loggedInFile, email + ", " + password + "\n");
+                        this.user = u;
                         return u;
                     }
                     throw new Exception("Incorrect password");
@@ -188,6 +195,7 @@ public class UserData {
                     if (Objects.equals(u.getPassword(), password)) {
                         data.get(true).remove(u);
                         data.get(false).add(u);
+                        this.user = new GuestUser();
                         return new GuestUser();
                     }
                     throw new Exception("Incorrect password");
@@ -234,4 +242,12 @@ public class UserData {
 //            // check this
 //        } scanned.close();
 //    }
+
+    /** Checks whether the user is logged in.
+     *
+     * @return a boolean whether the user is logged in or not
+     */
+    public boolean isLoggedIn() {
+        return this.user instanceof GuestUser;
+    }
 }
