@@ -22,6 +22,8 @@ public class TextBasedFrontend {
         String input = scanner.nextLine();
         while (!input.equalsIgnoreCase("exit")) {
             if (input.length() > 0) {
+                /* if a user provides an empty command (i.e., pressing enter without typing anything),
+                the program will not ask user to type a valid command nor do anything. */
                 switch (input.toLowerCase()) {
                     default:
                         System.out.println("Invalid command.");
@@ -90,6 +92,11 @@ public class TextBasedFrontend {
                         }
                         break;
                     case "search":
+                        /* There are 3 types of search: keyword, artist, genre.
+                        Keyword search filters action that the user can take;
+                        Artist search filters artists in the database, and so for genre.
+                        The program prints out available option for the user based on the provided keyword.
+                        Then, the user is asked to choose one of available options. */
                         System.out.print("Please choose search type (keyword, artist, genres): ");
                         input = scanner.nextLine();
                         if (input.equalsIgnoreCase("keyword")) {
