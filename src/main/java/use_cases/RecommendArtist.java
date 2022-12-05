@@ -14,7 +14,7 @@ public class RecommendArtist {
      * @param genre   the genre the recommendation is within
      * @param similar if the recommendation should be based on the user's followers or random
      * @param rUser   the user that is making the request, should be registeredUser if similar is true
-     * @return an artist recommeneded for the User
+     * @return an artist recommended for the User
      */
     public static Artist recommend(String genre, boolean similar, User rUser) {
         Artist recommendation = new Artist();
@@ -24,8 +24,8 @@ public class RecommendArtist {
             List<Artist> registeredUserFollows = ((RegisteredUser) rUser).getFollows(); //similar is true means user is registered
             //get Artists not Followed within the same genre
             List<Artist> nonFollow = findNonFollows(registeredUserFollows, genre);
-            //if the user follows everyone return a random person they follow
-            if (nonFollow.size() == 0) {
+            //if the user follows everyone or no one return a random person they follow
+            if (nonFollow.size() == 0 || registeredUserFollows.size() == 0) {
                 return randomRecommend(genre);
             }
             double recommendationSimilarityScore = 0.0;
@@ -50,7 +50,10 @@ public class RecommendArtist {
 
     }
     /**
-     * generate a recommendation randomly within the genre
+     * Generate a recommendation randomly within the genre
+     *
+     * @param genre the genre the recommendation is within
+     * @return an Entities.Artist object
      */
     private static Artist randomRecommend(String genre) {
         List<Artist> sameGenre = MusicData.getArtistsByGenre(genre);
@@ -59,7 +62,11 @@ public class RecommendArtist {
     }
 
     /**
-     * generate all the artists a user doesn't follow within a genre
+     * Generate all the artists a user doesn't follow within a genre
+     *
+     * @param genre the genre the recommendation is within
+     * @param registeredUserFollows the artists the user follows (to be filtered out if within genre)
+     * @return a list of Entities.Artist objects that user does not allow
      */
     private static List<Artist> findNonFollows(List<Artist> registeredUserFollows, String genre) {
         List<Artist> sameGenre = MusicData.getArtistsByGenre(genre);
@@ -77,7 +84,11 @@ public class RecommendArtist {
     }
 
     /**
-     * generate a similarity score between the artist and the user's follows
+     * Generate a similarity score between the artist and the user's follows
+     *
+     * @param artistNotFollowed the artist that the similarity score should be generated for
+     * @param registeredUserFollows the artists the user follows (to be compared with)
+     * @return double representing similarity score between the artist and user's other followed artists
      */
     private static double generateSimilarityScore(List<Artist> registeredUserFollows, Artist artistNotFollowed) {
 
