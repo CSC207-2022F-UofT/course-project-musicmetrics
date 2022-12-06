@@ -156,7 +156,10 @@ public class Searcher {
      * @return information of an Artist with the given name stored in HashMap
      */
     public HashMap<String, Object> getArtistInfoByName(String name) {
-        return MusicData.getArtistByName(name).getInfo();
+        if (MusicData.getArtistByName(name) != null) {
+            return MusicData.getArtistByName(name).getInfo();
+        }
+        return new HashMap<>();
     }
 
     /**
