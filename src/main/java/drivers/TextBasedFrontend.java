@@ -10,12 +10,20 @@ public class TextBasedFrontend {
 
     public static void main(String[] args) throws FileNotFoundException {
         Searcher searcher = new Searcher(); // also sets up the MusicData
+        UserDataBuilder builder;
+        try {
+            builder = new UserDataBuilder();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("Welcome to MusicMetric!");
         Scanner scanner = new Scanner(System.in);
         System.out.print("Please type a command (type \"help\" for command list): ");
         String input = scanner.nextLine();
         while (!input.equalsIgnoreCase("exit")) {
             if (input.length() > 0) {
+                /* if a user provides an empty command (i.e., pressing enter without typing anything),
+                the program will not ask user to type a valid command nor do anything. */
                 switch (input.toLowerCase()) {
                     default:
                         System.out.println("Invalid command.");
@@ -31,13 +39,35 @@ public class TextBasedFrontend {
                         System.out.println("exit : terminate the program");
                         break;
                     case "login":
-                        System.out.println("Command \"login\" is not yet supported.");
+                        System.out.print("Please type your email: ");
+                        String email = scanner.nextLine();
+                        System.out.print("Please type the password: ");
+                        String pwd = scanner.nextLine();
+                        try {
+                            builder.getUserData().logInUser(email, pwd);
+                            break;
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
                         break;
                     case "logout":
-                        System.out.println("Command \"logout\" is not yet supported.");
+                        try {
+                            builder.getUserData().logoutUser();
+                            break;
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
                         break;
                     case "register":
-                        System.out.println("Command \"register\" is not yet supported.");
+                        System.out.print("Please type your email: ");
+                        email = scanner.nextLine();
+                        System.out.print("Please type the password: ");
+                        pwd = scanner.nextLine();
+                        try {
+                            builder.getUserData().saveUser(email, pwd);
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
                         break;
                     case "recommend":
                         //make user select a genre
@@ -62,6 +92,11 @@ public class TextBasedFrontend {
                         }
                         break;
                     case "search":
+                        /* There are 3 types of search: keyword, artist, genre.
+                        Keyword search filters action that the user can take;
+                        Artist search filters artists in the database, and so for genre.
+                        The program prints out available option for the user based on the provided keyword.
+                        Then, the user is asked to choose one of available options. */
                         System.out.print("Please choose search type (keyword, artist, genres): ");
                         input = scanner.nextLine();
                         if (input.equalsIgnoreCase("keyword")) {
