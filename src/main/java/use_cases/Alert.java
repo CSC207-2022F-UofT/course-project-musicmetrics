@@ -6,14 +6,13 @@ import java.util.List;
 import entities.RegisteredUser;
 import entities.Artist;
 
-
 public class Alert {
     static double growth_rate = 1.25;
     HashMap<String, Integer> tops;
     RegisteredUser user;
 
     public Alert(RegisteredUser user) {
-        HashMap<String, Integer> tops = new HashMap<String, Integer>();
+        this.tops = new HashMap<String, Integer>();
         this.user = user;
 
     }

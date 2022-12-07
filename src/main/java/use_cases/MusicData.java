@@ -4,7 +4,7 @@ import entities.Artist;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MusicData{
+public class MusicData implements stream{
     /**
      * NOTE: Assume that an Artist will have information for EVERY WEEK in the Hashmap
      */
@@ -40,7 +40,7 @@ public class MusicData{
      * @param b Artist instance from later week
      * @return Boolean whether there has been a trending-worthy increase
      */
-    public static Boolean isTrending(Artist a, Artist b){
+    private static Boolean isTrending(Artist a, Artist b){
         return (b.getStreams() > a.getStreams()*1.10 || b.getStreams() > a.getStreams() + 10000000);
     }
 
