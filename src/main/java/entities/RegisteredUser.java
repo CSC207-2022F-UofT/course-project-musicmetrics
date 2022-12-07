@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
 
+import use_cases.*;
+import interface_adapters.Searcher;
+
 public class RegisteredUser extends entities.User {
     private final String email;
     private String password;
