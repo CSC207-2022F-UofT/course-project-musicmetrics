@@ -1,21 +1,18 @@
 package use_cases;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import entities.RegisteredUser;
 import entities.Artist;
-import interface_adapters.AlertsController;
 
 public class Alert {
-    String message;
     static double growth_rate = 1.25;
     HashMap<String, Integer> tops;
     RegisteredUser user;
 
     public Alert(RegisteredUser user) {
-        HashMap<String, Integer> tops = new HashMap<String, Integer>();
+        this.tops = new HashMap<String, Integer>();
         this.user = user;
 
     }
