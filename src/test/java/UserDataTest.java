@@ -1,11 +1,11 @@
 import entities.GuestUser;
 import entities.RegisteredUser;
+import entities.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import use_cases.UserData;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.util.Scanner;
 
 public class UserDataTest {
@@ -19,20 +19,16 @@ public class UserDataTest {
         Assertions.assertEquals(4, u.getUsers().size());
 
         // Test getUser
-        RegisteredUser user1 = u.getUser("abc@gmail.com"); // logged in
-        RegisteredUser user2 = u.getUser("def@gmail.com"); // logged out
-        RegisteredUser user3 = u.getUser("fgh@gmai.com"); // logged out
-        RegisteredUser user4 = u.getUser("bcd@gmail.com"); // logged in
+        assert u.getUser("abc@gmail.com") instanceof RegisteredUser;
+        RegisteredUser user1 = (RegisteredUser) u.getUser("abc@gmail.com");
         RegisteredUser newUser = new RegisteredUser("xyz@gmail.com", "password");
 
         // Test checkUser: check whether user is in database
-        assert u.checkUser(user1); // in data and logged-in
-        assert u.checkUser(user2); // in data and not logged in
+        assert u.checkUser((RegisteredUser) user1); // in database
         assert !u.checkUser(newUser); // not in database
 
-        // Test checkStatus(user): check whether user is logged in, logged out, or does not exist in database
-        assert u.checkStatus(user1); // logged in
-        assert !u.checkStatus(user2); // not logged in
+        // Test checkStatus(user): check whether user is logged in or not
+        assert !u.checkStatus((RegisteredUser) user1); // not logged in
         // catch exception that user not in database
         try {
             u.checkStatus(newUser);
@@ -65,24 +61,25 @@ public class UserDataTest {
 
         //Test saveUser
         assert u.saveUser(newUser.getEmail(), newUser.getPassword()); // new user saved successfully
-        // need to check  if text files have been updated again?
+        // need to check if text files have been updated again?
         assert !u.saveUser(user1.getEmail(), user1.getPassword()); // existing user saved unsuccessfully
 
 
         // Test deleteUser
-        assert u.deleteUser(newUser.getEmail(), newUser.getPassword()); // new user deleted successfully
-        assert !u.deleteUser(newUser.getEmail(), newUser.getPassword()); // non-existing user not deleted successfully
-        assert !u.deleteUser(user2.getEmail(), user2.getPassword()); // not logged in user not deleted successfully
+        assert u.deleteUser(newUser.getEmail()); // new user deleted successfully
+        assert !u.deleteUser(newUser.getEmail()); // non-existing user not deleted successfully
+        assert !u.deleteUser(user1.getEmail()); // not logged in user not deleted successfully
 
         // Test logInUser
-        assert u.logInUser(user2.getEmail(), user2.getPassword()) == u.getUser(user2.getEmail()); // log in successful
+        u.logInUser(user1.getEmail(), user1.getPassword());
+        u.isLoggedIn(); // log in successful
         try {
             u.logInUser(user1.getEmail(), user1.getPassword()); // already logged in
         } catch (Exception e) {
             System.out.println("logInUser case passed: user already logged in.");
         }
         try {
-            u.logInUser(user3.getEmail(), "notThePassword"); // wrong password
+            u.logInUser("bcd@gmail.com", "notThePassword"); // wrong password
         } catch (Exception e) {
             System.out.println("logInUser case passed: user with wrong email.");
         }
@@ -93,22 +90,23 @@ public class UserDataTest {
     }
 
         // Test logOutUser
-        assert u.logoutUser(user1.getEmail(), user1.getPassword()) instanceof GuestUser; // log out successful
+        u.logoutUser();
+        assert !u.isLoggedIn(); // log out successful
         try {
-            u.logoutUser(user1.getEmail(), user1.getPassword()); // not logged in
+            u.logoutUser(); // not logged in
         } catch (Exception e) {
             System.out.println("logOutUser case passed: user not logged in.");
         }
-        try {
-            u.logoutUser(newUser.getEmail(), newUser.getPassword()); // user not in database
-        } catch (Exception e) {
-            System.out.println("logOutUser case passed: user not in database.");
-        }
-        try {
-            u.logoutUser(user4.getEmail(), "randomPassword"); // case: wrong password
-        } catch (Exception e) {
-            System.out.println("logOutUser case passed: wrong password.");
-        }
+//        try {
+//            u.logoutUser(); // user not in database
+//        } catch (Exception e) {
+//            System.out.println("logOutUser case passed: user not in database.");
+//        }
+//        try {
+//            u.logoutUser(user4.getEmail(), "randomPassword"); // case: wrong password
+//        } catch (Exception e) {
+//            System.out.println("logOutUser case passed: wrong password.");
+//        }
     }
 }
 

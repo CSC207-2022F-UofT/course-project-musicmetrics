@@ -13,56 +13,38 @@ import java.util.Scanner;
 public class UserData {
 
     // Keys are Bool values and have an arraylist of Entities.RegisteredUser objects mapped to the key.
+    // ArrayList accepts User objects in case different kinds of Users are created and added in the future.
     //  True if Entities.User is logged-in currently
     //  False if Entities.User is Logged-out currently
-    //  When a Entities.User logs in, their Entities.User object instance should be moved from False to True
-    static HashMap<Boolean, ArrayList<RegisteredUser>> data = new HashMap<>();
-    File registeredFile = new File("AllRegisteredUsers.txt");
-    File loggedInFile = new File("LoggedInUsers.txt");
+    //  When an Entities.User logs in, their Entities.User object instance should be moved from False to True
+    static HashMap<Boolean, ArrayList<User>> data = new HashMap<>();
 
-    private User user;
+    private User currentUser;
 
-    public UserData() throws Exception {
+    public UserData() throws FileNotFoundException{
         // initialize data HashMap
         data.put(true, new ArrayList<>());
         data.put(false, new ArrayList<>());
-        // read off loggedInFile and append to data
-//        Scanner loggedInUsers = new Scanner("LoggedInUsers.txt").useDelimiter(",");
-//        loggedInUsers.nextLine(); // skip header
-//        String email = "";
-//        String password = "";
-//
-//        while (loggedInUsers.hasNextLine()) {
-//            email = loggedInUsers.next();
-//            password = loggedInUsers.next();
-//            RegisteredUser user = new RegisteredUser(email, password);
-//            data.get(true).add(user);
-//            // read off registeredUsers file and append to data
-//        }
-//        loggedInUsers.close();
         Scanner registeredUsers = new Scanner("AllRegisteredUsers.txt").useDelimiter(",");
         registeredUsers.nextLine(); // skip header
-        String email = "";
-        String password = "";
+        String email2;
+        String password2;
         while (registeredUsers.hasNextLine()) {
-            email = registeredUsers.next();
-            password = registeredUsers.next();
-            // check if user is already in data - logged in
-            if (!data.get(true).contains(this.getUser(email))) {
-                RegisteredUser user2 = new RegisteredUser(email, password);
-                data.get(false).add(user2);
-            }
+            email2 = registeredUsers.next();
+            password2 = registeredUsers.next();
+            RegisteredUser user2 = new RegisteredUser(email2, password2);
+            data.get(false).add(user2);
         }
         registeredUsers.close();
-        this.user = new GuestUser();
+        this.currentUser = new GuestUser();
     }
 
     /**
-     * @param u is a Entities.RegisteredUser object
+     * @param u is an Entities.User object
      * @return true/false bool telling if the user is logged in or not (True= logged in, false= not logged in)
      * or throws an exception which says that the Registered user is not in database
      */
-    public boolean checkStatus(RegisteredUser u) throws Exception {
+    public boolean checkStatus(User u) throws Exception {
         if (data.get(true).contains(u)) {
             return true;
         }
@@ -86,29 +68,29 @@ public class UserData {
      * @param u Entities.RegisteredUser object
      * @return true/false boolean telling if the user exists in the database or not
      */
-    public boolean checkUser(RegisteredUser u) {
+    public boolean checkUser(User u) {
         return data.containsValue(u);
     }
 
     /**
      * @return an ArrayList containing all Users
      */
-    public ArrayList<RegisteredUser> getUsers() {
-        ArrayList<RegisteredUser> users = new ArrayList<RegisteredUser>();
+    public ArrayList<User> getUsers() {
+        ArrayList<User> users = new ArrayList<>();
         users.addAll(data.get(true));
         users.addAll(data.get(false));
         return users;
     }
 
     /**
-     * USE THIS IF you want to work with a Entities.RegisteredUser's instance object but only have their email
+     * USE THIS IF you want to work with an Entities.RegisteredUser's instance object but only have their email
      *
-     * @param email string representing a Entities.RegisteredUser's email
+     * @param email string representing an Entities.RegisteredUser's email
      * @return the instance object for the desired Entities.RegisteredUser
      * @throws Exception if user is not in database
      */
-    public RegisteredUser getUser(String email) throws Exception {
-        for (RegisteredUser u : getUsers()) {
+    public User getUser(String email) throws Exception {
+        for (User u : getUsers()) {
             if (Objects.equals(u.toString(), email)) {
                 return u;
             }
@@ -117,31 +99,31 @@ public class UserData {
     }
 
     /**
-     * @param email    a string representing an email for a registered user
+     * @param email a string representing an email for a registered user
      * @param password a string representing a password for a registered user
      */
-    public boolean saveUser(String email, String password) throws Exception {
-        if (!data.get(true).contains(this.getUser(email)) && !data.get(false).contains(this.getUser(email))) {
-            // create new Entities.RegisteredUser
+    public boolean saveUser(String email, String password) {
+        try {
+            User u = this.getUser(email);
+            return false; // user already saved in system
+        } catch (Exception e) {
+            // User does not exist, save into HashMap
             RegisteredUser newUser = new RegisteredUser(email, password);
             data.get(true).add(newUser);
-            // add user to LoggedInUsers text file
-//          writeToTextFile(loggedInFile, email + ", " + password + "\n");
+            // add user into LoggedInUsers text file
             return true;
         }
-        return false;
     }
 
     /**
      * Deletes a user from the data HashMap
      *
      * @param email string denoting the email of user to be deleted
-     * @param password string denoting the password of user to be deleted
      * @return boolean value true/false whether user is deleted successfully
      */
 
-    public boolean deleteUser(String email, String password) throws Exception {
-        RegisteredUser userToDelete = this.getUser(email);
+    public boolean deleteUser(String email) throws Exception {
+        RegisteredUser userToDelete = (RegisteredUser) this.getUser(email);
         // check if the user is stored in data - user has to be logged-in in order to delete their account
         if (data.get(true).contains(userToDelete)) {
             data.get(true).remove(userToDelete);
@@ -155,23 +137,21 @@ public class UserData {
      *
      * @param email    a string representing an email for a registered user
      * @param password a string representing a password for a registered user
-     * @return the Entities.RegisteredUser instance for this email and password
      * @throws Exception Already logged in, incorrect password, or email not found.
      */
-    public RegisteredUser logInUser(String email, String password) throws Exception {
+    public void logInUser(String email, String password) throws Exception {
         if (checkStatus(email)) {
             throw new Exception("Already logged in");
         }
         if (!(checkStatus(email))) {
-            for (RegisteredUser u : data.get(false)) {
-                if (Objects.equals(u.toString(), email)) {
-                    if (Objects.equals(u.getPassword(), password)) {
+            for (User u : data.get(false)) {
+                if (Objects.equals(u.toString(), email) && (u instanceof RegisteredUser)) {
+                    if (Objects.equals(((RegisteredUser) u).getPassword(), password)) {
                         data.get(false).remove(u);
                         data.get(true).add(u);
                         // add user to LoggedInUsers text file
 //                        writeToTextFile(loggedInFile, email + ", " + password + "\n");
-                        this.user = u;
-                        return u;
+                        this.currentUser = u;
                     }
                     throw new Exception("Incorrect password");
                 }
@@ -182,30 +162,33 @@ public class UserData {
 
     /**
      * Logs out a RegisteredUser based on their email and password
-     *
-     * @param email    a string representing an email address for a registered user
-     * @param password a string representing a password for a registered user
-     * @return a Entities.GuestUser (if successfully logged out)
      * * @throws Exception if incorrect password, already logged out, or email not found
      */
-    public GuestUser logoutUser(String email, String password) throws Exception {
-        if (checkStatus(email)) {
-            for (RegisteredUser u : data.get(true)) {
-                if (Objects.equals(u.toString(), email)) {
-                    if (Objects.equals(u.getPassword(), password)) {
-                        data.get(true).remove(u);
-                        data.get(false).add(u);
-                        this.user = new GuestUser();
-                        return new GuestUser();
-                    }
-                    throw new Exception("Incorrect password");
-                }
-            }
+    public void logoutUser() throws Exception {
+        if (!(this.currentUser instanceof GuestUser)) {
+            data.get(true).remove(this.currentUser);
+            data.get(false).add(this.currentUser);
+            this.currentUser = new GuestUser();
+        } else {
+            throw new Exception("You are not logged in. You cannot be logged out.");
         }
-        if (!(checkStatus(email))) {
-            throw new Exception("Already logged out");
-        }
-        throw new Exception("Email not found");
+//        if (checkStatus(this.currentUser)) {
+//            for (RegisteredUser u : data.get(true)) {
+//                if (Objects.equals(u.toString(), email)) {
+//                    if (Objects.equals(u.getPassword(), password)) {
+//                        data.get(true).remove(u);
+//                        data.get(false).add(u);
+//                        this.currentUser = new GuestUser();
+//                        return new GuestUser();
+//                    }
+//                    throw new Exception("Incorrect password");
+//                }
+//            }
+//        }
+//        if (!(checkStatus(email))) {
+//            throw new Exception("Already logged out");
+//        }
+//        throw new Exception("Email not found");
     }
 
     /**
@@ -213,7 +196,6 @@ public class UserData {
      *
      * @param filename name of text file to be written to
      * @param toRemove string to be removed from the text file
-     * @throws IOException
      */
 
     public void writeToTextFile(String filename, String toRemove) throws IOException {
@@ -248,6 +230,6 @@ public class UserData {
      * @return a boolean whether the user is logged in or not
      */
     public boolean isLoggedIn() {
-        return this.user instanceof GuestUser;
+        return this.currentUser instanceof GuestUser;
     }
 }

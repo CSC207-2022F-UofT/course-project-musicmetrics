@@ -1,4 +1,4 @@
-package interface_adapters;
+package use_cases;
 
 import use_cases.*;
 
@@ -12,9 +12,5 @@ public class UserDataBuilder {
 
     public UserData getUserData() {
         return this.userData;
-    }
-
-    public void updateUserData() throws Exception {
-        userData = new UserData();
     }
 }
