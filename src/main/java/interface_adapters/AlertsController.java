@@ -13,6 +13,7 @@ public class AlertsController {
      */
 
     public StringBuilder format(Alert alert){
+        alert.trigger();
         StringBuilder message = new StringBuilder();
         HashMap<String, Integer> map = alert.gettop();
         for (String i: map.keySet()){

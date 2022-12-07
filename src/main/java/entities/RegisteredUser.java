@@ -19,23 +19,7 @@ public class RegisteredUser extends entities.User {
         this.follows = new ArrayList<>();
     }
 
-//    public Alert getAlerts(double growthRate, boolean compare, int top) {
-//        return null;
-//    }
-
-    public void setAlerts() {
-
-    }
-
     public String toString() { return this.email;}
-
-    public void deleteAlert() {
-
-    }
-
-//    public void updateAlert(Alert alert) {
-//
-//    }
 
     @Override
     public boolean checkPermissions() {
@@ -71,39 +55,21 @@ public class RegisteredUser extends entities.User {
     public void setFollows(ArrayList<entities.Artist> follows) {this.follows = follows; }
 
     /**
-     * Adds an artist the Entities.RegisteredUser want to follow to their followings.
+     * Adds an artist the Entities.RegisteredUser want to remove from their followings.
+     * @param artist the artist user wants to add
      */
-//    public void addFollow() throws FileNotFoundException {
-//        // Asks for the input of the user for the artist to use in the InterfaceAdapters.Searcher
-//        Searcher searcher = new Searcher();
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("Enter the name of the artist:");
-//        String artist = scanner.nextLine();
-//        List<String> artists = searcher.filterArtist(artist);
-//        // check if artist in database and check if not already following artist-- if so, append to following ArrayList
-//        if (artists.contains(artist)) {
-//            if (!follows.contains(artist)) {
-//                follows.add(MusicData.getArtistByName(artist));
-//            }
-//        }
-//    }
-
+    public void Follow(Artist artist){
+        this.follows.add(artist);
+    }
 
     /**
      * Removes an artist the Entities.RegisteredUser want to remove from their followings.
+     * @param artist the artist user wants to remove
      */
-//    public void removeFollow() throws FileNotFoundException {
-//        // Asks for the input of the user for the artist to use in the InterfaceAdapters.Searcher
-//        Searcher searcher = new Searcher();
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("Enter the name of the artist:");
-//        String artist = scanner.nextLine();
-//        List<String> artists = searcher.filterArtist(artist);
-//        // check if artist in database -- if so, remove from following ArrayList
-//        if (artists.contains(artist)) {
-//            follows.remove(MusicData.getArtistByName(artist));
-//        }
-//    }
+    public void Remove(Artist artist){
+        this.follows.remove(artist);
+    }
+
 
     /**
      * Gets all artists a registeredUser follows
