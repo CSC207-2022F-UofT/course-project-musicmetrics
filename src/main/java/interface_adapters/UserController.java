@@ -12,8 +12,12 @@ public class UserController {
      * @param email logged-in user's email
      * @param artist Artist name to follow
      */
-    public static void followArtist(UserData userData, String email, String artist) throws Exception {
-        userData.getUser(email).followArtist(MusicData.getArtistByName(artist));
+    public static boolean followArtist(UserData userData, String email, String artist) throws Exception {
+        if (!userData.getUser(email).getFollows().contains(MusicData.getArtistByName(artist))) {
+            userData.getUser(email).followArtist(MusicData.getArtistByName(artist));
+            return true;
+        }
+        return false;
     }
 
     /**

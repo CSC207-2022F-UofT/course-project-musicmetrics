@@ -54,7 +54,9 @@ public class RegisteredUser extends entities.User {
      * @param artist the artist user wants to add
      */
     public void followArtist(Artist artist){
-        this.follows.add(artist);
+        if (!this.follows.contains(artist)) {
+            this.follows.add(artist);
+        }
     }
 
     /**

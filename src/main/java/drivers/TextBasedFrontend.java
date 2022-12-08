@@ -1,7 +1,7 @@
+
 package drivers;
 import interface_adapters.*;
-import interface_adapters.UserDataBuilder;
-
+import use_cases.UserData;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -51,6 +51,7 @@ public class TextBasedFrontend {
                         pwd = scanner.nextLine();
                         try {
                             builder.getUserData().logInUser(email, pwd);
+                            System.out.println("Successfully logged in.");
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
@@ -58,6 +59,7 @@ public class TextBasedFrontend {
                     case "logout":
                         try {
                             builder.getUserData().logoutUser();
+                            System.out.println("Successfully logged out.");
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
@@ -68,7 +70,20 @@ public class TextBasedFrontend {
                         System.out.print("Please type the password: ");
                         pwd = scanner.nextLine();
                         try {
-                            builder.getUserData().saveUser(email, pwd);
+                            boolean success = builder.getUserData().saveUser(email, pwd);
+                            if (success) {
+                                System.out.println("Successfully registered.");
+                            }
+                            else {
+                                System.out.println("Register failed, the email is already in use.");
+                            }
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
+                        break;
+                    case "alert":
+                        try {
+                            System.out.println(AlertsController.format(email, builder.getUserData()));
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
@@ -77,8 +92,8 @@ public class TextBasedFrontend {
                         //make user select a genre
                         String genre = genreAsker(scanner, searcher);
                         if(!genre.equals("Invalid index")){
-                            if (UserPresenter.checkIfGuestUser()){
-                                String recNameRand = RecommendController.randomRecommend(genre);
+                            if (UserPresenter.checkIfGuestUser(builder.getUserData())){
+                                String recNameRand = RecommendController.randomRecommend(genre, builder.getUserData());
                                 Map<String, Object> infoRand = searcher.getArtistInfoByName(recNameRand);
                                 System.out.println("You may be interested in the following artist:");
                                 for (Map.Entry<String, Object> entry : infoRand.entrySet()) {
@@ -86,7 +101,7 @@ public class TextBasedFrontend {
                                 }
                             }
                             else{
-                                String recNameSim = RecommendController.similarRecommend(genre);
+                                String recNameSim = RecommendController.similarRecommend(genre, builder.getUserData());
                                 Map<String, Object> infoSimi = searcher.getArtistInfoByName(recNameSim);
                                 System.out.println("You may be interested in the following artist:");
                                 for (Map.Entry<String, Object> entry : infoSimi.entrySet()) {
@@ -100,6 +115,10 @@ public class TextBasedFrontend {
                             System.out.print("Who do you want to follow? ");
                             input = scanner.nextLine();
                             List<String> artists = searcher.filterArtist(input);
+                            if (artists.size() == 0) {
+                                System.out.println("It seems like we don't have such artist.");
+                                break;
+                            }
                             for (int i = 0;i < artists.size();i++) {
                                 System.out.println((i + 1) + ". " + artists.get(i));
                             }
@@ -107,7 +126,14 @@ public class TextBasedFrontend {
                             try {
                                 int index = Integer.parseInt(scanner.nextLine().strip());
                                 if (1 <= index && index <= artists.size()) {
-                                    UserController.followArtist(builder.getUserData(), email, artists.get(index - 1));
+                                    boolean success = UserController.followArtist(builder.getUserData(),
+                                            email, artists.get(index - 1));
+                                    if (success) {
+                                        System.out.println("Successfully followed " + artists.get(index - 1));
+                                    }
+                                    else {
+                                        System.out.println("You are already following that artist.");
+                                    }
                                 }
                                 else {
                                     System.out.println("Invalid index");
@@ -138,6 +164,7 @@ public class TextBasedFrontend {
                                     int index = Integer.parseInt(scanner.nextLine().strip());
                                     if (1 <= index && index <= artists.size()) {
                                         UserController.unfollowArtist(builder.getUserData(), email, artists.get(index - 1));
+                                        System.out.println("Successfully unfollowed " + artists.get(index - 1));
                                     }
                                     else {
                                         System.out.println("Invalid index");
@@ -235,12 +262,15 @@ public class TextBasedFrontend {
                         }
                         break;
                     case "profile":
-                        if (builder.getUserData().isLoggedIn()) {
+                        if (!builder.getUserData().isLoggedIn()) {
                             System.out.println("You are a Guest User. Type \"register\" to sign-up or type \"login\" to sign-in if you already have an account.");
+                        }
+                        else {
+                            System.out.println("You are logged in. Email: " + email);
                         }
                         break;
                 }
-                System.out.print("Please type a command (type \"help\" for command list): ");
+                System.out.print("Please type a command: ");
             }
             input = scanner.nextLine();
         }

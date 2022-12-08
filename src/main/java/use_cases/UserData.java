@@ -21,8 +21,7 @@ public class UserData {
     //  False if Entities.User is Logged-out currently
     //  When an Entities.User logs in, their Entities.User object instance should be moved from False to True
     static HashMap<Boolean, ArrayList<User>> data = new HashMap<>();
-
-    public static User currentUser;
+    private User currentUser;
 
     public UserData() throws FileNotFoundException{
         // initialize data HashMap
@@ -85,7 +84,7 @@ public class UserData {
      * @return true/false boolean telling if the user exists in the database or not
      */
     public boolean checkUser(User u) {
-        return data.containsValue(u);
+        return currentUser == u;
     }
 
     /**
@@ -128,7 +127,6 @@ public class UserData {
             data.get(false).add(newUser);
             writeToTextFile("src/main/java/entities/AllRegisteredUsers", ", " + email + ", " + password);
             // add user into LoggedInUsers text file
-            this.currentUser = newUser;
             return true;
         }
     }
@@ -170,6 +168,7 @@ public class UserData {
                         // add user to LoggedInUsers text file
 //                        writeToTextFile(loggedInFile, email + ", " + password + "\n");
                         this.currentUser = u;
+                        return;
                     }
                     throw new Exception("Incorrect password");
                 }
@@ -247,8 +246,8 @@ public class UserData {
      *
      * @return a boolean whether the user is logged in or not
      */
-    public static boolean isLoggedIn() {
-        return currentUser instanceof RegisteredUser;
+    public boolean isLoggedIn() {
+        return this.currentUser instanceof RegisteredUser;
     }
 
     public User getCurrentUser() {

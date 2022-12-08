@@ -9,15 +9,16 @@ public class RecommendController {
      *
      * @param genre the genre the recommendation is within
      */
-    public static String similarRecommend(String genre){
-        return RecommendArtist.recommend(genre, true, UserData.currentUser).getName();
+
+    public static String similarRecommend(String genre, UserData userData){
+        return RecommendArtist.recommend(genre, true, userData.getCurrentUser()).getName();
     }
     /**
      * recommend randomly
      *
      * @param genre the genre the recommendation is within
      */
-    public static String randomRecommend(String genre){
-        return RecommendArtist.recommend(genre, false, UserData.currentUser).getName();
+    public static String randomRecommend(String genre, UserData userData){
+        return RecommendArtist.recommend(genre, false, userData.getCurrentUser()).getName();
     }
 }
