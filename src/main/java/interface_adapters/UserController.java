@@ -1,4 +1,5 @@
 package interface_adapters;
+
 import use_cases.*;
 
 import java.util.List;

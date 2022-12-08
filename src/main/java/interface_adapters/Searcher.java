@@ -1,4 +1,5 @@
 package interface_adapters;
+
 import use_cases.*;
 
 import java.io.File;
@@ -48,7 +49,6 @@ public class Searcher {
         return getKeyListSortedByValue(scoreMap);
     }
 
-
     /**
      * Returns an ArrayList of at most 10 most relevant Artist that the User can navigate based on the given keyword.
      *
@@ -65,8 +65,6 @@ public class Searcher {
         }
         return getKeyListSortedByValue(scoreMap);
     }
-
-
 
     /**
      * Returns an ArrayList of at most 10 most relevant Genre that the User can navigate based on the given keyword.
@@ -85,8 +83,6 @@ public class Searcher {
         return getKeyListSortedByValue(scoreMap);
 
     }
-
-
 
     /**
      * Returns relevant score which indicates how relevant the keyword is to the str.
@@ -171,6 +167,5 @@ public class Searcher {
     public List<String> genreResult(String genre) {
         return MusicData.getArtistsNameByGenre(genre);
     }
-
 }
 

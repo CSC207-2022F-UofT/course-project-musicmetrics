@@ -16,11 +16,14 @@ public class RegisteredUser extends entities.User {
 
     public String toString() { return this.email;}
 
+    /** Checks whether the user has the permission (i.e., follow permission)
+     *
+     * @return a boolean whether the User has the permission
+     */
     @Override
     public boolean checkPermissions() {
         return true;
     }
-
 
     /**
      * @param newPassword String that will be the new password
@@ -43,7 +46,7 @@ public class RegisteredUser extends entities.User {
         return this.email;
     }
 
-    /**
+    /** Sets the user's follow
      *
      * @param follows following ArrayList to set
      */
@@ -66,7 +69,6 @@ public class RegisteredUser extends entities.User {
     public void unfollowArtist(Artist artist){
         this.follows.remove(artist);
     }
-
 
     /**
      * Gets all artists a registeredUser follows

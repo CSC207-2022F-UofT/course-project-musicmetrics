@@ -1,7 +1,6 @@
-
 package drivers;
+
 import interface_adapters.*;
-import use_cases.UserData;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -40,11 +39,14 @@ public class TextBasedFrontend {
                         System.out.println("recommend : get an artist recommendation within a specific genre");
                         System.out.println("follow : follow an artist");
                         System.out.println("unfollow : unfollow an artist");
+                        System.out.println("alert : get alert from followed artist (growth rate)");
                         System.out.println("search : search for data in out program");
                         System.out.println("profile : user profile");
                         System.out.println("exit : terminate the program");
                         break;
                     case "login":
+                        /* Ask the user to type their email and password to log in to registered account.
+                        If provided email/password does not exist or is incorrect, it notifies the user. */
                         System.out.print("Please type your email: ");
                         email = scanner.nextLine();
                         System.out.print("Please type the password: ");
@@ -57,6 +59,7 @@ public class TextBasedFrontend {
                         }
                         break;
                     case "logout":
+                        /* The user can only log out when they are logged in. */
                         try {
                             builder.getUserData().logoutUser();
                             System.out.println("Successfully logged out.");
@@ -65,6 +68,8 @@ public class TextBasedFrontend {
                         }
                         break;
                     case "register":
+                        /* Ask the user to type their email and password to log in to registered account.
+                        If provided email/password does not exist or is incorrect, it notifies the user. */
                         System.out.print("Please type your email: ");
                         email = scanner.nextLine();
                         System.out.print("Please type the password: ");
@@ -91,7 +96,7 @@ public class TextBasedFrontend {
                     case "recommend":
                         //make user select a genre
                         String genre = genreAsker(scanner, searcher);
-                        if(!genre.equals("Invalid index")){
+                        if (!genre.equals("Invalid index")) {
                             if (UserPresenter.checkIfGuestUser(builder.getUserData())){
                                 String recNameRand = RecommendController.randomRecommend(genre, builder.getUserData());
                                 Map<String, Object> infoRand = searcher.getArtistInfoByName(recNameRand);
@@ -100,7 +105,7 @@ public class TextBasedFrontend {
                                     System.out.println(entry.getKey() + ": " + entry.getValue());
                                 }
                             }
-                            else{
+                            else {
                                 String recNameSim = RecommendController.similarRecommend(genre, builder.getUserData());
                                 Map<String, Object> infoSimi = searcher.getArtistInfoByName(recNameSim);
                                 System.out.println("You may be interested in the following artist:");
@@ -270,13 +275,14 @@ public class TextBasedFrontend {
                         }
                         break;
                 }
-                System.out.print("Please type a command: ");
+                System.out.print("\nPlease type a command: ");
             }
             input = scanner.nextLine();
         }
         System.out.println("Thank you for using MusicMetric.");
         System.exit(0);
     }
+
     /**
      * helper function that asks the user to select a genre
      *
