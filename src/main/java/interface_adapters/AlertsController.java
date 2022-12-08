@@ -14,16 +14,16 @@ public class AlertsController {
 
      * @return returns each top artist names and their stream growth rate in front of their names.
      */
-    public static String format(String email, UserData userData) throws Exception {
+    public static String format(String email, UserData userData, Double gr) throws Exception {
         var user = userData.getUser(email);
         Alert alert = new Alert(user);
-        alert.trigger();
+        alert.trigger(gr);
         StringBuilder message = new StringBuilder();
 
         HashMap<String, Float> map = alert.getTop();
 
         for (String i : map.keySet()) {
-            message.append(i).append(": ").append(map.get(i)).append("\n");
+            message.append(i).append(": ").append(String.format("%.2f", map.get(i))).append("x").append("\n");
         }
         if (message.length() > 0) {
             message.setLength(message.length() - 1);

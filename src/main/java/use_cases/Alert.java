@@ -11,7 +11,6 @@ import entities.User;
 
 public class Alert {
     HashMap<String, Float> tops;
-    double growth_rate = 1.25;
     User user;
 
     public Alert(User user) {
@@ -25,7 +24,7 @@ public class Alert {
      * user is the list of all artists that in trigger, their streams are compared and the top ones
      * will be determined.
      */
-    public void trigger() {
+    public void trigger(Double gr) {
         List<Artist> follows = new ArrayList<>();
         for (String i: user.getFollows()) {
             follows.add(MusicData.getArtistByName(i));
@@ -34,7 +33,7 @@ public class Alert {
             List<Integer> weeks = Arrays.asList(MusicData.getLatestWeek() - 1, MusicData.getLatestWeek());
             HashMap<Integer, Integer> stream_week = MusicData.getStreams(i, weeks);
             float growth = (float) stream_week.get(MusicData.getLatestWeek()) / (float) stream_week.get(MusicData.getLatestWeek() - 1);
-            if (stream_week.get(MusicData.getLatestWeek() - 1) * growth_rate <=
+            if (stream_week.get(MusicData.getLatestWeek() - 1) * gr <=
                     stream_week.get(MusicData.getLatestWeek())) {
                 if (!this.tops.containsKey(i.getName())) {
                     this.tops.put(i.getName(), growth);
