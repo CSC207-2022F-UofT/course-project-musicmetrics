@@ -84,6 +84,9 @@ public class RegisteredUser extends entities.User {
      * Updates the text file for data persistence
      */
     public void addToFollows(String toAdd) throws IOException {
+        if (this.follows.contains(toAdd)) {
+            return;
+        }
         File inputFile = new File("src/main/java/entities/Follows");
         File tempFile = new File("src/main/java/entities/FollowsIntermediate");
 
@@ -167,6 +170,6 @@ public class RegisteredUser extends entities.User {
         FollowsBuilder f = new FollowsBuilder();
         RegisteredUser user = new RegisteredUser("abc@gmail.com", "password123");
 
-        user.addToFollows("Drake");
+        System.out.println(user.getFollows());
     }
 }

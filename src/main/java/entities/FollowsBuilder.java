@@ -22,6 +22,7 @@ public class FollowsBuilder {
             for (int k = 1; k < j.length; k++) {
                 currlst.add(j[k]);
             }
+            System.out.println(currlst);
             followsMap.put(email, currlst);
 
         }
@@ -29,5 +30,6 @@ public class FollowsBuilder {
 
     public static void main(String[] args) throws FileNotFoundException {
         FollowsBuilder c = new FollowsBuilder();
+
     }
 }
