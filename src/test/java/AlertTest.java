@@ -37,12 +37,12 @@ public class AlertTest {
         Artist Taylor02 = new Artist(1000, "Pop", "Taylor Swift",
                 new Boolean[]{true, true, false, false, true}, 2, 200);
         ArrayList<Artist> artists02 = new ArrayList<>();
-        artists.add(Drake02);
-        artists.add(Jcole02);
-        artists.add(Kendrick02);
-        artists.add(Taylor02);
+        artists02.add(Drake02);
+        artists02.add(Jcole02);
+        artists02.add(Kendrick02);
+        artists02.add(Taylor02);
         user.setFollows(artists02);
-        MusicData.data.put(2, artists);
+        MusicData.data.put(2, artists02);
 
         Alert a = new Alert(user);
         a.trigger();
