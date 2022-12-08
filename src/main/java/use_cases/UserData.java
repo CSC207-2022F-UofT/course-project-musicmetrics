@@ -22,6 +22,10 @@ public class UserData {
         // initialize data HashMap
         data.put(true, new ArrayList<>());
         data.put(false, new ArrayList<>());
+
+        // initialize follows array
+        FollowsBuilder f = new FollowsBuilder();
+
         Scanner registeredUsers = new Scanner(new File("src/main/java/entities/AllRegisteredUsers"));
         registeredUsers.useDelimiter(", ");
         registeredUsers.nextLine();
@@ -31,7 +35,6 @@ public class UserData {
             email2 = registeredUsers.next();
             password2 = registeredUsers.next();
             RegisteredUser user2 = new RegisteredUser(email2, password2);
-
 
             data.get(false).add(user2);
         }

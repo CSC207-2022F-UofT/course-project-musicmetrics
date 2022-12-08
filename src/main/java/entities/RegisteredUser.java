@@ -95,7 +95,6 @@ public class RegisteredUser extends entities.User {
         while((currentLine = reader.readLine()) != null) {
             // trim newline when comparing with lineToRemove
             String trimmedLine = currentLine.trim();
-            System.out.println(trimmedLine);
             String[] tmp = trimmedLine.split(", ");
             if (Objects.equals(tmp[0], this.email)) {
                 writer.write(currentLine + ", " + toAdd);
@@ -130,7 +129,6 @@ public class RegisteredUser extends entities.User {
         while((currentLine = reader.readLine()) != null) {
             // trim newline when comparing with lineToRemove
             String trimmedLine = currentLine.trim();
-            System.out.println(trimmedLine);
             String[] tmp = trimmedLine.split(", ");
             if (Objects.equals(tmp[0], this.email)) {
                 final List<String> list = new ArrayList<String>();
@@ -161,12 +159,5 @@ public class RegisteredUser extends entities.User {
      */
     public ArrayList<String> getFollows() {
         return this.follows;
-    }
-
-    public static void main(String[] args) throws IOException {
-        FollowsBuilder f = new FollowsBuilder();
-        RegisteredUser user = new RegisteredUser("abc@gmail.com", "password123");
-
-        System.out.println(user.getFollows());
     }
 }
