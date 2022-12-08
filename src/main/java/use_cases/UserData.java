@@ -1,4 +1,5 @@
 package use_cases;
+import entities.Artist;
 import entities.GuestUser;
 import entities.RegisteredUser;
 import entities.User;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
+
+import static use_cases.ArtistBuilder.setArtistData;
 
 
 public class UserData {
@@ -25,8 +28,9 @@ public class UserData {
         // initialize data HashMap
         data.put(true, new ArrayList<>());
         data.put(false, new ArrayList<>());
-        Scanner registeredUsers = new Scanner("AllRegisteredUsers.txt").useDelimiter(",");
-        registeredUsers.nextLine(); // skip header
+        Scanner registeredUsers = new Scanner(new File("src/main/java/entities/AllRegisteredUsers"));
+        registeredUsers.useDelimiter(", ");
+        registeredUsers.nextLine();
         String email2;
         String password2;
         while (registeredUsers.hasNextLine()) {
@@ -36,6 +40,18 @@ public class UserData {
             data.get(false).add(user2);
         }
         registeredUsers.close();
+//
+//        Scanner sc = new Scanner(new File("src/main/java/use_cases/music_datSbase/Data_" + week));
+//        sc.useDelimiter(", ");
+//        sc.nextLine();
+//        ArrayList<Artist> allArtists = new ArrayList<>();
+//        while (sc.hasNextLine()) {
+//            Artist a = setArtistData(sc, week);
+//            allArtists.add(a); //add Artist to allArtists arraylist
+//        }
+//        MusicData.data.put(week, allArtists); //store information in data HashMap
+//        sc.close();
+
         this.currentUser = new GuestUser();
     }
 
@@ -102,14 +118,15 @@ public class UserData {
      * @param email a string representing an email for a registered user
      * @param password a string representing a password for a registered user
      */
-    public boolean saveUser(String email, String password) {
+    public boolean saveUser(String email, String password) throws IOException {
         try {
             User u = this.getUser(email);
             return false; // user already saved in system
         } catch (Exception e) {
             // User does not exist, save into HashMap
             RegisteredUser newUser = new RegisteredUser(email, password);
-            data.get(true).add(newUser);
+            data.get(false).add(newUser);
+            writeToTextFile("src/main/java/entities/AllRegisteredUsers", ", " + email + ", " + password);
             // add user into LoggedInUsers text file
             return true;
         }
@@ -200,9 +217,9 @@ public class UserData {
 
     public void writeToTextFile(String filename, String toRemove) throws IOException {
         File file = new File(filename);
-        FileWriter fw = new FileWriter(file);
-        PrintWriter pw = new PrintWriter(fw);
-        pw.println(toRemove);
+        FileWriter fw = new FileWriter(file, true);
+        fw.write(toRemove);
+        fw.close();
     }
 
 //    public void deleteFromTextFile(String filename, String toRemove) throws IOException {
@@ -231,5 +248,13 @@ public class UserData {
      */
     public boolean isLoggedIn() {
         return this.currentUser instanceof GuestUser;
+    }
+
+    public static void main(String[] args) throws IOException {
+        UserData c = new UserData();
+        System.out.println(UserData.data);
+        c.saveUser("123abc@gmail.com", "321321");
+        System.out.println(UserData.data);
+
     }
 }
