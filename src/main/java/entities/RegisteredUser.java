@@ -1,12 +1,7 @@
 package entities;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
-
-import use_cases.*;
-import interface_adapters.Searcher;
 
 public class RegisteredUser extends entities.User {
     private final String email;
@@ -58,7 +53,7 @@ public class RegisteredUser extends entities.User {
      * Adds an artist the Entities.RegisteredUser want to remove from their followings.
      * @param artist the artist user wants to add
      */
-    public void Follow(Artist artist){
+    public void followArtist(Artist artist){
         this.follows.add(artist);
     }
 
@@ -66,7 +61,7 @@ public class RegisteredUser extends entities.User {
      * Removes an artist the Entities.RegisteredUser want to remove from their followings.
      * @param artist the artist user wants to remove
      */
-    public void Remove(Artist artist){
+    public void unfollowArtist(Artist artist){
         this.follows.remove(artist);
     }
 

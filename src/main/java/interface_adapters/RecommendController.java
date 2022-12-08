@@ -1,7 +1,7 @@
 package interface_adapters;
 
 import use_cases.RecommendArtist;
-import use_cases.UserInteractor;
+import use_cases.UserData;
 
 public class RecommendController {
     /**
@@ -10,7 +10,7 @@ public class RecommendController {
      * @param genre the genre the recommendation is within
      */
     public static String similarRecommend(String genre){
-        return RecommendArtist.recommend(genre, true, UserInteractor.loggedinUser).getName();
+        return RecommendArtist.recommend(genre, true, UserData.currentUser).getName();
     }
     /**
      * recommend randomly
@@ -18,6 +18,6 @@ public class RecommendController {
      * @param genre the genre the recommendation is within
      */
     public static String randomRecommend(String genre){
-        return RecommendArtist.recommend(genre, false, UserInteractor.loggedinUser).getName();
+        return RecommendArtist.recommend(genre, false, UserData.currentUser).getName();
     }
 }

@@ -1,4 +1,4 @@
-package use_cases;
+package interface_adapters;
 
 import use_cases.*;
 
@@ -13,4 +13,5 @@ public class UserDataBuilder {
     public UserData getUserData() {
         return this.userData;
     }
+
 }
