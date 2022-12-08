@@ -10,6 +10,9 @@ import java.util.HashMap;
 public class AlertTest {
     @Test
     public void TriggerTest() {
+
+        //testing alert when user have multiple followings with different streams
+        // and with different growth rates for alert that user chooses
         RegisteredUser user = new RegisteredUser("something@yahoo.com", "1111");
         entities.Artist Drake = new entities.Artist(1000, "Hip-Hop/Rap", "Drake",
                 new Boolean[] {false, false, false, false, false, true}, 1, 1000);
@@ -59,5 +62,35 @@ public class AlertTest {
         HashMap<String, Float> NameGrowth = new HashMap<>();
         NameGrowth.put("Drake", (float) 2);
         Assertions.assertEquals(a.getTop(), NameGrowth);
+
+        a.trigger(0.0);
+        HashMap<String, Float> NoGrowth = new HashMap<>();
+        NoGrowth.put("Drake", (float) 2);
+        NoGrowth.put("Eminem", (float) 0.05);
+        NoGrowth.put("Post Malone", (float) 0.005);
+        NoGrowth.put("Taylor Swift", (float) 0.2);
+        Assertions.assertEquals(a.getTop(), NoGrowth);
+
+
+        // Testing alert when the user has no followings.
+        ArrayList<String> NoFollows = new ArrayList<String>();
+        user.setFollows(NoFollows);
+        Alert b = new Alert(user);
+        b.trigger(1.0);
+        HashMap<String, Float> No = new HashMap<>();
+        Assertions.assertEquals(b.getTop(), No);
+
+        //Testing alert when the user has one following.
+        ArrayList<String> OnoFollows = new ArrayList<String>();
+        OnoFollows.add(Drake.getName());
+        user.setFollows(OnoFollows);
+        Alert c = new Alert(user);
+        c.trigger(1.25);
+        HashMap<String, Float> One = new HashMap<>();
+        One.put("Drake", (float) 2);
+        Assertions.assertEquals(c.getTop(), One);
+
+
+
     }
 }
