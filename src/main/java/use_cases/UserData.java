@@ -116,15 +116,20 @@ public class UserData {
      * @param email a string representing an email for a registered user
      * @param password a string representing a password for a registered user
      */
-    public boolean saveUser(String email, String password) throws IOException {
+    public boolean saveUser(String email, String password) throws Exception {
         try {
             User u = this.getUser(email);
             return false; // user already saved in system
         } catch (Exception e) {
             // User does not exist, save into HashMap
+            writeToTextFile("src/main/java/entities/Follows", System.getProperty("line.separator") + email);
+            writeToTextFile("src/main/java/entities/AllRegisteredUsers", ", " + email + ", " + password);
+
+            FollowsBuilder f = new FollowsBuilder();
             RegisteredUser newUser = new RegisteredUser(email, password);
             data.get(false).add(newUser);
-            writeToTextFile("src/main/java/entities/AllRegisteredUsers", ", " + email + ", " + password);
+            logInUser(email, password);
+
             // add user into LoggedInUsers text file
             return true;
         }
@@ -253,5 +258,11 @@ public class UserData {
      */
     public User getCurrentUser() {
         return this.currentUser;
+    }
+
+    public static void main(String[] args) throws Exception {
+        UserData u = new UserData();
+
+
     }
 }
