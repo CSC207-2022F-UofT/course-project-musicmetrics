@@ -89,10 +89,10 @@ public class UserData {
      * @return the instance object for the desired Entities.RegisteredUser
      * @throws Exception if user is not in database
      */
-    public User getUser(String email) throws Exception {
+    public RegisteredUser getUser(String email) throws Exception {
         for (User u : getUsers()) {
             if (Objects.equals(u.toString(), email)) {
-                return u;
+                return (RegisteredUser) u;
             }
         }
         throw new Exception("Entities.User not found");
@@ -111,6 +111,7 @@ public class UserData {
             RegisteredUser newUser = new RegisteredUser(email, password);
             data.get(true).add(newUser);
             // add user into LoggedInUsers text file
+            this.currentUser = newUser;
             return true;
         }
     }
@@ -230,6 +231,10 @@ public class UserData {
      * @return a boolean whether the user is logged in or not
      */
     public boolean isLoggedIn() {
-        return this.currentUser instanceof GuestUser;
+        return this.currentUser instanceof RegisteredUser;
+    }
+
+    public User getCurrentUser() {
+        return this.currentUser;
     }
 }
