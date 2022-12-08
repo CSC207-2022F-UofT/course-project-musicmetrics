@@ -4,7 +4,7 @@ import entities.Artist;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MusicData implements stream{
+public class MusicData{
     /**
      * NOTE: Assume that an Artist will have information for EVERY WEEK in the Hashmap
      */
