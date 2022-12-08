@@ -36,6 +36,8 @@ public class UserData {
             email2 = registeredUsers.next();
             password2 = registeredUsers.next();
             RegisteredUser user2 = new RegisteredUser(email2, password2);
+
+
             data.get(false).add(user2);
         }
         registeredUsers.close();
@@ -84,7 +86,7 @@ public class UserData {
      * @return true/false boolean telling if the user exists in the database or not
      */
     public boolean checkUser(User u) {
-        return data.containsValue(u);
+        return currentUser == u;
     }
 
     /**

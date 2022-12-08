@@ -1,17 +1,20 @@
 package use_cases;
 
+import java.awt.image.renderable.RenderableImage;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import entities.Artist;
+import entities.RegisteredUser;
 import entities.User;
 
 public class Alert {
     static double growth_rate = 1.25;
-    HashMap<String, Integer> tops;
+    HashMap<String, Float> tops;
     User user;
     public Alert(User user) {
-        this.tops = new HashMap<String, Integer>();
+        this.tops = new HashMap<String, Float>();
         this.user = user;
     }
 
@@ -22,11 +25,14 @@ public class Alert {
      * will be determined.
      */
     public void trigger() {
-        List<Artist> follows = this.user.getFollows();
+        List<Artist> follows = new ArrayList<>();
+        for (String i: ((RegisteredUser) user).getFollows()) {
+            follows.add(MusicData.getArtistByName(i));
+        }
         for (Artist i : follows) {
             List<Integer> weeks = Arrays.asList(MusicData.getLatestWeek() - 1, MusicData.getLatestWeek());
             HashMap<Integer, Integer> stream_week = MusicData.getStreams(i, weeks);
-            int growth = stream_week.get(MusicData.getLatestWeek()) / stream_week.get(MusicData.getLatestWeek() - 1);
+            float growth = (float) stream_week.get(MusicData.getLatestWeek()) / (float) stream_week.get(MusicData.getLatestWeek() - 1);
             if (stream_week.get(MusicData.getLatestWeek() - 1) * growth_rate <=
                     stream_week.get(MusicData.getLatestWeek())) {
                 if (!this.tops.containsKey(i.getName())) {
@@ -37,5 +43,5 @@ public class Alert {
         }
     }
 
-    public HashMap<String, Integer> gettop() {return tops;}
+    public HashMap<String, Float> gettop() {return tops;}
 }
