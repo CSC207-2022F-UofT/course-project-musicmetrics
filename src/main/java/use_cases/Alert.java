@@ -11,6 +11,7 @@ import entities.User;
 
 public class Alert {
     HashMap<String, Float> tops;
+    double growth_rate = 1.25;
     User user;
 
     public Alert(User user) {
@@ -24,7 +25,7 @@ public class Alert {
      * user is the list of all artists that in trigger, their streams are compared and the top ones
      * will be determined.
      */
-    public void trigger(double growth_rate) {
+    public void trigger() {
         List<Artist> follows = new ArrayList<>();
         for (String i: user.getFollows()) {
             follows.add(MusicData.getArtistByName(i));
