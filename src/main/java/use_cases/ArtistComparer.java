@@ -32,10 +32,7 @@ public class ArtistComparer {
      * @return names - a list of the top artists' names
      */
     public static List<String> topArtistNames(int amt) {
-        List<Artist> artists = use_cases.MusicData.getTop(use_cases.MusicData.getLatestWeek(), amt);
-        List<String> names = new ArrayList<String>();
-        for (Artist a : artists){names.add(a.getName()); }
-        return names;
+        return artistToNames(use_cases.MusicData.getTop(use_cases.MusicData.getLatestWeek(), amt));
     }
 
     public static List<String> trendingArtistNames(int startWeek, int endWeek, int amt) {
@@ -48,6 +45,14 @@ public class ArtistComparer {
             else {
                 break;
             }
+        }
+        return names;
+    }
+
+    public static List<String> artistToNames(List<Artist> artists) {
+        List<String> names = new ArrayList<>();
+        for (Artist artist : artists) {
+            names.add(artist.getName());
         }
         return names;
     }

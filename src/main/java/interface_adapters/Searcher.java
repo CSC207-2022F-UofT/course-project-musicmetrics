@@ -98,7 +98,7 @@ public class Searcher {
      * @return a double relevant score (0 <= returnValue <= 100.0)
      */
     public static double getRelevantScore(String keyword, String str) {
-        if (str.length() > keyword.length() && str.toLowerCase().contains(keyword.toLowerCase())) {
+        if (str.length() > keyword.length() && str.toLowerCase().contains(keyword.toLowerCase()) || keyword.equalsIgnoreCase(str)) {
             return 100.0 / ((str.toLowerCase().indexOf(keyword.toLowerCase()) * 100.0) + str.length());
         }
         return 0.0;
