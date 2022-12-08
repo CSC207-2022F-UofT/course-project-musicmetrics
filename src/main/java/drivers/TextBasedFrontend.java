@@ -106,7 +106,6 @@ public class TextBasedFrontend {
                                 int index = Integer.parseInt(scanner.nextLine().strip());
                                 if (1 <= index && index <= artists.size()) {
                                     UserController.followArtist(builder.getUserData(), email, artists.get(index - 1));
-                                    System.out.println("Successfully followed " + artists.get(index - 1));
                                 }
                                 else {
                                     System.out.println("Invalid index");
@@ -137,7 +136,6 @@ public class TextBasedFrontend {
                                     int index = Integer.parseInt(scanner.nextLine().strip());
                                     if (1 <= index && index <= artists.size()) {
                                         UserController.unfollowArtist(builder.getUserData(), email, artists.get(index - 1));
-                                        System.out.println("Successfully unfollowed " + artists.get(index - 1));
                                     }
                                     else {
                                         System.out.println("Invalid index");
@@ -235,11 +233,8 @@ public class TextBasedFrontend {
                         }
                         break;
                     case "profile":
-                        if (!builder.getUserData().isLoggedIn()) {
+                        if (builder.getUserData().isLoggedIn()) {
                             System.out.println("You are a Guest User. Type \"register\" to sign-up or type \"login\" to sign-in if you already have an account.");
-                        }
-                        else {
-                            System.out.println("You are logged in. Email: " + email);
                         }
                         break;
                 }
