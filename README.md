@@ -64,7 +64,7 @@ MusicMetric makes the most use of Java, utlizing both it's frontend and backend 
 |    |         │── drivers
 |    |         │── entities
 |    |         │── interface_adapters
-|    |         └── uses_cases                      
+|    |         └── use_cases                      
 │    └── test
 └── README.md
 ```
