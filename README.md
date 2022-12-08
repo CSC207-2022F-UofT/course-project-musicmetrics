@@ -1,6 +1,6 @@
 <br />
 <p align="center">
-  <img src="musicmetriclogos/musicmetriclogo.png" alt="Logo">
+  <img src="https://github.com/CSC207-2022F-UofT/course-project-musicmetrics/blob/main/images/musicmetriclogo.png" alt="Logo">
  
 </div>
 
