@@ -105,8 +105,11 @@ public class TextBasedFrontend {
                     case "alert":
                         /* Prints out the growth rate of Artists that the user have followed. */
                         try {
-                            System.out.println("These artists have more than 25% growth within the past week:");
-                            System.out.println(AlertsController.format(email, builder.getUserData()));
+                            System.out.println("Set the target growth rate for your followed artists (e.g 1.1, 1.25, 1.5): ");
+                            double gr = Double.parseDouble(scanner.nextLine());
+                            System.out.println("These artists have more than " + gr + "x growth within the past week:");
+
+                            System.out.println(AlertsController.format(email, builder.getUserData(), gr));
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }

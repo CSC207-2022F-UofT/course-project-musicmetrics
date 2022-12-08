@@ -16,7 +16,7 @@ public class UserDataTest {
         UserDataBuilder u = new UserDataBuilder();
 
         // Test getUser
-        assert u.getUserData().getUser("abc@gmail.com") instanceof RegisteredUser;
+        assert u.getUserData().getUser("abc@gmail.com") != null;
         RegisteredUser user1 = (RegisteredUser) u.getUserData().getUser("abc@gmail.com");
         RegisteredUser newUser = new RegisteredUser("xyz@gmail.com", "password");
 
