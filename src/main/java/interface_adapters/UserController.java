@@ -15,7 +15,7 @@ public class UserController {
      */
     public static boolean followArtist(UserData userData, String email, String artist) throws Exception {
         if (!userData.getUser(email).getFollows().contains(MusicData.getArtistByName(artist))) {
-            userData.getUser(email).followArtist(MusicData.getArtistByName(artist));
+            userData.getUser(email).followArtist(artist);
             return true;
         }
         return false;
@@ -29,7 +29,7 @@ public class UserController {
      * @param artist Artist name to unfollow
      */
     public static void unfollowArtist(UserData userData, String email, String artist) throws Exception {
-        userData.getUser(email).unfollowArtist(MusicData.getArtistByName(artist));
+        userData.getUser(email).unfollowArtist(artist);
     }
 
     /**
@@ -40,7 +40,7 @@ public class UserController {
      * @return an ArrayList of followed Artist name
      */
     public static List<String> getFollowedArtistNames(UserData userData, String email) throws Exception {
-        return ArtistComparer.artistToNames(userData.getUser(email).getFollows());
+        return userData.getUser(email).getFollows();
     }
 
     /**

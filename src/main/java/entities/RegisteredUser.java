@@ -167,6 +167,6 @@ public class RegisteredUser extends entities.User {
         FollowsBuilder f = new FollowsBuilder();
         RegisteredUser user = new RegisteredUser("abc@gmail.com", "password123");
 
-        user.addToFollows("Drake");
+        System.out.println(user.getFollows());
     }
 }
