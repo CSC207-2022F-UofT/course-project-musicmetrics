@@ -209,8 +209,7 @@ public class TextBasedFrontend {
                                 try {
                                     int index = Integer.parseInt(scanner.nextLine().strip());
                                     if (1 <= index && index <= artists.size()) {
-                                        String artist = artists.get(index - 1);
-                                        UserController.unfollowArtist(builder.getUserData(), email, artists.get(index - 1));
+                                        String artist = UserController.unfollowArtist(builder.getUserData(), email, artists.get(index - 1));
                                         System.out.println("Successfully unfollowed " + artist);
                                     }
                                     else {

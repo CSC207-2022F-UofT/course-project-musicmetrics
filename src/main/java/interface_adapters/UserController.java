@@ -22,14 +22,17 @@ public class UserController {
     }
 
     /**
-     * Let logged-in user (currentUser) in UserData to unfollow the given artist
+     * Lets the logged-in user (currentUser) in UserData to unfollow the given artist and
+     * returns the name of the removed Artist
      *
      * @param userData UserData
      * @param email logged-in user's email
      * @param artist Artist name to unfollow
+     * @return removed Artist name
      */
-    public static void unfollowArtist(UserData userData, String email, String artist) throws Exception {
+    public static String unfollowArtist(UserData userData, String email, String artist) throws Exception {
         userData.getUser(email).unfollowArtist(artist);
+        return artist;
     }
 
     /**
