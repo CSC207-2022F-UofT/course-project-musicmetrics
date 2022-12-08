@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+
+/**
+ * Initializes a follows Hashmap for each user in AllRegisteredUsers.
+ * This hashmap is used to create Users' follows.
+ */
 public class FollowsBuilder {
     public static HashMap<String, ArrayList<String>> followsMap = new HashMap<>();
     public FollowsBuilder() throws FileNotFoundException {
