@@ -19,7 +19,7 @@ public class UserData {
     //  When an Entities.User logs in, their Entities.User object instance should be moved from False to True
     static HashMap<Boolean, ArrayList<User>> data = new HashMap<>();
 
-    private User currentUser;
+    public static User currentUser;
 
     public UserData() throws FileNotFoundException{
         // initialize data HashMap
@@ -230,8 +230,8 @@ public class UserData {
      *
      * @return a boolean whether the user is logged in or not
      */
-    public boolean isLoggedIn() {
-        return this.currentUser instanceof RegisteredUser;
+    public static boolean isLoggedIn() {
+        return currentUser instanceof RegisteredUser;
     }
 
     public User getCurrentUser() {
