@@ -105,8 +105,8 @@ public class TextBasedFrontend {
                     case "alert":
                         /* Prints out the growth rate of Artists that the user have followed. */
                         try {
-                            double i = 2;
-                            System.out.println(AlertsController.format(email, builder.getUserData(), i));
+                            System.out.println("These artists have more than 25% growth within the past week:");
+                            System.out.println(AlertsController.format(email, builder.getUserData()));
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
