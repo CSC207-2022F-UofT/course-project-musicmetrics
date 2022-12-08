@@ -13,6 +13,7 @@ public class Alert {
     static double growth_rate = 1.25;
     HashMap<String, Float> tops;
     User user;
+
     public Alert(User user) {
         this.tops = new HashMap<String, Float>();
         this.user = user;
@@ -43,5 +44,7 @@ public class Alert {
         }
     }
 
-    public HashMap<String, Float> gettop() {return tops;}
+    public HashMap<String, Float> getTop() {
+        return this.tops;
+    }
 }

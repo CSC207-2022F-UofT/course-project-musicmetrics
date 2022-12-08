@@ -1,5 +1,6 @@
 package use_cases;
-import entities.Artist;
+
+import entities.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,12 +33,17 @@ public class ArtistComparer {
      * @return names - a list of the top artists' names
      */
     public static List<String> topArtistNames(int amt) {
-        List<Artist> artists = use_cases.MusicData.getTop(use_cases.MusicData.getLatestWeek(), amt);
-        List<String> names = new ArrayList<String>();
-        for (Artist a : artists){names.add(a.getName()); }
-        return names;
+        return artistToNames(use_cases.MusicData.getTop(use_cases.MusicData.getLatestWeek(), amt));
     }
 
+    /**
+     * Returns an ArrayList of trending Artist names based on given parameters.
+     *
+     * @param startWeek the starting week number
+     * @param endWeek the ending week number
+     * @param amt the number of artists names needed
+     * @return an ArrayList of trending Artists names
+     */
     public static List<String> trendingArtistNames(int startWeek, int endWeek, int amt) {
         List<Artist> artists = MusicData.getTrending(startWeek, endWeek);
         List<String> names = new ArrayList<>();
@@ -48,6 +54,20 @@ public class ArtistComparer {
             else {
                 break;
             }
+        }
+        return names;
+    }
+
+    /**
+     * Returns an ArrayList of Artist name given a List of Artist
+     *
+     * @param artists a List of Artist to convert to an ArrayList of names
+     * @return an ArrayList of Artists names
+     */
+    public static List<String> artistToNames(List<Artist> artists) {
+        List<String> names = new ArrayList<>();
+        for (Artist artist : artists) {
+            names.add(artist.getName());
         }
         return names;
     }

@@ -1,44 +1,57 @@
 package interface_adapters;
+
 import use_cases.*;
 
-import java.util.Scanner;
+import java.util.List;
 
 public class UserController {
 
-    public void setUser(String type) {
-
+    /**
+     * Let logged-in user (currentUser) in UserData to follow the given artist
+     *
+     * @param userData UserData
+     * @param email logged-in user's email
+     * @param artist Artist name to follow
+     */
+    public static boolean followArtist(UserData userData, String email, String artist) throws Exception {
+        if (!userData.getUser(email).getFollows().contains(MusicData.getArtistByName(artist))) {
+            userData.getUser(email).followArtist(MusicData.getArtistByName(artist));
+            return true;
+        }
+        return false;
     }
 
     /**
-     * Logs in user based on email and password the user inputs into the user interface
-     * @throws Exception
+     * Let logged-in user (currentUser) in UserData to unfollow the given artist
+     *
+     * @param userData UserData
+     * @param email logged-in user's email
+     * @param artist Artist name to unfollow
      */
-    public void logInUser() throws Exception {
-        UserData u = new UserData();
-        // ask for email and password
-        Scanner email = new Scanner(System.in);
-        System.out.println("Enter your email: ");
-        Scanner password = new Scanner(System.in);
-        System.out.println("Enter your password: ");
-        // call on u.login
-        u.logInUser(String.valueOf(email), String.valueOf(password));
+    public static void unfollowArtist(UserData userData, String email, String artist) throws Exception {
+        userData.getUser(email).unfollowArtist(MusicData.getArtistByName(artist));
     }
 
     /**
-     * Logs out user based on interaction between user and user interface
+     * Returns an ArrayList of Artist name that the logged-in user in userData has followed
+     *
+     * @param userData UserData
+     * @param email logged-in user's email
+     * @return an ArrayList of followed Artist name
      */
-    public void logoutUser(){
+    public static List<String> getFollowedArtistNames(UserData userData, String email) throws Exception {
+        return ArtistComparer.artistToNames(userData.getUser(email).getFollows());
     }
 
     /**
-     * Notifies user to change password after sending an email to the user
+     * Let logged-in user (currentUser) in UserData to change their password
+     *
+     * @param userData UserData
+     * @param email logged-in user's email
+     * @param newPassword new password
      */
-    public void forgotPassword() {
-        Scanner emailInput = new Scanner(System.in);
-        System.out.println("Please enter your email address.");
-        System.out.println("An email to reset your password has been sent to " + emailInput.next());
-        // email leads to her instance of Entities.RegisteredUser tp change password?
+    public static void changePassword(UserData userData, String email, String newPassword) throws Exception {
+        userData.getUser(email).changePassword(newPassword);
     }
-
 
 }

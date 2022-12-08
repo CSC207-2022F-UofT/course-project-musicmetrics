@@ -1,17 +1,12 @@
 package use_cases;
-import entities.Artist;
-import entities.GuestUser;
-import entities.RegisteredUser;
-import entities.User;
+
+import entities.*;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
-
-import static use_cases.ArtistBuilder.setArtistData;
-
 
 public class UserData {
 
@@ -76,7 +71,6 @@ public class UserData {
      * @return true/false bool telling if the user is logged in or not (True= logged in, false= not logged in)
      * or throws an exception which says that the Registered user is not in database
      */
-
     public boolean checkStatus(String email) throws Exception {
         return checkStatus(getUser(email));
     }
@@ -106,10 +100,10 @@ public class UserData {
      * @return the instance object for the desired Entities.RegisteredUser
      * @throws Exception if user is not in database
      */
-    public User getUser(String email) throws Exception {
+    public RegisteredUser getUser(String email) throws Exception {
         for (User u : getUsers()) {
             if (Objects.equals(u.toString(), email)) {
-                return u;
+                return (RegisteredUser) u;
             }
         }
         throw new Exception("Entities.User not found");
@@ -139,7 +133,6 @@ public class UserData {
      * @param email string denoting the email of user to be deleted
      * @return boolean value true/false whether user is deleted successfully
      */
-
     public boolean deleteUser(String email) throws Exception {
         RegisteredUser userToDelete = (RegisteredUser) this.getUser(email);
         // check if the user is stored in data - user has to be logged-in in order to delete their account
@@ -170,6 +163,7 @@ public class UserData {
                         // add user to LoggedInUsers text file
 //                        writeToTextFile(loggedInFile, email + ", " + password + "\n");
                         this.currentUser = u;
+                        return;
                     }
                     throw new Exception("Incorrect password");
                 }
@@ -215,7 +209,6 @@ public class UserData {
      * @param filename name of text file to be written to
      * @param toRemove string to be removed from the text file
      */
-
     public void writeToTextFile(String filename, String toRemove) throws IOException {
         File file = new File(filename);
         FileWriter fw = new FileWriter(file, true);
@@ -248,14 +241,14 @@ public class UserData {
      * @return a boolean whether the user is logged in or not
      */
     public boolean isLoggedIn() {
-        return this.currentUser instanceof GuestUser;
+        return this.currentUser instanceof RegisteredUser;
     }
 
-    public static void main(String[] args) throws IOException {
-        UserData c = new UserData();
-        System.out.println(UserData.data);
-        c.saveUser("123abc@gmail.com", "321321");
-        System.out.println(UserData.data);
-
+    /** Returns current user attribute
+     *
+     * @return currentUser attribute
+     */
+    public User getCurrentUser() {
+        return this.currentUser;
     }
 }

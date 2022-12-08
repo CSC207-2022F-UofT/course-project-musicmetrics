@@ -1,11 +1,11 @@
 package entities;
 
-import javax.swing.text.Style;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
 
 public class RegisteredUser extends entities.User {
     private final String email;
@@ -20,11 +20,14 @@ public class RegisteredUser extends entities.User {
 
     public String toString() { return this.email;}
 
+    /** Checks whether the user has the permission (i.e., follow permission)
+     *
+     * @return a boolean whether the User has the permission
+     */
     @Override
     public boolean checkPermissions() {
         return true;
     }
-
 
     /**
      * @param newPassword String that will be the new password
@@ -47,7 +50,7 @@ public class RegisteredUser extends entities.User {
         return this.email;
     }
 
-    /**
+    /** Sets the user's follow
      *
      * @param follows following ArrayList to set
      */
@@ -57,7 +60,8 @@ public class RegisteredUser extends entities.User {
      * Adds an artist the Entities.RegisteredUser want to remove from their followings.
      * @param artist the artist user wants to add
      */
-    public void Follow(String artist) throws IOException {
+     
+    public void followArtist(String artist) throws IOException {
         this.follows.add(artist);
         addToFollows(artist);
     }
@@ -66,7 +70,8 @@ public class RegisteredUser extends entities.User {
      * Removes an artist the Entities.RegisteredUser want to remove from their followings.
      * @param artist the artist user wants to remove
      */
-    public void Remove(String artist) throws IOException {
+
+    public void unfollowArtist(String artist) throws IOException {
         this.follows.remove(artist);
         removeFromFollows(artist);
     }
@@ -103,7 +108,6 @@ public class RegisteredUser extends entities.User {
         reader.close();
         tempFile.renameTo(inputFile);
     }
-
 
     /**
      *

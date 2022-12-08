@@ -1,5 +1,6 @@
 package use_cases;
-import entities.Artist;
+
+import entities.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -9,7 +10,6 @@ public class MusicData{
      * NOTE: Assume that an Artist will have information for EVERY WEEK in the Hashmap
      */
     public static HashMap<Integer, ArrayList<Artist>> data = new HashMap<>();
-
 
     /**
      * Compare past streams to a current week to see if an artist was trending during a given week
@@ -53,7 +53,6 @@ public class MusicData{
         return Collections.max(data.keySet());
     }
 
-
     /**
      * Gets all streams of a given artist for given weeks
      *
@@ -89,11 +88,14 @@ public class MusicData{
         return 0;
     }
 
-//    returns list of artist objects for current week
+    /** Returns an ArrayList of Artist of the given week
+     *
+     * @param week the data week
+     * @return an ArrayList of Artist
+     */
     public static ArrayList<Artist> getArtists(int week){
         return data.get(week);
     }
-
 
     /**
      * FOR TESTING PURPOSES
@@ -142,14 +144,12 @@ public class MusicData{
         int week = getLatestWeek();
         List<Artist> artist_in_genre = new ArrayList<>();
         ArrayList<Artist> w_data = getArtists(week);
-
         for (Artist a : w_data){
             if (a.getGenre().equals(genre)){artist_in_genre.add(a); } //add artist to list if genre matches
         }
         if (artist_in_genre.size() >= 1) {return artist_in_genre;}
         else {return null;}
     }
-
 
     /**
      * gets all genres in MusicData files
@@ -169,7 +169,6 @@ public class MusicData{
         }
         return all_genres.stream().distinct().collect(Collectors.toList());
     }
-
 
     /**
      * Gets the top artists of the week by streams
@@ -197,7 +196,6 @@ public class MusicData{
                 }
             }
         }
-
         return top;
     }
 
@@ -248,10 +246,11 @@ public class MusicData{
     public static HashMap<String, Object> getArtistData(String artist, int week){
         Artist artistObj = null;
         for (Artist a : data.get(week)) {
-            if (a.getName().equals(artist)) {artistObj = a; }
+            if (a.getName().equals(artist)) {
+                artistObj = a;
+            }
         }
-
-        if (!(artistObj==null)) {
+        if (!(artistObj == null)) {
             return artistObj.getInfo();
         }
         return null;
@@ -284,12 +283,17 @@ public class MusicData{
     public static List<String> getArtistsNameByGenre(String genre) {
         List<Artist> artists = MusicData.getArtistsByGenre(genre);
         List<String> names = new ArrayList<>();
-        if (artists == null) {return null;}
+        if (artists == null) {
+            return null;
+        }
         for (Artist artist : artists) {
             names.add(artist.getName());
         }
-        if (names.size() >= 1) {return names;}
-        else {return null;}
+        if (names.size() >= 1) {
+            return names;
+        }
+        else {
+            return null;
+        }
     }
-
 }

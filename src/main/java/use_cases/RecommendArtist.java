@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-
 public class RecommendArtist {
+
     /**
      * Gets an artist recommendation within a specific genre, random if similar is false, otherwise uses the similarties
      * with artists the user follows. Recommendation not within follows.
@@ -45,14 +45,13 @@ public class RecommendArtist {
                     recommendationSimilarityScore = similarityScore;
                 }
             }
-
         }
         else {
             recommendation = randomRecommend(genre);
         }
         return recommendation;
-
     }
+
     /**
      * Generate a recommendation randomly within the genre
      *
@@ -95,7 +94,6 @@ public class RecommendArtist {
      * @return double representing similarity score between the artist and user's other followed artists
      */
     private static double generateSimilarityScore(List<Artist> registeredUserFollows, Artist artistNotFollowed) {
-
         double similarityScore = 0.0;
         Boolean[] artistSimilarties = artistNotFollowed.getLikes();
         for(Artist follow : registeredUserFollows){
@@ -108,6 +106,4 @@ public class RecommendArtist {
         }
         return similarityScore;
     }
-
-
 }
