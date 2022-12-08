@@ -62,8 +62,9 @@ public class RegisteredUser extends entities.User {
      */
      
     public void followArtist(String artist) throws IOException {
-        this.follows.add(artist);
         addToFollows(artist);
+        this.follows.add(artist);
+
     }
 
     /**
@@ -72,8 +73,9 @@ public class RegisteredUser extends entities.User {
      */
 
     public void unfollowArtist(String artist) throws IOException {
-        this.follows.remove(artist);
         removeFromFollows(artist);
+        this.follows.remove(artist);
+
     }
 
     /**
@@ -159,5 +161,14 @@ public class RegisteredUser extends entities.User {
      */
     public ArrayList<String> getFollows() {
         return this.follows;
+    }
+
+    public static void main(String[] args) throws IOException {
+        FollowsBuilder f = new FollowsBuilder();
+        RegisteredUser r = new RegisteredUser("abc@gmail.com", "password123");
+
+        System.out.println(r.getFollows());
+        r.unfollowArtist("Drake");
+        System.out.println(r.getFollows());
     }
 }
