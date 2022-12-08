@@ -19,7 +19,7 @@ class SearcherTest {
     public void GetRelevantScoreSameIndexSameLength() {
         double score1 = Searcher.getRelevantScore("top", "top 10 genres");
         double score2 = Searcher.getRelevantScore("top", "top 5 artists");
-        Assertions.assertTrue(score1 > score2);
+        Assertions.assertEquals(score1, score2);
     }
 
     @Test
@@ -52,11 +52,21 @@ class SearcherTest {
     }
 
     @Test
-    public void FilterKeywordShortKeyword() throws FileNotFoundException {
+    public void FilterKeywordExactMatch() throws FileNotFoundException {
         Searcher searcher = new Searcher();
         List<String> expected = new ArrayList<>();
         expected.add("top 5 artists");
+        expected.add("top 5 artists of the past week");
+        List<String> actual = searcher.filterKeyword("top 5 artists");
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void FilterKeywordShortKeyword() throws FileNotFoundException {
+        Searcher searcher = new Searcher();
+        List<String> expected = new ArrayList<>();
         expected.add("5 most trending artists");
+        expected.add("top 5 artists");
         expected.add("top 5 artists of the past week");
         List<String> actual = searcher.filterKeyword("5");
         Assertions.assertEquals(expected, actual);
@@ -82,6 +92,15 @@ class SearcherTest {
     }
 
     @Test
+    public void FilterArtistExactMatch() throws FileNotFoundException {
+        Searcher searcher = new Searcher();
+        List<String> expected = new ArrayList<>();
+        expected.add("BTS");
+        List<String> actual = searcher.filterArtist("bts");
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
     public void FilterArtistShortKeyword() throws FileNotFoundException {
         Searcher searcher = new Searcher();
         List<String> expected = new ArrayList<>();
@@ -89,7 +108,6 @@ class SearcherTest {
         expected.add("Taylor Swift");
         expected.add("BTS");
         expected.add("Post Malone");
-        expected.add("XXXTENTACION");
         expected.add("Justin Bieber");
         List<String> actual = searcher.filterArtist("t");
         Assertions.assertEquals(expected, actual);
@@ -109,6 +127,15 @@ class SearcherTest {
         Searcher searcher = new Searcher();
         List<String> expected = new ArrayList<>();
         List<String> actual = searcher.filterGenre("Pokemon");
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void FilterGenreExactMatch() throws FileNotFoundException {
+        Searcher searcher = new Searcher();
+        List<String> expected = new ArrayList<>();
+        expected.add("Latin trap");
+        List<String> actual = searcher.filterGenre("Latin trap");
         Assertions.assertEquals(expected, actual);
     }
 

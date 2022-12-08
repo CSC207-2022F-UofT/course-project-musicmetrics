@@ -1,5 +1,6 @@
 package use_cases;
-import entities.Artist;
+
+import entities.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

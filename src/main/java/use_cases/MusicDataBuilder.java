@@ -1,7 +1,7 @@
 package use_cases;
 
 
-import entities.Artist;
+import entities.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,6 +14,7 @@ import static use_cases.ArtistBuilder.setArtistData;
 Builder to construct MusicData instances
  */
 public class MusicDataBuilder {
+
     /**
      * reads from relevant data files and stores info in data Hashmap
      *

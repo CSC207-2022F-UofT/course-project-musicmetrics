@@ -1,4 +1,5 @@
 package interface_adapters;
+
 import use_cases.*;
 
 import java.util.List;
@@ -12,8 +13,12 @@ public class UserController {
      * @param email logged-in user's email
      * @param artist Artist name to follow
      */
-    public static void followArtist(UserData userData, String email, String artist) throws Exception {
-        userData.getUser(email).followArtist(MusicData.getArtistByName(artist));
+    public static boolean followArtist(UserData userData, String email, String artist) throws Exception {
+        if (!userData.getUser(email).getFollows().contains(MusicData.getArtistByName(artist))) {
+            userData.getUser(email).followArtist(MusicData.getArtistByName(artist));
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -36,6 +41,17 @@ public class UserController {
      */
     public static List<String> getFollowedArtistNames(UserData userData, String email) throws Exception {
         return ArtistComparer.artistToNames(userData.getUser(email).getFollows());
+    }
+
+    /**
+     * Let logged-in user (currentUser) in UserData to change their password
+     *
+     * @param userData UserData
+     * @param email logged-in user's email
+     * @param newPassword new password
+     */
+    public static void changePassword(UserData userData, String email, String newPassword) throws Exception {
+        userData.getUser(email).changePassword(newPassword);
     }
 
 }

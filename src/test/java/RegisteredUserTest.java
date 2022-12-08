@@ -7,28 +7,8 @@ public class RegisteredUserTest {
     RegisteredUser u = new RegisteredUser("mno@gmail.com", "password");
 
     @Test
-    public void testGetAlerts() {
-    }
-
-    @Test
-    public void testSetAlerts() {
-    }
-
-    @Test
     public void testToString() {
         Assertions.assertEquals(u.toString(), "mno@gmail.com");
-    }
-
-    @Test
-    public void testDeleteAlert() {
-    }
-
-    @Test
-    public void testUpdateAlert() {
-    }
-
-    @Test
-    public void testCheckPermissions() {
     }
 
     @Test

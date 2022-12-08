@@ -8,10 +8,11 @@ import entities.User;
 
 public class Alert {
     static double growth_rate = 1.25;
-    HashMap<String, Integer> tops;
+    HashMap<String, Float> tops;
     User user;
+
     public Alert(User user) {
-        this.tops = new HashMap<String, Integer>();
+        this.tops = new HashMap<String, Float>();
         this.user = user;
     }
 
@@ -26,7 +27,7 @@ public class Alert {
         for (Artist i : follows) {
             List<Integer> weeks = Arrays.asList(MusicData.getLatestWeek() - 1, MusicData.getLatestWeek());
             HashMap<Integer, Integer> stream_week = MusicData.getStreams(i, weeks);
-            int growth = stream_week.get(MusicData.getLatestWeek()) / stream_week.get(MusicData.getLatestWeek() - 1);
+            float growth = (float) stream_week.get(MusicData.getLatestWeek()) / (float) stream_week.get(MusicData.getLatestWeek() - 1);
             if (stream_week.get(MusicData.getLatestWeek() - 1) * growth_rate <=
                     stream_week.get(MusicData.getLatestWeek())) {
                 if (!this.tops.containsKey(i.getName())) {
@@ -37,5 +38,7 @@ public class Alert {
         }
     }
 
-    public HashMap<String, Integer> gettop() {return tops;}
+    public HashMap<String, Float> getTop() {
+        return this.tops;
+    }
 }
