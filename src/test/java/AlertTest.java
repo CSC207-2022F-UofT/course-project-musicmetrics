@@ -46,9 +46,8 @@ public class AlertTest {
 
         Alert a = new Alert(user);
         a.trigger();
-        HashMap<String, Integer> NameGrowth = new HashMap<String, Integer>();
-        NameGrowth.put("Drake", 2);
-        Assertions.assertEquals(a.gettop(), NameGrowth);
-
+        HashMap<String, Float> NameGrowth = new HashMap<>();
+        NameGrowth.put("Drake", (float) 2);
+        Assertions.assertEquals(a.getTop(), NameGrowth);
     }
-    }
+}
