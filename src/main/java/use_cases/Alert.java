@@ -1,9 +1,12 @@
 package use_cases;
 
+import java.awt.image.renderable.RenderableImage;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import entities.Artist;
+import entities.RegisteredUser;
 import entities.User;
 
 public class Alert {
@@ -23,7 +26,10 @@ public class Alert {
      * will be determined.
      */
     public void trigger() {
-        List<Artist> follows = this.user.getFollows();
+        List<Artist> follows = new ArrayList<>();
+        for (String i: ((RegisteredUser) user).getFollows()) {
+            follows.add(MusicData.getArtistByName(i));
+        }
         for (Artist i : follows) {
             List<Integer> weeks = Arrays.asList(MusicData.getLatestWeek() - 1, MusicData.getLatestWeek());
             HashMap<Integer, Integer> stream_week = MusicData.getStreams(i, weeks);

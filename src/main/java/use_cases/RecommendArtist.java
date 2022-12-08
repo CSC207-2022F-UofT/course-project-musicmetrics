@@ -2,6 +2,7 @@ package use_cases;
 
 import entities.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -21,7 +22,10 @@ public class RecommendArtist {
         if (similar) {
             //generate a recommendation off of similarity scores to followed artists within the genre
             //get the User's follows and initialize the current highest similarity score (the one of the recommendation)
-            List<Artist> registeredUserFollows = ((RegisteredUser) rUser).getFollows(); //similar is true means user is registered
+            List<Artist> registeredUserFollows = new ArrayList<>();   //similar is true means user is registered
+            for (String i: ((RegisteredUser) rUser).getFollows()) {
+                registeredUserFollows.add(MusicData.getArtistByName(i));
+            }
             //get Artists not Followed within the same genre
             List<Artist> nonFollow = findNonFollows(registeredUserFollows, genre);
             //if the user follows everyone or no one return a random person they follow
