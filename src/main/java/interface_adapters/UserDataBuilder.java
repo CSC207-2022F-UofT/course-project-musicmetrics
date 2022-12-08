@@ -1,11 +1,10 @@
-package use_cases;
+package interface_adapters;
 
 import use_cases.*;
 
 public class UserDataBuilder {
 
-    private UserData userData;
-
+    private final UserData userData;
     public UserDataBuilder() throws Exception {
         this.userData = new UserData();
     }

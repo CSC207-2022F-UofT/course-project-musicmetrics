@@ -1,6 +1,6 @@
 package drivers;
 import interface_adapters.*;
-import use_cases.UserDataBuilder;
+import interface_adapters.UserDataBuilder;
 
 import java.io.FileNotFoundException;
 import java.util.List;

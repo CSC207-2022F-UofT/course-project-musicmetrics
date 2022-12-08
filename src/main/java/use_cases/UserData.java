@@ -21,7 +21,6 @@ public class UserData {
     //  False if Entities.User is Logged-out currently
     //  When an Entities.User logs in, their Entities.User object instance should be moved from False to True
     static HashMap<Boolean, ArrayList<User>> data = new HashMap<>();
-
     private User currentUser;
 
     public UserData() throws FileNotFoundException{
