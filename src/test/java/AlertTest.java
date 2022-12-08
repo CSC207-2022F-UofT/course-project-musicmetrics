@@ -55,7 +55,7 @@ public class AlertTest {
         MusicData.data.put(2, artists02);
 
         Alert a = new Alert(user);
-        a.trigger();
+        a.trigger(1.25);
         HashMap<String, Float> NameGrowth = new HashMap<>();
         NameGrowth.put("Drake", (float) 2);
         Assertions.assertEquals(a.getTop(), NameGrowth);
