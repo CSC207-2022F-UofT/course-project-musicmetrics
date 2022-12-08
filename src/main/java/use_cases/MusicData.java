@@ -1,11 +1,7 @@
 package use_cases;
 
-import entities.Artist;
-import entities.RegisteredUser;
-import entities.User;
+import entities.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,59 +10,6 @@ public class MusicData{
      * NOTE: Assume that an Artist will have information for EVERY WEEK in the Hashmap
      */
     public static HashMap<Integer, ArrayList<Artist>> data = new HashMap<>();
-
-
-    /**
-     * reads from relevant data files and stores info in data Hashmap
-     *
-     * @throws FileNotFoundException for Scanner sc
-     */
-    public static void setData() throws FileNotFoundException {
-
-        for (int week=1; week<=3; week++) {
-            Scanner sc = new Scanner(new File("src/main/java/use_cases/music_database/Data_" + week));
-            sc.useDelimiter(", ");
-            sc.nextLine();
-            ArrayList<Artist> allArtists = new ArrayList<>();
-            while (sc.hasNextLine()) {
-//                System.out.println(week);
-//                System.out.println(sc.next());
-//                System.out.println(sc.next());
-//                System.out.println(sc.next());
-//                System.out.println(sc.next());
-//                System.out.println(sc.next());
-
-                Artist a = setArtistData(sc, week);
-                allArtists.add(a); //add Artist to allArtists arraylist
-            }
-            data.put(week, allArtists); //store information in data HashMap
-            sc.close();
-        }
-    }
-
-
-    /**
-     * Reads info from relevant file and stores in a new Artist instance
-     *
-     * @param sc Scanner passed from setData to read this line
-     * @param week Current week and file data is extracted from
-     *
-     * @return Artist instance with current week's info stored
-     */
-    public static Artist setArtistData(Scanner sc, int week){
-        String name, genre;
-        int streams, follows;
-
-        //read all info
-        name = sc.next();
-        streams = Integer.parseInt(sc.next());
-        follows = Integer.parseInt(sc.next());
-        genre = sc.next();
-        Boolean[] likes = likesConverter(sc.next());
-
-        return new Artist(follows, genre, name, likes, week, streams);
-    }
-
 
     /**
      * Compare past streams to a current week to see if an artist was trending during a given week
@@ -87,12 +30,6 @@ public class MusicData{
             }
         }
 
-//        StringBuilder to_return = new StringBuilder();
-//        for (Artist a : trending){
-//            to_return.append(a.getName());
-//            to_return.append("\n");
-//        }
-//        return to_return;
         return trending;
     }
 
@@ -103,71 +40,8 @@ public class MusicData{
      * @param b Artist instance from later week
      * @return Boolean whether there has been a trending-worthy increase
      */
-    public static Boolean isTrending(Artist a, Artist b){
+    private static Boolean isTrending(Artist a, Artist b){
         return (b.getStreams() > a.getStreams()*1.10 || b.getStreams() > a.getStreams() + 10000000);
-    }
-
-
-    /**
-     * Gets an artist recommendation within a specific genre, random if similar is false, otherwise uses the similarties
-     * with artists the user follows. Recommendation not within follows.
-     *
-     * @param genre the genre the recommendation is within
-     * @param similar if the recommendation should be based on the user's followers or random
-     * @param rUser the user that is making the request, should be registeredUser if similar is true
-     * @return an artist recommeneded for the User
-     */
-    public Artist recommendArtist(String genre, boolean similar, User rUser) {
-        Artist recommendation = new Artist();
-        List<Artist> sameGenre = getArtistsByGenre(genre);
-        if(similar){
-            //generate a recommendation off of similarity scores to followed artists within the genre
-            //get the User's follows and initialize the current highest similarity score (the one of the recommendation)
-            List<Artist> registeredUserFollows = ((RegisteredUser) rUser).getFollows(); //similar is true means user is registered
-            //get Artists not Followed within the same genre
-            List<Artist> nonFollow = getArtistsByGenre(genre);
-            for(Artist artistWithinGenre : sameGenre){ //filter out the ones followed
-                for (Artist followed : registeredUserFollows) {
-                    if (followed.getName().equals(artistWithinGenre.getName())) {
-                        nonFollow.remove(artistWithinGenre);
-                        break;
-                    }
-                }
-            }
-            //if the user follows everyone return a random person they follow
-            if(nonFollow.size() == 0){
-                int randomInt = new Random().nextInt(sameGenre.size());
-                recommendation = sameGenre.get(randomInt);
-                return recommendation;
-            }
-            double recommendationSimilarityScore = 0.0;
-            for(Artist artistNotFollowed : nonFollow){
-                //for each artist within the recommended genre, generate the total similarity score to artistWithinGenre
-                double similarityScore = 0.0;
-                Boolean[] artistSimilarties = artistNotFollowed.getLikes();
-                for(Artist follow : registeredUserFollows){
-                    Boolean[] followSimilarities = follow.getLikes();
-                    for(int i = 0; i < artistSimilarties.length && i < followSimilarities.length; i++){
-                        if(followSimilarities[i] == artistSimilarties[i]){
-                            similarityScore = similarityScore + 1;
-                        }
-                    }
-                }
-                //generate an average similarity score and then change the recommendation if the average is greater
-                //than the average of the current recommendation
-                similarityScore = similarityScore / registeredUserFollows.size();
-                if(similarityScore > recommendationSimilarityScore){
-                    recommendation = artistNotFollowed;
-                    recommendationSimilarityScore = similarityScore;
-                }
-            }
-        } else{
-            //generate a recommendation randomly within the genre
-            int randomInt = new Random().nextInt(sameGenre.size());
-            recommendation = sameGenre.get(randomInt);
-        }
-
-        return recommendation;
     }
 
 
@@ -178,7 +52,6 @@ public class MusicData{
     public static int getLatestWeek() {
         return Collections.max(data.keySet());
     }
-
 
     /**
      * Gets all streams of a given artist for given weeks
@@ -197,9 +70,14 @@ public class MusicData{
         return to_return;
     }
 
-
-//    Helper method for getStreams that returns artist streams of a week
-//    Assumes artists for MusicData is stored in a key(week) to value(array of artists relationship)
+    /**
+     * Helper method for getStreams that returns artist streams of a week
+     * Assumes artists for MusicData is stored in a key(week) to value(array of artists relationship)
+     *
+     * @param name a string representing artist name
+     * @param week integer representing a week
+     * @return an integer representing streaming number
+     */
     private static int getStreamsHelper(String name, int week) {
         List<Artist> week_data = getArtists(week);
         for (Artist artist: week_data) {
@@ -210,30 +88,18 @@ public class MusicData{
         return 0;
     }
 
-    /**
-     * converts a string of 1s and 0s into a boolean array
+    /** Returns an ArrayList of Artist of the given week
      *
-     * @param binary a string of 1s and 0s to represent likes
-     * @return boolean array corresponding to binary
+     * @param week the data week
+     * @return an ArrayList of Artist
      */
-    private static Boolean[] likesConverter(String binary) {
-        String[] binaryList = binary.split(" ");
-        Boolean[] likes = new Boolean[binary.length()];
-        for(int i = 0; i < binaryList.length; i++){
-            String s = binaryList[i];
-            likes[i] = s.equals("1");
-        }
-        return likes;
-    }
-
-
-//    returns list of artist objects for current week
     public static ArrayList<Artist> getArtists(int week){
         return data.get(week);
     }
 
-
     /**
+     * FOR TESTING PURPOSES
+     * Method used to add an artist to the data hashmap
      *
      * @param artist An Artist Object
      */
@@ -242,15 +108,34 @@ public class MusicData{
             data.get(artist.time).add(artist);
             }
         if (!(data.containsKey(artist.time))){
-            ArrayList<Artist> artistList = new ArrayList<Artist>();
+            ArrayList<Artist> artistList = new ArrayList<>();
             artistList.add(artist);
             data.put(artist.time, artistList);
         }
     }
 
+    /**
+     * FOR TESTING PURPOSES
+     * Removes artist from the data hashmap
+     * weeks do not need to be specified because it is assumed that if an artist is in the hashmap,
+     * then it has data for every week
+     *
+     * @param artist a string representing an artist name
+     */
+    public static void removeArtist(String artist) {
+        for (int k : data.keySet()) {
+            data.get(k).removeIf(a -> Objects.equals(a.getName(), artist));
+            if (data.get(getLatestWeek()).size() == 0) {data.remove(getLatestWeek());}
+            // ^^ Removes the latest week if the artist that was removed was the only artist in that week
+            // We remove the latest week if it is empty for testing purposes and continuity
+            // If a week is empty, and it is not the latest week, then we keep it in the hashmap.
+        }
+        if (data.get(getLatestWeek()).size() == 0) {data.remove(getLatestWeek());}
+    }
 
     /**
      * Retrieve all artists within given genre
+     * return null if genre does not exist or there are no artists
      *
      * @param genre the genre being searched for
      * @return list of all Artists in that genre
@@ -259,14 +144,12 @@ public class MusicData{
         int week = getLatestWeek();
         List<Artist> artist_in_genre = new ArrayList<>();
         ArrayList<Artist> w_data = getArtists(week);
-
         for (Artist a : w_data){
             if (a.getGenre().equals(genre)){artist_in_genre.add(a); } //add artist to list if genre matches
         }
-
-        return artist_in_genre;
+        if (artist_in_genre.size() >= 1) {return artist_in_genre;}
+        else {return null;}
     }
-
 
     /**
      * gets all genres in MusicData files
@@ -286,7 +169,6 @@ public class MusicData{
         }
         return all_genres.stream().distinct().collect(Collectors.toList());
     }
-
 
     /**
      * Gets the top artists of the week by streams
@@ -314,11 +196,16 @@ public class MusicData{
                 }
             }
         }
-
         return top;
     }
 
-
+    /**
+     *
+     * @param artist an instance of artist
+     * @param weeks a list containing integers that represent a week
+     * @return a hashmap with an integer week as a key,
+     *          and an integer representing the amount of follows the artist has for that week
+     */
     public static HashMap<Integer, Integer> getFollows(Artist artist, List<Integer> weeks) {
         HashMap<Integer, Integer> follows = new HashMap<>();
         String artistName = artist.getName();
@@ -329,6 +216,13 @@ public class MusicData{
         return follows;
     }
 
+    /**
+     * Helper method used in getFollows
+     *
+     * @param name a string representing the name of an artist
+     * @param week an integer representing a week
+     * @return an integer representing the number of follows for the artist at a given week
+     */
     private static int getFollowsHelper(String name, int week) {
         List<Artist> weekData = getArtists(week);
         for (Artist artist: weekData) {
@@ -352,10 +246,11 @@ public class MusicData{
     public static HashMap<String, Object> getArtistData(String artist, int week){
         Artist artistObj = null;
         for (Artist a : data.get(week)) {
-            if (a.getName().equals(artist)) {artistObj = a; }
+            if (a.getName().equals(artist)) {
+                artistObj = a;
+            }
         }
-
-        if (!(artistObj==null)) {
+        if (!(artistObj == null)) {
             return artistObj.getInfo();
         }
         return null;
@@ -368,7 +263,7 @@ public class MusicData{
      * @param name the name of the artist
      * @return an Artist with the given name
      */
-    public static Artist artistResult(String name) {
+    public static Artist getArtistByName(String name) {
         List<Artist> artists = MusicData.getArtists(MusicData.getLatestWeek());
         for (Artist artist : artists) {
             if (artist.getName().equals(name)) {
@@ -378,10 +273,27 @@ public class MusicData{
         return null;
     }
 
-
-    public static void main(String[] args) throws FileNotFoundException {
-        MusicData.setData();
-        System.out.println(getGenres());
+    /**
+     * Returns an ArrayList of the name of Artists within the given genre.
+     * Returns null if genre does not exist in our database
+     *
+     * @param genre the name of the genre
+     * @return an ArrayList of the name of Artists with the given genre
+     */
+    public static List<String> getArtistsNameByGenre(String genre) {
+        List<Artist> artists = MusicData.getArtistsByGenre(genre);
+        List<String> names = new ArrayList<>();
+        if (artists == null) {
+            return null;
+        }
+        for (Artist artist : artists) {
+            names.add(artist.getName());
+        }
+        if (names.size() >= 1) {
+            return names;
+        }
+        else {
+            return null;
+        }
     }
-
 }

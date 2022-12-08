@@ -1,57 +1,32 @@
 package entities;
 
-import interface_adapters.Alert;
-import interface_adapters.Searcher;
-import use_cases.MusicData;
-import use_cases.UserData;
-
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.*;
+import java.util.Objects;
 
-public class RegisteredUser extends User {
+
+public class RegisteredUser extends entities.User {
     private final String email;
     private String password;
-    public ArrayList<Artist> follows;
+    public ArrayList<String> follows;
 
     public RegisteredUser(String email, String password) {
         this.email = email;
         this.password = password;
-        this.follows = new ArrayList<>();
-    }
-
-    public Alert getAlerts(double growthRate, boolean compare, int top) {
-        return null;
-    }
-
-    public void setAlerts() {
-
+        this.follows = FollowsBuilder.followsMap.get(email);
     }
 
     public String toString() { return this.email;}
 
-    public void deleteAlert() {
-
-    }
-
-    public void updateAlert(Alert alert) {
-
-    }
-
+    /** Checks whether the user has the permission (i.e., follow permission)
+     *
+     * @return a boolean whether the User has the permission
+     */
     @Override
     public boolean checkPermissions() {
         return true;
-    }
-
-    /**
-     * use_cases.UserData's logout method is used
-     * @return a new Entities.GuestUser instance
-     * throws Exception if user is not logged in or does not exist in database
-     */
-    public GuestUser logout() throws Exception {
-        UserData u = new UserData();
-        return u.logoutUser(this.email, this.password);
     }
 
     /**
@@ -75,45 +50,111 @@ public class RegisteredUser extends User {
         return this.email;
     }
 
-    /**
+    /** Sets the user's follow
      *
      * @param follows following ArrayList to set
      */
-    public void setFollows(ArrayList<Artist> follows) {this.follows = follows; }
+    public void setFollows(ArrayList<String> follows) {this.follows = follows; }
 
     /**
-     * Adds an artist the Entities.RegisteredUser want to follow to their followings.
+     * Adds an artist the Entities.RegisteredUser want to remove from their followings.
+     * @param artist the artist user wants to add
      */
-    public void addFollow() throws FileNotFoundException {
-        // Asks for the input of the user for the artist to use in the InterfaceAdapters.Searcher
-        Searcher searcher = new Searcher();
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the name of the artist:");
-        String artist = scanner.nextLine();
-        List<String> artists = searcher.filterArtist(artist);
-        // check if artist in database and check if not already following artist-- if so, append to following ArrayList
-        if (artists.contains(artist)) {
-            if (!follows.contains(artist)) {
-                follows.add(MusicData.artistResult(artist));
-            }
-        }
-    }
+     
+    public void followArtist(String artist) throws IOException {
+        addToFollows(artist);
+        this.follows.add(artist);
 
+    }
 
     /**
      * Removes an artist the Entities.RegisteredUser want to remove from their followings.
+     * @param artist the artist user wants to remove
      */
-    public void removeFollow() throws FileNotFoundException {
-        // Asks for the input of the user for the artist to use in the InterfaceAdapters.Searcher
-        Searcher searcher = new Searcher();
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the name of the artist:");
-        String artist = scanner.nextLine();
-        List<String> artists = searcher.filterArtist(artist);
-        // check if artist in database -- if so, remove from following ArrayList
-        if (artists.contains(artist)) {
-            follows.remove(MusicData.artistResult(artist));
+
+    public void unfollowArtist(String artist) throws IOException {
+        removeFromFollows(artist);
+        this.follows.remove(artist);
+
+    }
+
+    /**
+     *
+     * @param toAdd string of Artist to add to the user's followed artist
+     *
+     *
+     * Updates the text file for data persistence
+     */
+    public void addToFollows(String toAdd) throws IOException {
+        if (this.follows.contains(toAdd)) {
+            return;
         }
+        File inputFile = new File("src/main/java/entities/Follows");
+        File tempFile = new File("src/main/java/entities/FollowsIntermediate");
+
+        BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+        String currentLine;
+
+        while((currentLine = reader.readLine()) != null) {
+            // trim newline when comparing with lineToRemove
+            String trimmedLine = currentLine.trim();
+            String[] tmp = trimmedLine.split(", ");
+            if (Objects.equals(tmp[0], this.email)) {
+                writer.write(currentLine + ", " + toAdd);
+                writer.write(System.getProperty("line.separator"));
+            } else {
+                writer.write(currentLine + System.getProperty("line.separator"));
+            }
+        }
+        writer.close();
+        reader.close();
+        tempFile.renameTo(inputFile);
+    }
+
+    /**
+     *
+     * @param toRemove string of Artist to remove from user's following
+     *
+     * Updates the text file for data persistence
+     */
+    public void removeFromFollows(String toRemove) throws IOException {
+        if (!follows.contains(toRemove)) {
+            return;
+        }
+        File inputFile = new File("src/main/java/entities/Follows");
+        File tempFile = new File("src/main/java/entities/FollowsIntermediate");
+
+        BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+        String currentLine;
+
+        while((currentLine = reader.readLine()) != null) {
+            // trim newline when comparing with lineToRemove
+            String trimmedLine = currentLine.trim();
+            String[] tmp = trimmedLine.split(", ");
+            if (Objects.equals(tmp[0], this.email)) {
+                final List<String> list = new ArrayList<String>();
+                Collections.addAll(list, tmp);
+                String header = list.remove(0);
+                list.remove(toRemove);
+                tmp = list.toArray(new String[0]);
+
+                writer.write(header);
+
+                for (String i : tmp) {
+                    writer.write(", " + i);
+                }
+                writer.write(System.getProperty("line.separator"));
+            } else {
+                writer.write(currentLine + System.getProperty("line.separator"));
+            }
+        }
+        writer.close();
+        reader.close();
+        tempFile.renameTo(inputFile);
     }
 
     /**
@@ -121,7 +162,7 @@ public class RegisteredUser extends User {
      *
      * @return a List of artists the registeredUser follows
      */
-    public List<Artist> getFollows() {
+    public ArrayList<String> getFollows() {
         return this.follows;
     }
 }

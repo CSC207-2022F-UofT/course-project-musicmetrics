@@ -10,102 +10,154 @@ import java.util.List;
 class SearcherTest {
 
     @Test
-    public void GetRelevantScoreDifferentLength() {
+    public void GetRelevantScoreNoRelevancy() {
+        double score = Searcher.getRelevantScore("bro", "top 5 genres");
+        Assertions.assertEquals(0, score);
+    }
+
+    @Test
+    public void GetRelevantScoreSameIndexSameLength() {
+        double score1 = Searcher.getRelevantScore("top", "top 10 genres");
+        double score2 = Searcher.getRelevantScore("top", "top 5 artists");
+        Assertions.assertEquals(score1, score2);
+    }
+
+    @Test
+    public void GetRelevantScoreSameIndexDifferentLength() {
         double score1 = Searcher.getRelevantScore("top", "top 5 genres");
         double score2 = Searcher.getRelevantScore("top", "top 5 artists");
         Assertions.assertTrue(score1 > score2);
     }
 
     @Test
+    public void GetRelevantScoreDifferentIndexSameLength() {
+        double score1 = Searcher.getRelevantScore("top", "top 5 artists of the past week");
+        double score2 = Searcher.getRelevantScore("top", "5 top artists of the past week");
+        Assertions.assertTrue(score1 > score2);
+    }
+
+    @Test
     public void GetRelevantScoreDifferentIndexDifferentLength() {
-        double score1 = Searcher.getRelevantScore("top", "top 5 genres");
-        double score2 = Searcher.getRelevantScore("top", "5 top artists");
+        double score1 = Searcher.getRelevantScore("top", "top 5 artists of the past week");
+        double score2 = Searcher.getRelevantScore("top", "10 top artists of the past week");
         Assertions.assertTrue(score1 > score2);
     }
 
     @Test
-    public void GetRelevantScoreDifferentIndexDifferentLength2() {
-        double score1 = Searcher.getRelevantScore("t", "tea party lets go");
-        double score2 = Searcher.getRelevantScore("t", "bts");
-        Assertions.assertTrue(score1 > score2);
+    public void FilterKeywordNoMatch() throws FileNotFoundException {
+        Searcher searcher = new Searcher();
+        List<String> expected = new ArrayList<>();
+        List<String> actual = searcher.filterKeyword("bruh");
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void GetRelevantScoreDifferentIndexDifferentLength3() {
-        double score1 = Searcher.getRelevantScore("te", "tea party lets go");
-        double score2 = Searcher.getRelevantScore("te", "I ate pizza");
-        double score3 = Searcher.getRelevantScore("te", "Everyone, attention!");
-        Assertions.assertTrue(score1 > score2);
-        Assertions.assertTrue(score2 > score3);
-    }
-
-    @Test
-    public void FilterKeywordCommonKeyword() throws FileNotFoundException {
+    public void FilterKeywordExactMatch() throws FileNotFoundException {
         Searcher searcher = new Searcher();
         List<String> expected = new ArrayList<>();
         expected.add("top 5 artists");
-        expected.add("top 10 artists");
-        expected.add("top 14 artists");
         expected.add("top 5 artists of the past week");
-        expected.add("top 14 artists of the past week");
-        expected.add("top 10 artists of the past week");
-        List<String> actual = searcher.filterKeyword("top");
+        List<String> actual = searcher.filterKeyword("top 5 artists");
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void FilterKeywordPartialKeyword() throws FileNotFoundException {
+    public void FilterKeywordShortKeyword() throws FileNotFoundException {
+        Searcher searcher = new Searcher();
+        List<String> expected = new ArrayList<>();
+        expected.add("5 most trending artists");
+        expected.add("top 5 artists");
+        expected.add("top 5 artists of the past week");
+        List<String> actual = searcher.filterKeyword("5");
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void FilterKeywordLongKeyword() throws FileNotFoundException {
         Searcher searcher = new Searcher();
         List<String> expected = new ArrayList<>();
         expected.add("top 5 artists of the past week");
         expected.add("top 14 artists of the past week");
         expected.add("top 10 artists of the past week");
-        List<String> actual = searcher.filterKeyword("artists of");
+        List<String> actual = searcher.filterKeyword("of the past week");
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void FilterArtistCommonKeyword() throws FileNotFoundException {
+    public void FilterArtistNoMatch() throws FileNotFoundException {
+        Searcher searcher = new Searcher();
+        List<String> expected = new ArrayList<>();
+        List<String> actual = searcher.filterArtist("Jack the Reaper");
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void FilterArtistExactMatch() throws FileNotFoundException {
+        Searcher searcher = new Searcher();
+        List<String> expected = new ArrayList<>();
+        expected.add("BTS");
+        List<String> actual = searcher.filterArtist("bts");
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void FilterArtistShortKeyword() throws FileNotFoundException {
         Searcher searcher = new Searcher();
         List<String> expected = new ArrayList<>();
         expected.add("The Weeknd");
         expected.add("Taylor Swift");
         expected.add("BTS");
         expected.add("Post Malone");
-        expected.add("XXXTENTACION");
         expected.add("Justin Bieber");
         List<String> actual = searcher.filterArtist("t");
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void FilterArtistPartialKeyword() throws FileNotFoundException {
+    public void FilterArtistLongKeyword() throws FileNotFoundException {
         Searcher searcher = new Searcher();
         List<String> expected = new ArrayList<>();
-        expected.add("Eminem");
-        expected.add("Imagine Dragons");
-        expected.add("Post Malone");
-        List<String> actual = searcher.filterArtist("ne");
+        expected.add("Taylor Swift");
+        List<String> actual = searcher.filterArtist("Taylor");
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void FilterGenreCommonKeyword() throws FileNotFoundException {
+    public void FilterGenreNoMatch() throws FileNotFoundException {
+        Searcher searcher = new Searcher();
+        List<String> expected = new ArrayList<>();
+        List<String> actual = searcher.filterGenre("Pokemon");
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void FilterGenreExactMatch() throws FileNotFoundException {
+        Searcher searcher = new Searcher();
+        List<String> expected = new ArrayList<>();
+        expected.add("Latin trap");
+        List<String> actual = searcher.filterGenre("Latin trap");
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void FilterGenreShortKeyword() throws FileNotFoundException {
+        Searcher searcher = new Searcher();
+        List<String> expected = new ArrayList<>();
+        expected.add("R&B");
+        expected.add("Latin trap");
+        expected.add("Latin urbano");
+        expected.add("Hip-Hop/Rap");
+        List<String> actual = searcher.filterGenre("r");
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void FilterGenreLongKeyword() throws FileNotFoundException {
         Searcher searcher = new Searcher();
         List<String> expected = new ArrayList<>();
         expected.add("Latin trap");
         expected.add("Latin urbano");
         List<String> actual = searcher.filterGenre("Latin");
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    public void FilterGenrePartialKeyword() throws FileNotFoundException {
-        Searcher searcher = new Searcher();
-        List<String> expected = new ArrayList<>();
-        expected.add("Latin trap");
-        expected.add("Hip-Hop/Rap");
-        List<String> actual = searcher.filterGenre("rap");
         Assertions.assertEquals(expected, actual);
     }
 }

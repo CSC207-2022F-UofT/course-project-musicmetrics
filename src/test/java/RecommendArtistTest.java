@@ -3,18 +3,20 @@ import entities.GuestUser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import use_cases.MusicData;
+import use_cases.MusicDataBuilder;
+import use_cases.RecommendArtist;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
-public class recommendArtistTest {
+public class RecommendArtistTest {
 
         @Test()
         public void TestRandom() throws FileNotFoundException {
                 //reset data
-                MusicData.setData();
+                MusicDataBuilder.setData();
 
                 Artist Drake = new Artist(1000, "Hip-Hop/Rap", "Drake",
                         new Boolean[] {true, false, false, false, true}, 1, 1000);
@@ -32,17 +34,20 @@ public class recommendArtistTest {
                 MusicData.data.put(1, week1Artist);
 
                 GuestUser gU = new GuestUser();
-                MusicData mD = new MusicData();
-                Artist reccommendation = mD.recommendArtist("Hip-Hop/Rap", false, gU);
+                //Tests if a random artist is recommended
+                Artist reccommendation = RecommendArtist.recommend("Hip-Hop/Rap", false, gU);
                 Assertions.assertEquals("Hip-Hop/Rap", reccommendation.getGenre());
-                reccommendation = mD.recommendArtist("Pop", false, gU);
         }
 
 
         @Test()
         public void TestSimilarity() throws FileNotFoundException {
+                //The user must be registered (otherwise similar would be false)
+                //The user can only select from the valid provided genres (all with atleast one artist)
                 //reset data
-                MusicData.setData();
+                MusicDataBuilder.setData();
+
+                entities.RegisteredUser rUser = new entities.RegisteredUser("test@gmail.com", "password");
 
                 //follow is within same genre
                 entities.Artist Drake = new entities.Artist(1000, "Hip-Hop/Rap", "Drake",
@@ -57,12 +62,18 @@ public class recommendArtistTest {
                 week1Artist.add(Kendrick);
                 use_cases.MusicData.data.put(3, week1Artist);
 
-                entities.RegisteredUser rUser = new entities.RegisteredUser("test@gmail.com", "password");
                 ArrayList<entities.Artist> userFollows = new ArrayList<>();
+                rUser.setFollows(userFollows);
+
+                //edge case User Follows No one
+                Artist reccommendation = RecommendArtist.recommend("Hip-Hop/Rap", false, rUser);
+                Assertions.assertEquals("Hip-Hop/Rap", reccommendation.getGenre());
+
+                //user follows someone
                 userFollows.add(Kendrick);
                 rUser.setFollows(userFollows);
                 use_cases.MusicData mD = new use_cases.MusicData();
-                entities.Artist recommendationRap = mD.recommendArtist("Hip-Hop/Rap", true, rUser);
+                entities.Artist recommendationRap = RecommendArtist.recommend("Hip-Hop/Rap", true, rUser);
                 Assertions.assertEquals("Jcole",recommendationRap.getName());
 
                 //follow is within different genre
@@ -73,8 +84,14 @@ public class recommendArtistTest {
                 week1Artist.add(Ariana);
                 week1Artist.add(Taylor);
                 use_cases.MusicData.data.put(3, week1Artist);
-                entities.Artist recommendationPop = mD.recommendArtist("Pop", true, rUser);
+                entities.Artist recommendationPop = RecommendArtist.recommend("Pop", true, rUser);
                 Assertions.assertEquals("Taylor Swift", recommendationPop.getName());
+
+                //edge case User Follows everyone
+                userFollows.add(Drake);
+                userFollows.add(Jcole);
+                Artist reccommendationEveryone = RecommendArtist.recommend("Hip-Hop/Rap", false, rUser);
+                Assertions.assertEquals("Hip-Hop/Rap", reccommendationEveryone.getGenre());
         }
 
 }
