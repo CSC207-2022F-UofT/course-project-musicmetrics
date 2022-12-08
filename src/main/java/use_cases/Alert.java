@@ -3,18 +3,16 @@ package use_cases;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import entities.RegisteredUser;
 import entities.Artist;
+import entities.User;
 
 public class Alert {
     static double growth_rate = 1.25;
     HashMap<String, Integer> tops;
-    RegisteredUser user;
-
-    public Alert(RegisteredUser user) {
+    User user;
+    public Alert(User user) {
         this.tops = new HashMap<String, Integer>();
         this.user = user;
-
     }
 
     /**
