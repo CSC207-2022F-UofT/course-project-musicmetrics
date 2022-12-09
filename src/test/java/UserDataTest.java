@@ -15,14 +15,18 @@ public class UserDataTest {
     public void testUserData() throws Exception {
         UserDataBuilder u = new UserDataBuilder();
 
-        // Test getUser
-        assert u.getUserData().getUser("abc@gmail.com") != null;
-        RegisteredUser user1 = (RegisteredUser) u.getUserData().getUser("abc@gmail.com");
-        RegisteredUser newUser = new RegisteredUser("xyz@gmail.com", "password");
+        // Test isLoggedIn - GuestUser is created initially
+        assert !u.getUserData().isLoggedIn();
 
-        // Test checkUser: check whether user is in database
-        assert u.getUserData().checkUser((RegisteredUser) user1); // in database
-        assert !u.getUserData().checkUser(newUser); // not in database
+        // Test getUser
+        assert u.getUserData().getUser("abc@gmail.com") != null; // returns a RegisteredUser
+        RegisteredUser user1 = (RegisteredUser) u.getUserData().getUser("abc@gmail.com");
+        RegisteredUser newUser = new RegisteredUser("testtest3@gmail.com", "password");
+
+        // Test checkUser: check whether user is currentUser
+        assert u.getUserData().checkUser(u.getUserData().getCurrentUser()); // check that the user is currentUser
+        assert !u.getUserData().checkUser(user1); // user in database, but not the current user
+        assert !u.getUserData().checkUser(newUser); // user not in database, but not the current user
 
         // Test checkStatus(user): check whether user is logged in or not
         assert !u.getUserData().checkStatus((RegisteredUser) user1); // not logged in
@@ -33,26 +37,19 @@ public class UserDataTest {
             System.out.println("checkStatus case passed: user not in database");
         }
 
-        // Test writeToTextFile
-        File file1 = new File("main/java/entities/AllRegisteredUsers.txt");
-        u.getUserData().writeToTextFile("main/java/entities/AllRegisteredUsers.txt", "New line added.");
-        Scanner checkAdded = new Scanner(file1);
-        checkAdded.nextLine();
-        var line = "";
-        while (checkAdded.hasNextLine()) {
-            line = checkAdded.nextLine();
-        }
-        Assertions.assertEquals(line, "New line added.");
-
         //Test saveUser
         assert u.getUserData().saveUser(newUser.getEmail(), newUser.getPassword()); // new user saved successfully
-        // need to check if text files have been updated again?
         assert !u.getUserData().saveUser(user1.getEmail(), user1.getPassword()); // existing user saved unsuccessfully
 
 
         // Test deleteUser
         assert u.getUserData().deleteUser(newUser.getEmail()); // new user deleted successfully
-        assert !u.getUserData().deleteUser(newUser.getEmail()); // non-existing user not deleted successfully
+        System.out.println("deleteUser test case passed: new user in data deleted successfully.");
+        try {
+            u.getUserData().deleteUser(newUser.getEmail());
+        } catch (Exception e) {
+            System.out.println("deleteUser test case passed: user not in database.");
+        }
         assert !u.getUserData().deleteUser(user1.getEmail()); // not logged in user not deleted successfully
 
         // Test logInUser

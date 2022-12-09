@@ -68,7 +68,7 @@ public class UserData {
 
     /**
      * @param u Entities.RegisteredUser object
-     * @return true/false boolean telling if the user exists in the database or not
+     * @return true/false boolean telling if the user is the current user
      */
     public boolean checkUser(User u) {
         return currentUser == u;
