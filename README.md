@@ -221,7 +221,7 @@ After installing the software, to run the program, follow these simple steps.
 1. Run `src/main/java/drivers/TextBasedFrontend.java`. You will see a prompt like this.
 
 <p align="center">
-<img src="https://github.com/CSC207-2022F-UofT/course-project-musicmetrics/blob/main/images/figure1.png" alt="Figure1">
+<img src="https://github.com/CSC207-2022F-UofT/course-project-musicmetrics/blob/main/images/Figure1.png" alt="Figure1">
 
 2. Type a command (type `help` for command list)
 
