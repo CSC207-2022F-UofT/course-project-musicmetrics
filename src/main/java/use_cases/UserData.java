@@ -39,18 +39,6 @@ public class UserData {
             data.get(false).add(user2);
         }
         registeredUsers.close();
-//
-//        Scanner sc = new Scanner(new File("src/main/java/use_cases/music_datSbase/Data_" + week));
-//        sc.useDelimiter(", ");
-//        sc.nextLine();
-//        ArrayList<Artist> allArtists = new ArrayList<>();
-//        while (sc.hasNextLine()) {
-//            Artist a = setArtistData(sc, week);
-//            allArtists.add(a); //add Artist to allArtists arraylist
-//        }
-//        MusicData.data.put(week, allArtists); //store information in data HashMap
-//        sc.close();
-
         this.currentUser = new GuestUser();
     }
 
@@ -129,8 +117,6 @@ public class UserData {
             RegisteredUser newUser = new RegisteredUser(email, password);
             data.get(false).add(newUser);
             logInUser(email, password);
-
-            // add user into LoggedInUsers text file
             return true;
         }
     }
@@ -168,8 +154,6 @@ public class UserData {
                     if (Objects.equals(((RegisteredUser) u).getPassword(), password)) {
                         data.get(false).remove(u);
                         data.get(true).add(u);
-                        // add user to LoggedInUsers text file
-//                        writeToTextFile(loggedInFile, email + ", " + password + "\n");
                         this.currentUser = u;
                         return;
                     }
@@ -192,23 +176,6 @@ public class UserData {
         } else {
             throw new Exception("You are not logged in. You cannot be logged out.");
         }
-//        if (checkStatus(this.currentUser)) {
-//            for (RegisteredUser u : data.get(true)) {
-//                if (Objects.equals(u.toString(), email)) {
-//                    if (Objects.equals(u.getPassword(), password)) {
-//                        data.get(true).remove(u);
-//                        data.get(false).add(u);
-//                        this.currentUser = new GuestUser();
-//                        return new GuestUser();
-//                    }
-//                    throw new Exception("Incorrect password");
-//                }
-//            }
-//        }
-//        if (!(checkStatus(email))) {
-//            throw new Exception("Already logged out");
-//        }
-//        throw new Exception("Email not found");
     }
 
     /**
@@ -223,26 +190,6 @@ public class UserData {
         fw.write(toRemove);
         fw.close();
     }
-
-//    public void deleteFromTextFile(String filename, String toRemove) throws IOException {
-//        Scanner scanned = new Scanner(new File(filename));
-//        StringBuilder content = new StringBuilder();
-//        scanned.nextLine(); // skip header
-//        while (scanned.hasNextLine()) {
-//            // read and store line temporarily if it doesn't match the string to be removed
-//            if (!Objects.equals(scanned.nextLine(), toRemove)) {
-//                content.append(scanned.nextLine());
-//                content.append("\n"); // is this necessary
-//            }
-//        }
-//        try {
-//            FileWriter foo = new FileWriter(String.valueOf(filename), false);
-//            foo.write(String.valueOf(content));
-//            filename = foo; // does filename get reassigned successfully
-//        } catch (Exception e) {
-//            // check this
-//        } scanned.close();
-//    }
 
     /** Checks whether the user is logged in.
      *
@@ -262,7 +209,5 @@ public class UserData {
 
     public static void main(String[] args) throws Exception {
         UserData u = new UserData();
-
-
     }
 }
